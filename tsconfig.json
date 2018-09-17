@@ -13,6 +13,14 @@
     "typeRoots": [
       "node_modules/@types"
     ],
+    "paths": {
+      "timsystems-lib": [
+        "./libs/timsystems-lib"
+      ],
+      "timsystems-lib/*": [
+        "./libs/timsystems-lib/*"
+      ]
+    },
     "lib": [
       "es2017",
       "dom"
