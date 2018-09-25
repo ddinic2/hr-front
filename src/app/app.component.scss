@@ -1,0 +1,28 @@
+.page {
+  display: flex;
+  width: 99vw;
+  height: 100vh;
+  align-content: stretch;
+  .sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 10%;
+    height: 100vh;
+    z-index: 999;
+    background: rgb(70, 70, 75);
+  }
+  .main-content {
+    margin-left: 9%;
+    padding: 0 0 0 16px;
+    width: 100vw;
+    .ribbon {
+      padding-left:-10;
+      margin-left:-20;
+      margin: 0;
+      width: 100%;
+      height: 30px;
+      background: rgb(70, 70, 75);
+    }
+  }
+}

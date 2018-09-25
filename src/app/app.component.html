@@ -1,8 +1,16 @@
-<div>
-
+<div class="page">
+  <div class="sidebar">
+    <p>sidebar placeholder</p>
+    <a routerLink="/lista-odsustava" routerLinkActive="active">Lista Odsustava</a>
+    <br/>
+    <a routerLink="/odsustvo" routerLinkActive="active">Novo Odsustvo</a>
+  </div>
+  <div class="main-content">
+    <div class="ribbon">
+      <span>ribbon placeholder</span>
+    </div>
+    <router-outlet>
+      <!-- <hr-leave-form></hr-leave-form> -->
+    </router-outlet>
+  </div>
 </div>
-<!-- <div>
-  <router-outlet></router-outlet>
-</div> -->
-
-<hr-leave-form></hr-leave-form>
