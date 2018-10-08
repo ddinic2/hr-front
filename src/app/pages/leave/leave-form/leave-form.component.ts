@@ -69,8 +69,6 @@ export class LeaveFormComponent implements OnInit {
 
   }
 
-
-
   displayFn(user?: any): string | undefined {
     return user
       ? user.FirstName + ' ' + user.Surname + ' : ' + user.OrgUnitName
