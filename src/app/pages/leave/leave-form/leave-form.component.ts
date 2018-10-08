@@ -58,7 +58,7 @@ export class LeaveFormComponent implements OnInit {
 
       this.toDate.valueChanges.subscribe( value => {
         if (value && this.fromDate.value) {
-         this.subs.getSubstitutesByDate(value, this.fromDate.value).toPromise().then(result => {
+         this.subs.getSubstitutesByDate(this.fromDate.value, value).toPromise().then(result => {
                 console.log(result);
                 this.options = result;
                 });
