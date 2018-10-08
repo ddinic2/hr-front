@@ -8,7 +8,7 @@ export const environment = {
     ROOT: 'http://localhost:54278/',
     SUBSTITUTE: 'work-leave',
     ABSCENCE: 'absences',
-    EMPLOYEESUBSITUTE: '/employee-subsitute'
+    EMPLOYEESUBSITUTE: '/employee-substitute'
   }
 };
 
