@@ -53,4 +53,6 @@ export class AbscencesListComponent implements OnInit {
   edit = () => console.log('edit');
   save = () => console.log('save');
   view = () => console.log('view');
+
+  
 }
