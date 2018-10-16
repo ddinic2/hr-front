@@ -48,12 +48,12 @@ export class SubstituteService {
     return this.substitutesList;
   }
   
-  getHolidayDays = () => {
-    const url = environment.db.ROOT + environment.db.HOLIDAYDAYS;
-    return this.http.get<any>(url);
-  }
+  // getHolidayDays = () => {
+  //   const url = environment.db.ROOT + environment.db.HOLIDAYDAYS;
+  //   return this.http.get<any>(url);
+  // }
 
-  getSubstitutesByDate = (dateFrom: Date, dateTo: Date): Observable<any[]> => {
+  getSubstitutesByDate = (dateFrom: Date, dateTo: Date) => {
     const startDate = moment(dateFrom);
     const endDate = moment(dateTo);
 
@@ -64,7 +64,7 @@ export class SubstituteService {
     };
     const url = environment.db.ROOT + environment.db.ABSCENCE + environment.db.EMPLOYEESUBSITUTE;
     console.log(obj);
-    return this.http.get<any>(url, obj);
+    return this.http.get<any>(url, obj).subscribe(res => this.substitutesList.next(res));
   }
 
   public postAbsence(employeeAbsence: EmployeeAbsence) {

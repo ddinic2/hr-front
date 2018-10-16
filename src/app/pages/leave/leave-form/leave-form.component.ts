@@ -17,7 +17,7 @@ export class LeaveFormComponent implements OnInit {
   employeeAbsenceForm: FormGroup;
   filteredOptions: Observable<Employee[]>;
   options: Employee[];
-  holidayDays: Observable<string[]>;
+  holidayDays: any;
 
   constructor(private _formBuilder: FormBuilder, private _subsService: SubstituteService) { }
 
@@ -30,19 +30,21 @@ export class LeaveFormComponent implements OnInit {
 
     this._subsService.getRelevantSubstitutes().subscribe(result => this.options = result);
 
-    this._subsService.getHolidayDays().subscribe(res => {
-       this.holidayDays = res;
-     });
+    // this._subsService.getHolidayDays().subscribe(res => 
+    //    this.holidayDays = res);
+     
 
     this.employeeAbsenceForm.controls['fromDate'].valueChanges.subscribe(value => {
       if (value && this.employeeAbsenceForm.controls['toDate'].value) {
         this._subsService.getSubstitutesByDate(value, this.employeeAbsenceForm.controls['toDate'].value);
+        console.log(this.options);
       }
     });
 
     this.employeeAbsenceForm.controls['toDate'].valueChanges.subscribe(value => {
       if (value && this.employeeAbsenceForm.controls['fromDate'].value) {
         this._subsService.getSubstitutesByDate(this.employeeAbsenceForm.controls['fromDate'].value, value);
+        console.log(this.options);
       }
     });
 
