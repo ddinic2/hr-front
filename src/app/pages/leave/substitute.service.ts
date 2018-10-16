@@ -1,7 +1,7 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from '../../../environments/environment';
-import { Observable, BehaviorSubject } from 'rxjs';
+import { Observable, BehaviorSubject, of } from 'rxjs';
 import * as _moment from 'moment';
 import business from 'moment-business';
 import * as _moment1 from 'moment-weekday-calc';
@@ -19,6 +19,7 @@ export class SubstituteService {
   public retPostData;
   dateFormat = 'YYYY-MM-DD';
   substitutesList = new BehaviorSubject<any>([]);
+  hoildayDateslist  = ['Wed Oct 3 2018', 'Fri Oct 12 2018', 'Mon Oct 15 2018', 'Wed Oct 17 2018', 'Fri Oct 19 2018'];
 
   extractData(res: Response) {
     const body = res.json();
@@ -31,6 +32,7 @@ export class SubstituteService {
 
   constructor(private http: HttpClient) {
     // this.getSubstitutes('');
+
   }
 
   // getSubstitutes(val: string): Observable<any[]> {
@@ -48,10 +50,11 @@ export class SubstituteService {
     return this.substitutesList;
   }
   
-  // getHolidayDays = () => {
-  //   const url = environment.db.ROOT + environment.db.HOLIDAYDAYS;
-  //   return this.http.get<any>(url);
-  // }
+  getHolidayDays = () => {
+    const url = environment.db.ROOT + environment.db.HOLIDAYDAYS;
+    //return this.http.get<any>(url);
+    return of(this.hoildayDateslist);
+  }
 
   getSubstitutesByDate = (dateFrom: Date, dateTo: Date) => {
     const startDate = moment(dateFrom);
@@ -64,44 +67,25 @@ export class SubstituteService {
     };
     const url = environment.db.ROOT + environment.db.ABSCENCE + environment.db.EMPLOYEESUBSITUTE;
     console.log(obj);
-    return this.http.get<any>(url, obj).subscribe(res => this.substitutesList.next(res));
+    return this.http.get<any>(url, obj);
+    // .subscribe(res => this.substitutesList.next(res));
   }
 
   public postAbsence(employeeAbsence: EmployeeAbsence) {
-    const url = environment.db.ROOT + environment.db.ABSCENCE;
 
+    const url = environment.db.ROOT + environment.db.ABSCENCE;
     const startDate = moment(employeeAbsence.fromDate);
     const endDate = moment(employeeAbsence.toDate);
-
     const dateArray  =  this.getDateArray(startDate, endDate);
-    const hoildayDateslist  = ['Wed Oct 3 2018', 'Fri Oct 12 2018', 'Mon Oct 15 2018', 'Wed Oct 17 2018', 'Fri Oct 19 2018'];
+    
 
-      hoildayDateslist.forEach(function(item) {
+      this.hoildayDateslist.forEach(function(item) {
         const index = dateArray.indexOf(item);
         if (index !== -1) {
           dateArray.splice(index, 1);
         }
-
+        employeeAbsence.numOfdays = dateArray.length;
        });
-       const numOfADys =  dateArray.length;
-       console.log('Praznici: ', dateArray);
-       console.log(numOfADys);
-
-
-    // const obj = {
-    //   EmployeeId: 2,
-    //   EmployeeName: options['FirstName'],
-    //   DateFrom: fromDate,
-    //   DateTo: toDate,
-    //   HRAbsenceType: 1,
-    //   HRAbsenceTypeName: 'Godišnji odmor',
-    //   HRJobTypePosition: null,
-    //   HRProcesStatus: 0,
-    //   HREmployeeAbsence: null,
-    //   NumOfdays: 2,
-    //   HRAbsenceProcessStatus: 1,
-    //   EmployeeEmail: 'bojan.bozic@timsystems.rs'
-    // };
 
     this.http.post(url, employeeAbsence).subscribe(data => {
       this.retPostData = data;
