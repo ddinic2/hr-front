@@ -1,10 +1,12 @@
-import { toDate } from '@angular/common/src/i18n/format_date';
+
 import { Component, OnInit, EventEmitter } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Observable } from 'rxjs';
-import { map, startWith, debounceTime } from 'rxjs/operators';
+import { map, startWith } from 'rxjs/operators';
 import { SubstituteService } from '../substitute.service';
-import { formatDate } from '@angular/common';
+import { EmployeeAbsence } from 'src/app/models/employee-absence';
+import { Employee } from 'src/app/models/employee';
+
 
 @Component({
   selector: 'hr-leave-form',
@@ -12,80 +14,64 @@ import { formatDate } from '@angular/common';
   styleUrls: ['./leave-form.component.scss']
 })
 export class LeaveFormComponent implements OnInit {
-  substituteControl = new FormControl();
-  filteredOptions: Observable<any[]>;
-  Employee = new EventEmitter();
-  options: any[];
+  employeeAbsenceForm: FormGroup;
+  filteredOptions: Observable<Employee[]>;
+  options: Employee[];
+  holidayDays: Observable<string[]>;
 
-  fromDate = new FormControl(new Date());
-  toDate = new FormControl(new Date());
-
-
-
-
-  constructor(private subs: SubstituteService) {}
-  selectedEmployee = event => {
-    this.Employee.emit(event.option.value);
-  }
+  constructor(private _formBuilder: FormBuilder, private _subsService: SubstituteService) { }
 
   ngOnInit() {
+    this.employeeAbsenceForm = this._formBuilder.group({
+      fromDate: ['', Validators.required],
+      toDate: ['', Validators.required],
+      replaceEmployee: ['', Validators.required]
+    });
 
+    this._subsService.getRelevantSubstitutes().subscribe(result => this.options = result);
 
-    // this.substituteControl.valueChanges
-    //   .pipe(
-    //     debounceTime(600),
-    //     startWith<string | any>(''),
-    //     map(value => (typeof value === 'string' ? value : value.name))
-    //   )
-    //   .subscribe(val => {
-    //     if (typeof val === 'string' && val.toString().length > 2) {
-    //       this.subs.getSubstitutes(val.toString()).toPromise().then(result => {
-    //         console.log(result);
-    //         this.options = result;
-    //       });
-    //     }
-    //   });
+    this._subsService.getHolidayDays().subscribe(res => {
+       this.holidayDays = res;
+     });
 
-      this.fromDate.valueChanges.subscribe( value => {
-        if (value && this.toDate.value) {
-         this.subs.getSubstitutesByDate(value, this.toDate.value).toPromise().then(result => {
-            console.log(result);
-            this.options = result;
-          });
-         }
-      });
+    this.employeeAbsenceForm.controls['fromDate'].valueChanges.subscribe(value => {
+      if (value && this.employeeAbsenceForm.controls['toDate'].value) {
+        this._subsService.getSubstitutesByDate(value, this.employeeAbsenceForm.controls['toDate'].value);
+      }
+    });
 
+    this.employeeAbsenceForm.controls['toDate'].valueChanges.subscribe(value => {
+      if (value && this.employeeAbsenceForm.controls['fromDate'].value) {
+        this._subsService.getSubstitutesByDate(this.employeeAbsenceForm.controls['fromDate'].value, value);
+      }
+    });
 
-      this.toDate.valueChanges.subscribe( value => {
-        if (value && this.fromDate.value) {
-         this.subs.getSubstitutesByDate(this.fromDate.value, value).toPromise().then(result => {
-                console.log(result);
-                this.options = result;
-                });
-         }
-      });
-
-
-
+    this.filteredOptions = this.employeeAbsenceForm.controls['replaceEmployee'].valueChanges
+      .pipe(startWith<string | Employee>(''),
+      map((name: string) =>  name.length >= 0 ?  this._filter(name) : this.options.slice()));
   }
 
-  displayFn(user?: any): string | undefined {
-    return user
-      ? user.FirstName + ' ' + user.Surname + ' : ' + user.OrgUnitName
-      : undefined;
-  }
   private _filter(name: string): any[] {
-    const filterValue = name.toLowerCase();
-
-    return this.options.filter(
-      option => option.name.toLowerCase().indexOf(filterValue) === 0
-    );
+    if (this.options !== undefined) {
+      this.options = this.options.slice(0, 4);
+      return this.options.filter(
+        (option: any) =>  option.FirstName.toLowerCase().indexOf(name.toLowerCase()) === 0
+      );
+      // return this.options.filter(
+      //   (option: any) =>  option.FullName.inncludes(name.toLocaleLowerCase())
+      // );
+    }
   }
 
-  add = (fromDate: Date, toDate: Date) =>
-  this.subs.postAbsence(fromDate, toDate)
+  displayFn(option: any): string | undefined {
+    return option ? `${option.FirstName} ${option.Surname}` : undefined;
+  }
 
-
+  saveAbsence() {
+    const formResult: EmployeeAbsence = this.employeeAbsenceForm.value;
+    console.log(JSON.stringify(formResult, null, 2));
+    this._subsService.postAbsence(formResult);
+  }
 }
 
 

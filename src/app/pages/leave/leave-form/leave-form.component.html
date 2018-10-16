@@ -1,37 +1,36 @@
 <div class="form-container">
-  <form>
+  <form [formGroup]="employeeAbsenceForm">
     <div class="dates-row">
       <div class="date-from">
         <mat-form-field>
-          <input matInput [matDatepicker]="from" placeholder="Početak Odmora" [formControl]="fromDate">
+          <input matInput [matDatepicker]="from" placeholder="Početak Odmora" formControlName="fromDate">
           <mat-datepicker-toggle matSuffix [for]="from"></mat-datepicker-toggle>
           <mat-datepicker #from></mat-datepicker>
         </mat-form-field>
       </div>
       <div class="date-to">
         <mat-form-field>
-          <input  matInput [matDatepicker]="to" placeholder="Kraj Odmora" [formControl]="toDate" >
+          <input matInput [matDatepicker]="to" placeholder="Kraj Odmora" formControlName="toDate">
           <mat-datepicker-toggle matSuffix [for]="to"></mat-datepicker-toggle>
           <mat-datepicker #to></mat-datepicker>
         </mat-form-field>
       </div>
     </div>
 
-
     <mat-form-field class="substitute-auto">
-      <input type="text" placeholder="Zamena" aria-label="Zamena"  matInput [formControl]="substituteControl"
-        [matAutocomplete]="auto">
-      <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selectedEmployee($event)" [displayWith]="displayFn">
-        <mat-option *ngFor="let option of options" [value]="option">
-            {{option.FirstName}} {{option.Surname}}
+      <input type="text" placeholder="Zamena" aria-label="Zamena" matInput formControlName="replaceEmployee" [matAutocomplete]="auto">
+      <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
+        <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
+          {{option.FirstName}} {{option.Surname}}
           <!-- {{option.FirstName}} {{option.Surname}} : {{option.OrgUnitName}} -->
         </mat-option>
       </mat-autocomplete>
     </mat-form-field>
-<div>
-    <button mat-raised-button (click)="add(fromDate.value, toDate.value)">Sačuvaj</button>
-    <!-- <button mat-raised-button (click)="goBack()">Odustani</button> -->
-</div>
+    <div>
+      <!--<button type="submit" [disabled]="!employeeAbsenceForm.valid" mat-raised-button (click)="saveAbsence()">Sačuvaj</button>-->
+      <button type="submit"  mat-raised-button (click)="saveAbsence()">Sačuvaj</button>
+      <!-- <button mat-raised-button (click)="goBack()">Odustani</button> -->
+    </div>
 
 
 
