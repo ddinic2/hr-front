@@ -6,6 +6,9 @@ import * as _moment from 'moment';
 import business from 'moment-business';
 import * as _moment1 from 'moment-weekday-calc';
 import { EmployeeAbsence } from 'src/app/models/employee-absence';
+import { Employee } from 'src/app/models/employee';
+import { AbsenceSickLeaveType } from 'src/app/models/absence-sick-leave-type';
+import { zip } from 'rxjs/operators';
 
 
 const moment = _moment;
@@ -19,7 +22,9 @@ export class SubstituteService {
   public retPostData;
   dateFormat = 'YYYY-MM-DD';
   substitutesList = new BehaviorSubject<any>([]);
-  hoildayDateslist  = ['Wed Oct 3 2018', 'Fri Oct 12 2018', 'Mon Oct 15 2018', 'Wed Oct 17 2018', 'Fri Oct 19 2018'];
+  holidayDateslist = [];//['Wed Oct 3 2018', 'Fri Oct 12 2018', 'Mon Oct 15 2018', 'Wed Oct 17 2018', 'Fri Oct 19 2018'];
+  holidayObservable: Observable<string[]>;
+  canSave = false;
 
   extractData(res: Response) {
     const body = res.json();
@@ -30,9 +35,14 @@ export class SubstituteService {
     return Observable.throw(error.message || error);
   }
 
+
   constructor(private http: HttpClient) {
     // this.getSubstitutes('');
-
+    this.holidayObservable = this.getHolidayDays();
+    this.holidayObservable.subscribe(res => {
+      this.holidayDateslist = res;
+      this.canSave = true;
+    });
   }
 
   // getSubstitutes(val: string): Observable<any[]> {
@@ -49,25 +59,32 @@ export class SubstituteService {
   getRelevantSubstitutes = () => {
     return this.substitutesList;
   }
-  
+
   getHolidayDays = () => {
-    const url = environment.db.ROOT + environment.db.HOLIDAYDAYS;
-    //return this.http.get<any>(url);
-    return of(this.hoildayDateslist);
+    const url = environment.db.ROOT + environment.db.HOLIDAY_DAYS;
+    return this.http.get<string[]>(url);
   }
 
+  getAbsenceSickLeaveType = () => {
+    const url = environment.db.ROOT + environment.db.ABSENCE_SICK_LEAVE_TYPE;
+    return this.http.get<AbsenceSickLeaveType[]>(url);
+  }
+
+
   getSubstitutesByDate = (dateFrom: Date, dateTo: Date) => {
+    debugger
     const startDate = moment(dateFrom);
     const endDate = moment(dateTo);
+
 
     const obj = {
       params: new HttpParams()
         .set('DateFrom', startDate.format(this.dateFormat))
         .set('DateTo', endDate.format(this.dateFormat))
     };
-    const url = environment.db.ROOT + environment.db.ABSCENCE + environment.db.EMPLOYEESUBSITUTE;
+    const url = environment.db.ROOT + environment.db.ABSCENCE + environment.db.EMPLOYEE_SUBSITUTE;
     console.log(obj);
-    return this.http.get<any>(url, obj);
+    return this.http.get<Employee[]>(url, obj);
     // .subscribe(res => this.substitutesList.next(res));
   }
 
@@ -76,32 +93,33 @@ export class SubstituteService {
     const url = environment.db.ROOT + environment.db.ABSCENCE;
     const startDate = moment(employeeAbsence.fromDate);
     const endDate = moment(employeeAbsence.toDate);
-    const dateArray  =  this.getDateArray(startDate, endDate);
-    
 
-      this.hoildayDateslist.forEach(function(item) {
-        const index = dateArray.indexOf(item);
-        if (index !== -1) {
-          dateArray.splice(index, 1);
-        }
-        employeeAbsence.numOfdays = dateArray.length;
-       });
+    const dateArray = this.getDateArray(startDate, endDate);
+
+
+    this.holidayDateslist.forEach(function (item) {
+      const index = dateArray.indexOf(item.Date);
+      if (index !== -1) {
+        dateArray.splice(index, 1);
+      }
+      employeeAbsence.numOfdays = dateArray.length;
+    });
 
     this.http.post(url, employeeAbsence).subscribe(data => {
       this.retPostData = data;
     });
   }
 
-   getDateArray = function(start, end) {
+  getDateArray = function (start, end) {
     const dateArray = new Array();
     const startDate = new Date(start);
     while (startDate <= end) {
       if (startDate.getDay() !== 0 && startDate.getDay() !== 6) {
-        dateArray.push(new Date(startDate).toString().substring(0, 15));
-            }
-        startDate.setDate(startDate.getDate() + 1);
+        dateArray.push(new Date(startDate).toISOString().substring(0, 10));
+      }
+      startDate.setDate(startDate.getDate() + 1);
     }
-        return dateArray;
+    return dateArray;
   };
 
 }

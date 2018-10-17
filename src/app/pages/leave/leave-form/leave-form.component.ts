@@ -1,11 +1,13 @@
 
 import { Component, OnInit, EventEmitter } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { Observable, of } from 'rxjs';
+import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import { SubstituteService } from '../substitute.service';
 import { EmployeeAbsence } from 'src/app/models/employee-absence';
 import { Employee } from 'src/app/models/employee';
+import { MatTabChangeEvent } from '@angular/material';
+import { AbsenceSickLeaveType } from 'src/app/models/absence-sick-leave-type';
 
 
 @Component({
@@ -15,44 +17,45 @@ import { Employee } from 'src/app/models/employee';
 })
 export class LeaveFormComponent implements OnInit {
   employeeAbsenceForm: FormGroup;
-  filteredOptions: Observable<Employee[]>;
+  filteredSubEmployeeOptions: Observable<Employee[]>;
   options: Employee[] = [];
   holidayDays: any;
+  isDisabled = false;
 
-  constructor(private _formBuilder: FormBuilder, private _subsService: SubstituteService) { }
+  constructor(private _formBuilder: FormBuilder, public subsService: SubstituteService) { 
+  }
 
   ngOnInit() {
     this.employeeAbsenceForm = this._formBuilder.group({
       fromDate: ['', Validators.required],
       toDate: ['', Validators.required],
-      replaceEmployee: ['', Validators.required]
+      replaceEmployee: [''],
+      absenceType: ['', Validators.required],
+      sickType: ['', Validators.required],
+      sickLeaveType: ['', Validators.required]
     });
 
-    this._subsService.getRelevantSubstitutes().subscribe(result => this.options = result);
-
-    // this._subsService.getHolidayDays().subscribe(res => 
-    //    this.holidayDays = res);
-
+    // this.subsService.getRelevantSubstitutes().subscribe(result => this.options = result);
 
     this.employeeAbsenceForm.controls['fromDate'].valueChanges.subscribe(value => {
       if (value && this.employeeAbsenceForm.controls['toDate'].value) {
-        this._subsService.getSubstitutesByDate(value, this.employeeAbsenceForm.controls['toDate'].value).subscribe(result => {
-          this.options = result;
-          this.employeeAbsenceForm.controls['replaceEmployee'].setValue(undefined);
+        this.subsService.getSubstitutesByDate(value, this.employeeAbsenceForm.controls['toDate'].value).subscribe(result => {
+          // this.employeeAbsenceForm.controls['replaceEmployee'].setValue(undefined);
+          this.options =  result.slice(0,4);
         });
       }
     });
 
     this.employeeAbsenceForm.controls['toDate'].valueChanges.subscribe(value => {
       if (value && this.employeeAbsenceForm.controls['fromDate'].value) {
-        this._subsService.getSubstitutesByDate(this.employeeAbsenceForm.controls['fromDate'].value, value).subscribe(result => {
-          this.options = result;
-          this.employeeAbsenceForm.controls['replaceEmployee'].setValue(undefined);
+        this.subsService.getSubstitutesByDate(this.employeeAbsenceForm.controls['fromDate'].value, value).subscribe((result) => {
+          // this.employeeAbsenceForm.controls['replaceEmployee'].setValue(undefined);
+          this.options = result.slice(0,4);
         });
       }
     });
 
-    this.filteredOptions = this.employeeAbsenceForm.controls['replaceEmployee'].valueChanges
+    this.filteredSubEmployeeOptions = this.employeeAbsenceForm.controls['replaceEmployee'].valueChanges
       .pipe(startWith<string | Employee>(''),
         map((name: string) => {
           console.log(name);
@@ -70,20 +73,23 @@ export class LeaveFormComponent implements OnInit {
           option.FirstName!.toLowerCase().indexOf(name.toLowerCase()) === 0
       );
       // return this.options.filter(
-      //   (option: any) =>  option.FullName.inncludes(name.toLocaleLowerCase())
+      //   (option: any) =>  option.FullName.includes(name.toLocaleLowerCase())
       // );
     }
   }
 
-  displayFn(option: any): string | undefined {
-    return typeof (option) === 'string' ? option : `${option.FirstName ? option.FirstName : 'nema ime'} ${option.Surname ? option.Surname : 'nema prezime'}`;
+  displayFn(employee: any): string | undefined {
+    //return typeof (option) === 'string' ? option : `${option.FirstName ? option.FirstName : 'nema ime'} ${option.Surname ? option.Surname : 'nema prezime'}`;
+    return typeof (employee) === 'string' ? employee : `${employee.FirstName} ${employee.Surname}`;
   }
+
 
   saveAbsence() {
     const formResult: EmployeeAbsence = this.employeeAbsenceForm.value;
     console.log(JSON.stringify(formResult, null, 2));
-    this._subsService.postAbsence(formResult);
+    this.subsService.postAbsence(formResult);
   }
+
 }
 
 
