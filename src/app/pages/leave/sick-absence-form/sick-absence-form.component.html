@@ -18,8 +18,28 @@
 
   <div class="dates-row">
     <mat-form-field>
-      <mat-select placeholder="Tip bolovanja" formControlName="sickLeaveType">
+      <mat-select placeholder="Tip poodsustva" formControlName="absenceSubtype">
+        <mat-option *ngFor="let type of absenceSubtypeOptions" [value]="type.HRabsenceSubtypeId">
+          {{ type.Name}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+
+  <div class="dates-row">
+    <mat-form-field>
+      <mat-select placeholder="Šifra bolesti" formControlName="sickLeaveType">
         <mat-option *ngFor="let type of sickLeaveTypeOptions" [value]="type.HRAbsenceSickLeaveTypeID">
+          {{ type.Name}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+
+  <div class="dates-row">
+    <mat-form-field>
+      <mat-select placeholder="Tip bolovanja" formControlName="sickLeaveCode">
+        <mat-option *ngFor="let type of sickLeaveCodeOptions" [value]="type.HRSickLeaveCodeId">
           {{ type.Name}}
         </mat-option>
       </mat-select>

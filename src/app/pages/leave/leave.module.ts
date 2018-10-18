@@ -10,6 +10,7 @@ import { LeaveFormComponent } from './leave-form/leave-form.component';
 import { LeaveComponent } from './leave.component';
 import { SickAbsenceFormComponent } from './sick-absence-form/sick-absence-form.component';
 import { PaidAbsenceFormComponent } from './paid-absence-form/paid-absence-form.component';
+import { WorksheetsFormComponent } from './worksheets-form/worksheets-form.component';
 
 @NgModule({
   imports: [
@@ -20,7 +21,7 @@ import { PaidAbsenceFormComponent } from './paid-absence-form/paid-absence-form.
     ReactiveFormsModule,
     SharedModule
   ],
-  declarations: [LeaveComponent, LeaveFormComponent, AbscencesListComponent, SickAbsenceFormComponent, PaidAbsenceFormComponent],
+  declarations: [LeaveComponent, LeaveFormComponent, AbscencesListComponent, SickAbsenceFormComponent, PaidAbsenceFormComponent, WorksheetsFormComponent],
   exports: [LeaveComponent, LeaveFormComponent, AbscencesListComponent]
 })
 export class LeaveModule {}
