@@ -13,7 +13,8 @@ export const environment = {
     HOLIDAY_DAYS: '/holiday-days',
     ABSENCE_SICK_LEAVE_TYPE: '/absence-sick-leave-type',
     ABSENCE_SUBTYPE:'/absence-subtype' ,
-    SICK_LEAVE_CODE: '/sick-leave-code'
+    SICK_LEAVE_CODE: '/sick-leave-code',
+    CHANGE_ABSENCE_STATUS: '/change-absence-status'
   }
 };
 

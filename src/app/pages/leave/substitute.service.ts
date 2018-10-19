@@ -88,7 +88,6 @@ export class SubstituteService {
   }
 
   getSubstitutesByDate = (dateFrom: Date, dateTo: Date) => {
-    debugger
     const startDate = moment(dateFrom);
     const endDate = moment(dateTo);
 

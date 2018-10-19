@@ -1,8 +1,6 @@
 import { AbscenceService } from './../abscence.service';
 import { Component, OnInit } from '@angular/core';
 import { LeaveComponent }  from 'src/app/pages/leave/leave.component';
-import { MatTabChangeEvent } from '@angular/material';
-import { BehaviorSubject } from 'rxjs';
 
 
 @Component({
@@ -12,7 +10,8 @@ import { BehaviorSubject } from 'rxjs';
 })
 export class AbscencesListComponent implements OnInit {
   pipesToApply = [];
-  //absenceType = new  BehaviorSubject(1);
+  absenceList: any = [];
+    
   columnNameArray = [
     'Ime',
     'Datum od',
@@ -57,9 +56,16 @@ export class AbscencesListComponent implements OnInit {
     );
 
 
-  edit = () => console.log('edit');
-  save = () => console.log('save');
-  view = () => console.log('view');
-  approve = () => console.log('approve');
-  deny = () => console.log('deny');
+//Odobravanje odsustva
+  edit = (item) => {
+    this.service.changeAbsenceStatus(item.EmployeeAbsence, item.AbsenceProcessStatus = 2);
+  }; 
+  //Ponistavanje odsustva
+  save =  (item) => {
+    this.service.changeAbsenceStatus(item.EmployeeAbsence, item.AbsenceProcessStatus = 3);
+  };
+  view = (item) =>
+  console.log('view');
+
+    
 }

@@ -2,7 +2,7 @@ import { environment } from './../../../environments/environment';
 import { Observable, from, BehaviorSubject } from 'rxjs';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { LeaveComponent} from 'src/app/pages/leave/leave.component';
+
 
 @Injectable({
   providedIn: 'root'
@@ -15,6 +15,8 @@ export class AbscenceService {
   page = 1;
   count = 20;
   status: 1;
+  public retPostData;
+
   
   absenceType = new  BehaviorSubject(1);//Uvek prvo prikazuje Godišnji odmor
   constructor(private http: HttpClient) {}
@@ -72,8 +74,19 @@ export class AbscenceService {
       URL += `&absenceType=${absenceType}`;
     }
     return this.http.get(URL);
+    
   };
+
+  changeAbsenceStatus = (employeeAbsence: number, absenceProcessStatus: number) => {
+      const url = environment.db.ROOT + environment.db.ABSCENCE + environment.db.CHANGE_ABSENCE_STATUS;
+      const obj = {employeeAbsence, absenceProcessStatus}
+      return this.http.post(url, obj).subscribe(res => {
+        this.retPostData = res;
+      });
       
+  };
+
+   
     
 }
 
