@@ -4,11 +4,11 @@ export interface EmployeeAbsence {
     fromDate: Date;
     toDate: Date;
     numOfdays: number;
-    hrEmployeeAbsence?: number;
-    hrAbsenceProcessStatus: number;
-    hrProcesStatus: number;
-    hRAbsenceType: number;
-    hrAbsenceTypeName: string;
-    employee: Employee;
-    replaceEmployee: number;
+    employeeAbsence?: number;
+    absenceProcessStatus: number;
+    procesStatus: number;
+    absenceType: number;
+    absenceTypeName: string;
+    //employee: Employee;
+    replacementEmployee: Employee;
 }

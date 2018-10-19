@@ -1,15 +1,53 @@
 import { environment } from './../../../environments/environment';
-import { Observable } from 'rxjs';
+import { Observable, from, BehaviorSubject } from 'rxjs';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { LeaveComponent} from 'src/app/pages/leave/leave.component';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AbscenceService {
   abscences: Observable<any>;
-
+  tabIndex: number;
+  order: '';
+  direction: "asc";
+  page = 1;
+  count = 20;
+  status: 1;
+  
+  absenceType = new  BehaviorSubject(1);//Uvek prvo prikazuje Godišnji odmor
   constructor(private http: HttpClient) {}
+
+    getTabIndex = (tabIndex: number) => {
+    switch(tabIndex)
+    {
+      case tabIndex = 0:
+      this.absenceType.next(1);
+      break;
+
+      case tabIndex = 1:
+      this.absenceType.next(3);
+      break;
+
+      case tabIndex = 2:
+      this.absenceType.next(4);
+      break;
+
+      case tabIndex = 3:
+      this.absenceType.next(5);
+      break;
+    }
+    this.getAbscences(
+    this.order,
+    this.direction,
+    this.page,
+    this.count,
+    this.status,
+    this.absenceType.value
+    ).subscribe(res => {return this.absenceType}); 
+
+  };
 
   getAbscences = (
     order: string,
@@ -17,7 +55,7 @@ export class AbscenceService {
     page = 1,
     count = 20,
     status: number,
-    absenceType: number
+    absenceType = this.absenceType.value
   ) => {
     let URL = environment.db.ROOT + environment.db.ABSCENCE + '?';
     URL += `page=${page + 1}&count=${count > 0 ? count : 20}`;

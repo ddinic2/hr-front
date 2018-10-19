@@ -22,7 +22,9 @@ export class SickAbsenceFormComponent implements OnInit {
     this.employeeSickAbsenceForm = this._formBuilder.group({
       fromDate: [''],
       toDate: [''],
-      sickLeaveType: ['']
+      sickLeaveType: [''],
+      absenceSubtype:[''],
+      sickLeaveCode: ['']
     });
   }
 
@@ -34,7 +36,8 @@ export class SickAbsenceFormComponent implements OnInit {
 
   saveAbsence() {
     let formValues = this.employeeSickAbsenceForm.value;
-    console.log(JSON.stringify(formValues, null, 2));
+    
+    console.log(JSON.stringify(formValues,null, 2));
   }
 
 }

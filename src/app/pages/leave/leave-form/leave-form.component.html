@@ -20,7 +20,7 @@
       <input type="text" placeholder="Zamena" aria-label="Zamena" matInput formControlName="replaceEmployee"
         [matAutocomplete]="auto">
       <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
-        <mat-option *ngFor="let employee of filteredSubEmployeeOptions | async" [value]="employee">
+        <mat-option *ngFor="let employee of options" [value]="employee">
           {{employee.FirstName}} {{employee.Surname}}
           <!-- {{option.FirstName}} {{option.Surname}} : {{option.OrgUnitName}} -->
         </mat-option>

@@ -1,4 +1,3 @@
-
 import { Component, OnInit, EventEmitter } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Observable } from 'rxjs';
@@ -40,8 +39,8 @@ export class LeaveFormComponent implements OnInit {
     this.employeeAbsenceForm.controls['fromDate'].valueChanges.subscribe(value => {
       if (value && this.employeeAbsenceForm.controls['toDate'].value) {
         this.subsService.getSubstitutesByDate(value, this.employeeAbsenceForm.controls['toDate'].value).subscribe(result => {
-          // this.employeeAbsenceForm.controls['replaceEmployee'].setValue(undefined);
-          this.options =  result.slice(0,4);
+          //this.employeeAbsenceForm.controls['replaceEmployee'].setValue(undefined);
+          this.options =  result;
         });
       }
     });
@@ -49,13 +48,13 @@ export class LeaveFormComponent implements OnInit {
     this.employeeAbsenceForm.controls['toDate'].valueChanges.subscribe(value => {
       if (value && this.employeeAbsenceForm.controls['fromDate'].value) {
         this.subsService.getSubstitutesByDate(this.employeeAbsenceForm.controls['fromDate'].value, value).subscribe((result) => {
-          // this.employeeAbsenceForm.controls['replaceEmployee'].setValue(undefined);
-          this.options = result.slice(0,4);
+          //this.employeeAbsenceForm.controls['replaceEmployee'].setValue(undefined);
+          this.options = result;
         });
       }
     });
 
-    this.filteredSubEmployeeOptions = this.employeeAbsenceForm.controls['replaceEmployee'].valueChanges
+    this.employeeAbsenceForm.controls['replaceEmployee'].valueChanges
       .pipe(startWith<string | Employee>(''),
         map((name: string) => {
           console.log(name);
@@ -67,7 +66,7 @@ export class LeaveFormComponent implements OnInit {
 
   private _filter(name: string): any[] {
     if (this.options !== undefined) {
-      this.options = this.options.slice(0, 4);
+      this.options = this.options;
       return this.options.filter(
         (option: any) =>
           option.FirstName!.toLowerCase().indexOf(name.toLowerCase()) === 0

@@ -11,6 +11,7 @@ import { AbsenceSickLeaveType } from 'src/app/models/absence-sick-leave-type';
 import { zip } from 'rxjs/operators';
 import { AbsenceSubtype } from 'src/app/models/absence-subtype';
 import { SickLeaveCode } from 'src/app/models/sick-leave-code';
+import { AbsenceType } from 'src/app/models/absence-type';
 
 
 const moment = _moment;
@@ -81,6 +82,10 @@ export class SubstituteService {
     const url = environment.db.ROOT + environment.db.SICK_LEAVE_CODE;
     return this.http.get<SickLeaveCode[]>(url);
   }
+  getAbsenceType = () => {
+    const url = environment.db.ROOT + environment.db.ABSENCE_TYPE;
+    return this.http.get<AbsenceType[]>(url);
+  }
 
   getSubstitutesByDate = (dateFrom: Date, dateTo: Date) => {
     debugger
@@ -116,7 +121,7 @@ export class SubstituteService {
       employeeAbsence.numOfdays = dateArray.length;
     });
 
-    this.http.post(url, employeeAbsence).subscribe(data => {
+    this.http.post(url, employeeAbsence ).subscribe(data => {
       this.retPostData = data;
     });
   }

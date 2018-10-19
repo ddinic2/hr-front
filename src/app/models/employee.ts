@@ -1,6 +1,6 @@
 export interface Employee {
     employeeId: number;
     employeeName: string;
-    hrJobTypePosition?: number;
+    jobTypePosition?: number;
     employeeEmail: string;
 }
