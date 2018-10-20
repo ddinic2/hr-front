@@ -4,7 +4,7 @@ import { Component, OnInit } from '@angular/core';
 @Component({
   selector: 'hr-abscences-list',
   templateUrl: './abscences-list.component.html',
-  styleUrls: ['./abscences-list.component.scss']
+  styleUrls: ['./abscences-list.component.scss'],
 })
 export class AbscencesListComponent implements OnInit {
   pipesToApply = [];
@@ -15,7 +15,7 @@ export class AbscencesListComponent implements OnInit {
     'Nesto',
     'HRJobTypePosition',
     'HRProcesStatus',
-    'HREmployeeAbsence'
+    'HREmployeeAbsence',
   ];
 
   displayedColumns = [
@@ -25,34 +25,19 @@ export class AbscencesListComponent implements OnInit {
     'HRAbsenceTypeName',
     'HRJobTypePosition',
     'HRProcesStatus',
-    'HREmployeeAbsence'
+    'HREmployeeAbsence',
   ];
 
   constructor(private service: AbscenceService) {}
 
   ngOnInit() {}
 
-  getRepoIssues = (
-    order: string,
-    direction: string,
-    page = 1,
-    count = 20,
-    status: number,
-    absenceType: number
-  ) =>
-    this.service.getAbscences(
-      order,
-      direction,
-      page,
-      count,
-      status,
-      absenceType
-    );
-
+  getRepoIssues = (order: string, direction: string, page = 1, count = 20, status: number, absenceType: number) =>
+    this.service.getAbscences(order, direction, page, count, status, absenceType);
 
   edit = () => console.log('edit');
   save = () => console.log('save');
   view = () => console.log('view');
-
-  
+  approve = () => console.log('approve');
+  deny = () => console.log('deny');
 }
