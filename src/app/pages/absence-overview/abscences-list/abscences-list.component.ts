@@ -1,7 +1,6 @@
 import { AbscenceService } from './../abscence.service';
-import { Component, OnInit } from '@angular/core';
-import { LeaveComponent }  from 'src/app/pages/leave/leave.component';
-
+import { Component, OnInit, Input } from '@angular/core';
+import { AbsenceProcessStatus } from "src/app/models/enums/absence-process-satatus";
 
 @Component({
   selector: 'hr-abscences-list',
@@ -9,17 +8,21 @@ import { LeaveComponent }  from 'src/app/pages/leave/leave.component';
   styleUrls: ['./abscences-list.component.scss'],
 })
 export class AbscencesListComponent implements OnInit {
-  pipesToApply = [];
-  absenceList: any = [];
-    
+  pipesToApply = [];  
+  data: any 
+  absenceProcessStatus = AbsenceProcessStatus;
+  @Input() absenceType: number;
+  
   columnNameArray = [
     'Ime',
     'Datum od',
     'Datum do',
     'Broj radnih dana',
-    'HRJobTypePosition',
-    'HRProcesStatus',
+    //'HRJobTypePosition',
+    'Status odsustva',
     'HREmployeeAbsence',
+    'Tip odsustva'
+
   ];
 
   displayedColumns = [
@@ -27,15 +30,18 @@ export class AbscencesListComponent implements OnInit {
     'FromDate',
     'ToDate',
     'NumOfdays',
-    'JobTypePosition',
-    'ProcesStatus',
-    'EmployeeAbsence'
+    //'JobTypePosition',
+    'AbsenceProcessStatusName',
+    'EmployeeAbsence',
+    'AbsenceTypeName'
   ];
 
-  constructor(private service: AbscenceService) {}
+  constructor(private service: AbscenceService) {
+  }
 
-  ngOnInit() {}
- 
+  ngOnInit() {
+
+  }
 
   getRepoIssues = (
     order: string,
@@ -43,8 +49,8 @@ export class AbscencesListComponent implements OnInit {
     page = 1,
     count = 20,
     status: number,
-    absenceType: number
-    
+    absenceType: number = this.absenceType
+
   ) =>
     this.service.getAbscences(
       order,
@@ -56,16 +62,20 @@ export class AbscencesListComponent implements OnInit {
     );
 
 
-//Odobravanje odsustva
+  //Odobravanje odsustva
   edit = (item) => {
-    this.service.changeAbsenceStatus(item.EmployeeAbsence, item.AbsenceProcessStatus = 2);
-  }; 
+    this.service.changeAbsenceStatus(item.EmployeeAbsence, item.AbsenceProcessStatus = this.absenceProcessStatus.Approved).subscribe(res=> {
+      item.AbsenceProcessStatusName =  res;      
+    });
+  };
   //Ponistavanje odsustva
-  save =  (item) => {
-    this.service.changeAbsenceStatus(item.EmployeeAbsence, item.AbsenceProcessStatus = 3);
+  save = (item) => {
+    this.service.changeAbsenceStatus(item.EmployeeAbsence, item.AbsenceProcessStatus = this.absenceProcessStatus.Deny).subscribe(res => {
+      item.AbsenceProcessStatusName = res;
+    });
   };
   view = (item) =>
-  console.log('view');
+    console.log('view');
 
-    
+
 }
