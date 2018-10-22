@@ -1,6 +1,8 @@
 import { AbscenceService } from './../abscence.service';
 import { Component, OnInit, Input } from '@angular/core';
 import { AbsenceProcessStatus } from "src/app/models/enums/absence-process-satatus";
+import { UpperCasePipe } from '@angular/common';
+import { RenderDebugInfo } from '@angular/core/src/render/api';
 
 @Component({
   selector: 'hr-abscences-list',
@@ -12,6 +14,7 @@ export class AbscencesListComponent implements OnInit {
   data: any 
   absenceProcessStatus = AbsenceProcessStatus;
   @Input() absenceType: number;
+  @Input() absProcessStatus: number;
   
   columnNameArray = [
     'Ime',
@@ -20,8 +23,8 @@ export class AbscencesListComponent implements OnInit {
     'Broj radnih dana',
     //'HRJobTypePosition',
     'Status odsustva',
-    'HREmployeeAbsence',
-    'Tip odsustva'
+    'Tip odsustva',
+    'HREmployeeAbsence'
 
   ];
 
@@ -32,8 +35,8 @@ export class AbscencesListComponent implements OnInit {
     'NumOfdays',
     //'JobTypePosition',
     'AbsenceProcessStatusName',
-    'EmployeeAbsence',
-    'AbsenceTypeName'
+    'AbsenceTypeName',
+    'EmployeeAbsence'
   ];
 
   constructor(private service: AbscenceService) {
@@ -48,7 +51,7 @@ export class AbscencesListComponent implements OnInit {
     direction: string,
     page = 1,
     count = 20,
-    status: number,
+    status: number = this.absProcessStatus,
     absenceType: number = this.absenceType
 
   ) =>
@@ -63,13 +66,13 @@ export class AbscencesListComponent implements OnInit {
 
 
   //Odobravanje odsustva
-  edit = (item) => {
+  approve = (item) => {
     this.service.changeAbsenceStatus(item.EmployeeAbsence, item.AbsenceProcessStatus = this.absenceProcessStatus.Approved).subscribe(res=> {
-      item.AbsenceProcessStatusName =  res;      
+      item.AbsenceProcessStatusName =  res;          
     });
   };
   //Ponistavanje odsustva
-  save = (item) => {
+  deny = (item) => {
     this.service.changeAbsenceStatus(item.EmployeeAbsence, item.AbsenceProcessStatus = this.absenceProcessStatus.Deny).subscribe(res => {
       item.AbsenceProcessStatusName = res;
     });

@@ -21,6 +21,12 @@ export class LeaveFormComponent implements OnInit {
   holidayDays: any;
   isDisabled = false;
 
+  disableWeekdays = (d: Date): boolean => {
+    const day = d.getDay();
+    return day !== 0 && day !== 6;
+  }
+  
+
   constructor(private _formBuilder: FormBuilder, public subsService: SubstituteService) { 
   }
 

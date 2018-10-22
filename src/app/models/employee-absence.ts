@@ -11,4 +11,5 @@ export interface EmployeeAbsence {
     absenceTypeName: string;
     //employee: Employee;
     replacementEmployee: Employee;
+    exceptionAbsence: boolean;
 }

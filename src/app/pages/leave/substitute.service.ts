@@ -1,7 +1,7 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from '../../../environments/environment';
-import { Observable, BehaviorSubject, of } from 'rxjs';
+import { Observable, BehaviorSubject, of, from } from 'rxjs';
 import * as _moment from 'moment';
 import business from 'moment-business';
 import * as _moment1 from 'moment-weekday-calc';
@@ -28,7 +28,7 @@ export class SubstituteService {
   holidayDateslist = [];//['Wed Oct 3 2018', 'Fri Oct 12 2018', 'Mon Oct 15 2018', 'Wed Oct 17 2018', 'Fri Oct 19 2018'];
   holidayObservable: Observable<string[]>;
   canSave = false;
-
+ 
   extractData(res: Response) {
     const body = res.json();
     return body || {};
@@ -103,15 +103,23 @@ export class SubstituteService {
     // .subscribe(res => this.substitutesList.next(res));
   }
 
-  public postAbsence(employeeAbsence: EmployeeAbsence) {
-
+  public postAbsence(employeeAbsence: EmployeeAbsence) {  
     const url = environment.db.ROOT + environment.db.ABSCENCE;
     const startDate = moment(employeeAbsence.fromDate);
     const endDate = moment(employeeAbsence.toDate);
+    const dateNow =  new  Date().toDateString().substring(0,15);
+    
+    const dateException = this.getExceptionDate(startDate);
+    dateException.forEach(function (item) {
+      const index = dateNow.indexOf(item);
+      if(index !== -1) {
+        employeeAbsence.exceptionAbsence = true;
+      }
+
+    });
+ 
 
     const dateArray = this.getDateArray(startDate, endDate);
-
-
     this.holidayDateslist.forEach(function (item) {
       const index = dateArray.indexOf(item.Date);
       if (index !== -1) {
@@ -130,11 +138,33 @@ export class SubstituteService {
     const startDate = new Date(start);
     while (startDate <= end) {
       if (startDate.getDay() !== 0 && startDate.getDay() !== 6) {
-        dateArray.push(new Date(startDate).toISOString().substring(0, 10));
+        dateArray.push(new Date(startDate).toDateString().substring(0, 15));
       }
       startDate.setDate(startDate.getDate() + 1);
     }
     return dateArray;
   };
+
+  getExceptionDate = function(start) {
+    var i = 0;
+    const dateExArray = new Array();
+    const startDate = new Date(start)
+    
+      dateExArray.push(new Date(startDate).toDateString().substring(0, 15));
+      startDate.setDate(startDate.getDate() - 1);
+      while(dateExArray.length <= 2){
+        if(startDate.getDay() !== 0 && startDate.getDay() !== 6){
+          dateExArray.push(new Date(startDate).toDateString().substring(0, 15));
+        }
+        startDate.setDate(startDate.getDate() - 1);
+      }
+      
+
+      debugger; 
+    return dateExArray;
+    
+  };
+
+  
 
 }
