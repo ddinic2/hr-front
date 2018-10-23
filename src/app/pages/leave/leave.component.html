@@ -2,7 +2,7 @@
     <mat-tab label="Godisnji odmori">
         <hr-leave-form></hr-leave-form>
         <h4>Odobravanje odsustva</h4>
-        <hr-abscences-list  [absenceType]="absenceTypes.Absence" [absProcessStatus]="absenceProcessStatus.Created"></hr-abscences-list>        
+        <hr-abscences-list  [absenceType]="absenceTypes.Absence" [absProcessStatus]="absenceProcessStatus.Created" [style.color]="red"></hr-abscences-list>        
     </mat-tab>
     <mat-tab label="Placeno odsustvo">
         <hr-paid-absence-form></hr-paid-absence-form>
@@ -16,7 +16,7 @@
     </mat-tab>    
     <mat-tab label ="Radne liste">
         <hr-worksheets-form></hr-worksheets-form>
-        <h4>Odobravanje odsustva</h4>
+        <h4>Radne liste</h4>
         <hr-abscences-list  [absenceType]="absenceTypes.Worksheet" [absProcessStatus]="absenceProcessStatus.Created"></hr-abscences-list>
     </mat-tab>
 </mat-tab-group>

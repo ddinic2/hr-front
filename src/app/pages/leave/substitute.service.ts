@@ -87,6 +87,16 @@ export class SubstituteService {
     return this.http.get<AbsenceType[]>(url);
   }
 
+  getEmployee = () => {
+    const url = environment.db.ROOT + environment.db.EMPLOYEE;
+    return this.http.get<Employee[]>(url);
+  }
+
+  getWorksheetsYear = () => {
+    const url = environment.db.ROOT + environment.db.WORKSHEETS + environment.db.WORKSHEETS_YEAR;
+    return this.http.get<number[]>(url);
+  }
+
   getSubstitutesByDate = (dateFrom: Date, dateTo: Date) => {
     const startDate = moment(dateFrom);
     const endDate = moment(dateTo);

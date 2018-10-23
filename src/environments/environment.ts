@@ -14,7 +14,10 @@ export const environment = {
     ABSENCE_SICK_LEAVE_TYPE: '/absence-sick-leave-type',
     ABSENCE_SUBTYPE:'/absence-subtype' ,
     SICK_LEAVE_CODE: '/sick-leave-code',
-    CHANGE_ABSENCE_STATUS: '/change-absence-status'
+    CHANGE_ABSENCE_STATUS: '/change-absence-status',
+    EMPLOYEE: 'employee-data',
+    WORKSHEETS: 'worksheets',
+    WORKSHEETS_YEAR: '/worksheets-year'
   }
 };
 
