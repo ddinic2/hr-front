@@ -12,6 +12,7 @@ import { zip } from 'rxjs/operators';
 import { AbsenceSubtype } from 'src/app/models/absence-subtype';
 import { SickLeaveCode } from 'src/app/models/sick-leave-code';
 import { AbsenceType } from 'src/app/models/absence-type';
+import {MatSnackBar} from '@angular/material';
 
 
 const moment = _moment;
@@ -39,7 +40,7 @@ export class SubstituteService {
   }
 
 
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient, public snackBar: MatSnackBar) {
     // this.getSubstitutes('');
     this.holidayObservable = this.getHolidayDays();
     this.holidayObservable.subscribe(res => {
@@ -140,6 +141,9 @@ export class SubstituteService {
 
     this.http.post(url, employeeAbsence ).subscribe(data => {
       this.retPostData = data;
+      this.snackBar.open(this.retPostData, 'OK', {
+        duration: 5000,
+      });
     });
   }
 
@@ -169,8 +173,6 @@ export class SubstituteService {
         startDate.setDate(startDate.getDate() - 1);
       }
       
-
-      debugger; 
     return dateExArray;
     
   };

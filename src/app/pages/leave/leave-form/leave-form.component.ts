@@ -5,8 +5,8 @@ import { map, startWith } from 'rxjs/operators';
 import { SubstituteService } from '../substitute.service';
 import { EmployeeAbsence } from 'src/app/models/employee-absence';
 import { Employee } from 'src/app/models/employee';
-import { MatTabChangeEvent } from '@angular/material';
 import { AbsenceSickLeaveType } from 'src/app/models/absence-sick-leave-type';
+
 
 
 @Component({
@@ -88,11 +88,11 @@ export class LeaveFormComponent implements OnInit {
     return typeof (employee) === 'string' ? employee : `${employee.FirstName} ${employee.Surname}`;
   }
 
-
+   
   saveAbsence() {
     const formResult: EmployeeAbsence = this.employeeAbsenceForm.value;
     console.log(JSON.stringify(formResult, null, 2));
-    this.subsService.postAbsence(formResult);
+    this.subsService.postAbsence(formResult);    
   }
 
 }
