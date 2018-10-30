@@ -98,7 +98,7 @@ export class SubstituteService {
     return this.http.get<number[]>(url);
   }
 
-  getSubstitutesByDate = (dateFrom: Date, dateTo: Date) => {
+  getSubstitutesByDate = (dateFrom: Date, dateTo: Date, employeeId: number) => {
     const startDate = moment(dateFrom);
     const endDate = moment(dateTo);
 
@@ -107,6 +107,7 @@ export class SubstituteService {
       params: new HttpParams()
         .set('DateFrom', startDate.format(this.dateFormat))
         .set('DateTo', endDate.format(this.dateFormat))
+        .set('EmployeeId', employeeId.toString())
     };
     const url = environment.db.ROOT + environment.db.ABSCENCE + environment.db.EMPLOYEE_SUBSITUTE;
     console.log(obj);

@@ -1,8 +1,16 @@
 import { AbscenceService } from './../abscence.service';
 import { Component, OnInit, Input } from '@angular/core';
 import { AbsenceProcessStatus } from "src/app/models/enums/absence-process-satatus";
+import { BehaviorSubject, Observable } from 'rxjs';
 import { UpperCasePipe } from '@angular/common';
 import { RenderDebugInfo } from '@angular/core/src/render/api';
+import { Employee } from 'src/app/models/employee';
+import { getTestBed } from '@angular/core/testing';
+import { TargetLocator } from 'selenium-webdriver';
+import { Options } from 'selenium-webdriver/chrome';
+import { LoginService } from 'src/app/shared/shared/login.service';
+
+
 
 @Component({
   selector: 'hr-abscences-list',
@@ -13,9 +21,11 @@ export class AbscencesListComponent implements OnInit {
   pipesToApply = [];  
   data: any 
   absenceProcessStatus = AbsenceProcessStatus;
+  loggedUser: any;
+   
   @Input() absenceType: number;
   @Input() absProcessStatus: number;
-  
+    
   columnNameArray = [
     'Ime',
     'Datum od',
@@ -39,21 +49,23 @@ export class AbscencesListComponent implements OnInit {
     'EmployeeAbsence'
   ];
 
-  constructor(private service: AbscenceService) {
+  constructor(private service: AbscenceService, private loginService: LoginService) {
+   
   }
+  
 
-  ngOnInit() {
-
-  }
-
-  getRepoIssues = (
+  ngOnInit() {    
+    this.loggedUser =  this.loginService.getLoggedInUser();
+  }  
+  
+    getRepoIssues = (
     order: string,
     direction: string,
     page = 1,
     count = 20,
     status: number = this.absProcessStatus,
     absenceType: number = this.absenceType
-
+    
   ) =>
     this.service.getAbscences(
       order,
@@ -77,8 +89,12 @@ export class AbscencesListComponent implements OnInit {
       item.AbsenceProcessStatusName = res;
     });
   };
+  edit = (item) =>
+  console.log('edit');
+  save = (item) =>
+  console.log('save');
   view = (item) =>
-    console.log('view');
+  console.log('view');
 
 
 }

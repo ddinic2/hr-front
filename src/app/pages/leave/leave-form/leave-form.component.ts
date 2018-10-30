@@ -1,12 +1,13 @@
-import { Component, OnInit, EventEmitter } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import { SubstituteService } from '../substitute.service';
 import { EmployeeAbsence } from 'src/app/models/employee-absence';
 import { Employee } from 'src/app/models/employee';
-import { AbsenceSickLeaveType } from 'src/app/models/absence-sick-leave-type';
-
+import { LoginService } from 'src/app/shared/shared/login.service';
+import { AbsenceTypes } from "src/app/models/enums/absence-type";
+import { AbsenceProcessStatus } from 'src/app/models/enums/absence-process-satatus';
 
 
 @Component({
@@ -20,6 +21,10 @@ export class LeaveFormComponent implements OnInit {
   options: Employee[] = [];
   holidayDays: any;
   isDisabled = false;
+  loggedUser: any;
+  absenceTypes = AbsenceTypes;
+  absenceProcessStatus = AbsenceProcessStatus;
+
 
   disableWeekdays = (d: Date): boolean => {
     const day = d.getDay();
@@ -27,7 +32,7 @@ export class LeaveFormComponent implements OnInit {
   }
   
 
-  constructor(private _formBuilder: FormBuilder, public subsService: SubstituteService) { 
+  constructor(private _formBuilder: FormBuilder, public subsService: SubstituteService, public loginService: LoginService) { 
   }
 
   ngOnInit() {
@@ -35,16 +40,20 @@ export class LeaveFormComponent implements OnInit {
       fromDate: ['', Validators.required],
       toDate: ['', Validators.required],
       replaceEmployee: [''],
-      absenceType: ['', Validators.required],
+      employeeId:[''],
+      employeeEmail: [''],      
       sickType: ['', Validators.required],
-      sickLeaveType: ['', Validators.required]
+      sickLeaveType: ['', Validators.required],
+      absenceType: this.absenceTypes.Absence,
+      absenceProcessStatus: this.absenceProcessStatus.Created     
+      
     });
 
-    // this.subsService.getRelevantSubstitutes().subscribe(result => this.options = result);
-
+    this.loggedUser =  this.loginService.getLoggedInUser();
+    
     this.employeeAbsenceForm.controls['fromDate'].valueChanges.subscribe(value => {
       if (value && this.employeeAbsenceForm.controls['toDate'].value) {
-        this.subsService.getSubstitutesByDate(value, this.employeeAbsenceForm.controls['toDate'].value).subscribe(result => {
+        this.subsService.getSubstitutesByDate(value, this.employeeAbsenceForm.controls['toDate'].value, this.loggedUser.value.data.employeeId).subscribe(result => {
           //this.employeeAbsenceForm.controls['replaceEmployee'].setValue(undefined);
           this.options =  result;
         });
@@ -53,7 +62,7 @@ export class LeaveFormComponent implements OnInit {
 
     this.employeeAbsenceForm.controls['toDate'].valueChanges.subscribe(value => {
       if (value && this.employeeAbsenceForm.controls['fromDate'].value) {
-        this.subsService.getSubstitutesByDate(this.employeeAbsenceForm.controls['fromDate'].value, value).subscribe((result) => {
+        this.subsService.getSubstitutesByDate(this.employeeAbsenceForm.controls['fromDate'].value, value, this.loggedUser.value.data.employeeId).subscribe((result) => {
           //this.employeeAbsenceForm.controls['replaceEmployee'].setValue(undefined);
           this.options = result;
         });
@@ -91,6 +100,8 @@ export class LeaveFormComponent implements OnInit {
    
   saveAbsence() {
     const formResult: EmployeeAbsence = this.employeeAbsenceForm.value;
+    formResult.employeeId = this.loggedUser.value.data.employeeId;
+    formResult.employeeEmail = this.loggedUser.value.data.employeeEmail;
     console.log(JSON.stringify(formResult, null, 2));
     this.subsService.postAbsence(formResult);    
   }

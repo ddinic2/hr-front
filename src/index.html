@@ -1,5 +1,6 @@
 <!doctype html>
 <html lang="en">
+
 <head>
   <meta charset="utf-8">
   <title>HrOdsustva</title>
@@ -8,7 +9,25 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="icon" type="image/x-icon" href="favicon.ico">
 </head>
+
 <body>
   <hr-root></hr-root>
 </body>
+
 </html>
+<script>
+  window.onload = function () {
+
+    console.log('TESTIRANJE');
+    //const eventdata = 'test';
+    window.addEventListener("message", function (event) {
+      console.log('Usao u win');
+      console.log(event.data);
+      //const objData =  (JSON.parse(event.data));
+      const objData = (JSON.parse('{"data":{"username":"djvitorovic","employeeId":"2","roleId":"4"}}'));
+      localStorage.setItem('loggedUserEmployee', JSON.stringify(objData))
+    });
+
+  }
+
+</script>

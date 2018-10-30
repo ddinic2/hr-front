@@ -1,6 +1,7 @@
 import { Employee } from './employee';
 
 export interface EmployeeAbsence {
+    employeeId: number,
     fromDate: Date;
     toDate: Date;
     numOfdays: number;
@@ -12,4 +13,5 @@ export interface EmployeeAbsence {
     //employee: Employee;
     replacementEmployee: Employee;
     exceptionAbsence: boolean;
+    employeeEmail: string,
 }
