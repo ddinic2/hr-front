@@ -5,12 +5,12 @@
   align-content: stretch;
   .sidebar {
     position: fixed;
-    top: 0;
+    top: 40px;
     left: 0;
     width: 10%;
     height: 100vh;
     z-index: 999;
-    background: rgb(70, 70, 75);
+    //background: rgb(211, 215, 241);
   }
   .main-content {
     margin-left: 9%;
@@ -21,8 +21,8 @@
       margin-left:-20;
       margin: 0;
       width: 100%;
-      height: 30px;
-      background: rgb(70, 70, 75);
+      height: 30px;     
+      //background: rgb(211, 215, 241);
     }
   }
 }

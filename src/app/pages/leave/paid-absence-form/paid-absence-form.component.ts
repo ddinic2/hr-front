@@ -25,6 +25,7 @@ export class PaidAbsenceFormComponent implements OnInit {
     this.employeePaidAbsenceForm = this._fromBuilder.group ({
       fromDate: [''],
       toDate: [''],
+      absenceType: [''],
       employeeId:[''],
       employeeEmail: [''],
       absenceProcessStatus: this.absenceProcessStatus.Created    

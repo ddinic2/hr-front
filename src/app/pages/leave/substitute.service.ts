@@ -13,6 +13,7 @@ import { AbsenceSubtype } from 'src/app/models/absence-subtype';
 import { SickLeaveCode } from 'src/app/models/sick-leave-code';
 import { AbsenceType } from 'src/app/models/absence-type';
 import {MatSnackBar} from '@angular/material';
+import { Worksheets } from 'src/app/models/worksheets';
 
 
 const moment = _moment;
@@ -93,14 +94,40 @@ export class SubstituteService {
     return this.http.get<Employee[]>(url);
   }
 
-  getWorksheetsYear = () => {
+  getWorksheetsMonths = () => {
+    const url = environment.db.ROOT + environment.db.WORKSHEETS + environment.db.WORKSHEETS_MONTH;
+    return this.http.get<number[]>(url);
+  }
+  getWorksheetsYears = () => {
     const url = environment.db.ROOT + environment.db.WORKSHEETS + environment.db.WORKSHEETS_YEAR;
     return this.http.get<number[]>(url);
+  }
+  getPresenceDetailType = () => {
+    const url = environment.db.ROOT + environment.db.WORKSHEETS + environment.db.PRESENCE_DETAIL_TYPE;
+    return this.http.get<number[]>(url);
+  }
+  
+  getOrgUnit = () => {
+    const url = environment.db.ROOT + environment.db.ORG_UNIT;
+    return this.http.get<any[]>(url);
+  }
+
+  getEmployeePresenceList = (formResult, employeeId: number ) => {
+    const obj = {
+      params: new HttpParams()
+      .set('Month', formResult.month.toString())
+      .set('Year', formResult.year.toString())
+      .set('OrgUnitId', formResult.orgUnit.OrgUnitId.toString())
+      .set('EmployeeId', employeeId.toString())
+    };
+    const url = environment.db.ROOT + environment.db.WORKSHEETS;
+    return this.http.get<any[]>(url, obj);
   }
 
   getSubstitutesByDate = (dateFrom: Date, dateTo: Date, employeeId: number) => {
     const startDate = moment(dateFrom);
     const endDate = moment(dateTo);
+    
 
 
     const obj = {

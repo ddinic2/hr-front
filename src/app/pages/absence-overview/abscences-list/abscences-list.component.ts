@@ -1,13 +1,6 @@
 import { AbscenceService } from './../abscence.service';
 import { Component, OnInit, Input } from '@angular/core';
 import { AbsenceProcessStatus } from "src/app/models/enums/absence-process-satatus";
-import { BehaviorSubject, Observable } from 'rxjs';
-import { UpperCasePipe } from '@angular/common';
-import { RenderDebugInfo } from '@angular/core/src/render/api';
-import { Employee } from 'src/app/models/employee';
-import { getTestBed } from '@angular/core/testing';
-import { TargetLocator } from 'selenium-webdriver';
-import { Options } from 'selenium-webdriver/chrome';
 import { LoginService } from 'src/app/shared/shared/login.service';
 
 

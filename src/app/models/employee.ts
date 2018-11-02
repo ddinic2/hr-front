@@ -6,6 +6,6 @@ export interface Employee {
     orgUnitName:string;
     jobTypePosition?: number;
     employeeEmail: string;
-    roleId: number,
+    roleId: number;
     
 }

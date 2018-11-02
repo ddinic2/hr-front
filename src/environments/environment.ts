@@ -17,7 +17,10 @@ export const environment = {
     CHANGE_ABSENCE_STATUS: '/change-absence-status',
     EMPLOYEE: 'employee-data',
     WORKSHEETS: 'worksheets',
-    WORKSHEETS_YEAR: '/worksheets-year'
+    WORKSHEETS_YEAR: '/worksheets-year',
+    WORKSHEETS_MONTH: '/worksheets-month',
+    ORG_UNIT: '/org-unit',
+    PRESENCE_DETAIL_TYPE: '/presence-detail-type'
   }
 };
 

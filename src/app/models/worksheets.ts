@@ -1,0 +1,38 @@
+export interface Worksheets{
+    month: number;
+    year: number;
+    orgUnitId: number;
+    orgUnitName: string;
+    employeeId: number;
+    // day1Status: number;
+    // day2Status: number;
+    // day3Status: number;
+    // day4Status: number;
+    // day5Status: number;
+    // day6Status: number;
+    // day7Status: number;
+    // day8Status: number;
+    // day9Status: number;   
+    // day10Status: number;
+    // day11Status: number;
+    // day12Status: number;
+    // day13Status: number;
+    // day14Status: number;
+    // day15Status: number;
+    // day16Status: number;
+    // day17Status: number;
+    // day18Status: number;
+    // day19Status: number;
+    // day20Status: number;
+    // day21Status: number;
+    // day22Status: number;
+    // day23Status: number;
+    // day24Status: number;
+    // day25Status: number;
+    // day26Status: number;
+    // day27Status: number;
+    // day28Status: number;
+    // day29Status: number;
+    // day30Status: number;
+    // day31Status: number;
+}
