@@ -28,9 +28,7 @@ export class WorksheetsFormComponent implements OnInit {
   employeePresenceList: any;
   selectedValue: string;
   worksheetsBehaviorSub = new BehaviorSubject<Worksheets>(null);
-
   
-
   
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
@@ -94,10 +92,12 @@ export class WorksheetsFormComponent implements OnInit {
   setItem = (item,index,event) => {
     console.log(item);
     console.log(event);
+    console.log(index);
     item.DayStatus[index] = event.value;
     console.log(item);
+    
   }
-
+  
   saveWorksheets = () => {
     const formResult: Worksheets = this.worksheetsForm.value;
     formResult.employeeId = this.loggedUser.value.data.employeeId;

@@ -43,7 +43,7 @@
         <td *ngFor="let date of item.DayStatus; let i=index">
           <div class="dates-row">
             <mat-form-field>
-              <mat-select (selectionChange)="setItem(item,i,$event)"  formControlName="absenceTypeControl">
+              <mat-select (selectionChange)="setItem(item,i,$event)" [value]="date">
                 <mat-option *ngFor="let selectOption of presenceDetailTypeOptions" [value]="selectOption.Id"> 
                   {{ selectOption.Code }}
                 </mat-option>
