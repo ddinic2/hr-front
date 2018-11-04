@@ -1,15 +1,16 @@
 td{
     max-width: 50px;
+    overflow: hidden;
     //mat-form-field{
         //display:hidden;
-    //}
-    //.mat-select{
-        //max-width: 50px;
-        //display: hidden;
     //}
     .dates-row{
         overflow: hidden;
         font-size: 12px;
+    }
+    .mat-form-field{
+        width: 45px;
+        overflow: hidden;
     }
   
 }

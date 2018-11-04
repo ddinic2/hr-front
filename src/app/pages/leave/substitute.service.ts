@@ -13,7 +13,8 @@ import { AbsenceSubtype } from 'src/app/models/absence-subtype';
 import { SickLeaveCode } from 'src/app/models/sick-leave-code';
 import { AbsenceType } from 'src/app/models/absence-type';
 import {MatSnackBar} from '@angular/material';
-import { Worksheets } from 'src/app/models/worksheets';
+import { EmployeePresenceList } from 'src/app/models/employee-presence-list';
+import { Headers, RequestOptions } from '@angular/http';
 
 
 const moment = _moment;
@@ -127,8 +128,6 @@ export class SubstituteService {
   getSubstitutesByDate = (dateFrom: Date, dateTo: Date, employeeId: number) => {
     const startDate = moment(dateFrom);
     const endDate = moment(dateTo);
-    
-
 
     const obj = {
       params: new HttpParams()
@@ -167,7 +166,7 @@ export class SubstituteService {
       employeeAbsence.numOfdays = dateArray.length;
     });
 
-    this.http.post(url, employeeAbsence ).subscribe(data => {
+    this.http.post(url, employeeAbsence).subscribe(data => {
       this.retPostData = data;
       this.snackBar.open(this.retPostData, 'OK', {
         duration: 5000,
@@ -204,6 +203,21 @@ export class SubstituteService {
     return dateExArray;
     
   };
+
+  putWorksheets(employeePresenceList: EmployeePresenceList, loginUserId: number) {
+      const url = environment.db.ROOT + environment.db.WORKSHEETS;
+      const obj = { 
+        params: new HttpParams() 
+        .set('LoginUserId', employeePresenceList.loginUserId.toString())
+      };
+
+      this.http.put(url,employeePresenceList, obj).subscribe(data => {
+        this.retPostData = data;
+        this.snackBar.open(this.retPostData, 'OK', {
+          duration: 5000,
+        });
+      });
+  }
 
   
 

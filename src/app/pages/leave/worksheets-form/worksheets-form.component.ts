@@ -1,12 +1,10 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { SubstituteService } from '../substitute.service';
-import { Employee} from 'src/app/models/employee';
-import {MatPaginator, MatSort, MatTableDataSource} from '@angular/material';
 import { AbsenceType } from 'src/app/models/absence-type';
 import { LoginService } from 'src/app/shared/shared/login.service';
 import { Worksheets} from 'src/app/models/worksheets';
-import { BehaviorSubject } from 'rxjs';
+import { EmployeePresenceList } from 'src/app/models/employee-presence-list';
 
 
 @Component({
@@ -15,35 +13,25 @@ import { BehaviorSubject } from 'rxjs';
   styleUrls: ['./worksheets-form.component.scss']
 })
 export class WorksheetsFormComponent implements OnInit {
-  worksheetsForm: FormGroup;
-  orgUnitOptions: any;
+  worksheetsForm: FormGroup;  
   worksheetsMonthsOptions: number[] = [];
   worksheetsYearsOptions: number[] = [];
-  displayedColumns: string[] = [];
-  dateArray: number[] = [31];
+  orgUnitOptions: any;
   dateList:number[]= [];
   absenceTypeOptions: AbsenceType[] = [];
   presenceDetailTypeOptions: any;
   loggedUser: any;
   employeePresenceList: any;
-  selectedValue: string;
-  worksheetsBehaviorSub = new BehaviorSubject<Worksheets>(null);
-  
-  
-  @ViewChild(MatPaginator) paginator: MatPaginator;
-  @ViewChild(MatSort) sort: MatSort;
+  loginUserId: number;
 
-  
+   
 
   constructor(private _fromBuilder: FormBuilder, public subService: SubstituteService, public loginService: LoginService) {
     this.worksheetsForm = this._fromBuilder.group({
       orgUnit: [''],
       year: [''],
       month: [''],
-      absenceTypeControl: [''] ,
-      empName:[''],
-      firstName:['']
-
+      absenceTypeControl: ['']       
     });
    
    }
@@ -55,7 +43,7 @@ export class WorksheetsFormComponent implements OnInit {
     this.subService.getWorksheetsMonths().subscribe (res=> {this.worksheetsMonthsOptions = res});
     this.subService.getAbsenceType().subscribe (res => {this.absenceTypeOptions = res})
     this.subService.getPresenceDetailType().subscribe(res => {this.presenceDetailTypeOptions = res});
-    this.dateList =  this.dateArrayListDetails(this.dateArray);   
+    this.dateList =  this.dateArrayListDetails(31);   
     this.worksheetsForm.get('month').setValue(1);
     this.worksheetsForm.get('year').setValue(2018);
     
@@ -65,17 +53,12 @@ export class WorksheetsFormComponent implements OnInit {
     return typeof (orgUnit) === 'string' ? orgUnit : `${orgUnit.Name}`;
   }
 
-  displayFn1(orgUnit: any): string | undefined {
-    return typeof (orgUnit) === 'string' ? orgUnit : `${orgUnit.Name}`;
-  }
-
- 
-  dateArrayListDetails = function (dateArray)
+  
+  dateArrayListDetails = function (dates)
   {
-    for(var i = 1; i <= dateArray; i++) { 
+    for(var i = 1; i <= dates; i++) { 
      this.dateList.push(i);
     };
-    this.displayedColumns = this.dateList;
     return this.dateList;
   }
 
@@ -83,33 +66,26 @@ export class WorksheetsFormComponent implements OnInit {
     const formResult = this.worksheetsForm.value;
     this.subService.getEmployeePresenceList(formResult, this.loggedUser.value.data.employeeId)
     .subscribe(res => { this.employeePresenceList = res });
-    //this.selectedValue = this.employeePresenceList[0].Day2Status;
-    //console.log("Prikazi listu" + this.employeePresenceList);
-    //console.log('Datum prikazi: ' + this.selectedValue);
-
+    
   }
 
-  setItem = (item,index,event) => {
+  selectedItem = (item,index,event) => {
     console.log(item);
     console.log(event);
     console.log(index);
-    item.DayStatus[index] = event.value;
+    item.DayStatus[index] = event;
     console.log(item);
     
   }
   
   saveWorksheets = () => {
-    const formResult: Worksheets = this.worksheetsForm.value;
-    formResult.employeeId = this.loggedUser.value.data.employeeId;
-    console.log(this.employeePresenceList);
+    this.loginUserId = this.loggedUser.value.data.employeeId;
+    this.employeePresenceList.loginUserId = this.loggedUser.value.data.employeeId;
+    const obj: EmployeePresenceList = this.employeePresenceList;
+    this.subService.putWorksheets(obj, this.loginUserId);
 
   }
 
-  // onChange(event: any){
-  //   this.worksheetsBehaviorSub.next(this.worksheetsForm.value)
-  //   let value = event.target;
-  //     }
-
-      
+    
   
 }
