@@ -11,4 +11,5 @@ export interface EmployeePresenceList{
     employeePresenceRegion: number;
     presenceListStatus: number,
     lockPresenceList: boolean;
+    disabled: boolean;
 }

@@ -40,10 +40,10 @@
       <th *ngFor="let item of dateList">{{item}}</th>
       <tr *ngFor="let item of employeePresenceList">
         <td>{{ item.EmployeeFullName }} </td>
-        <td *ngFor="let date of item.DayStatus; let i=index">
+        <td *ngFor="let date of item.DayStatus; let i=index" >
           <div class="dates-row">
             <mat-form-field>
-              <mat-select (selectionChange)="selectedItem(item,i,$event.value)" [value]="date">
+              <mat-select (selectionChange)="selectedItem(item,i,$event.value)" [value]="date" disabled="item.disabled">
                 <mat-option *ngFor="let selectOption of presenceDetailTypeOptions" [value]="selectOption.Id"> 
                   {{ selectOption.Code }}
                 </mat-option>
