@@ -5,6 +5,8 @@ import { AbsenceType } from 'src/app/models/absence-type';
 import { LoginService } from 'src/app/shared/shared/login.service';
 import { Worksheets} from 'src/app/models/worksheets';
 import { EmployeePresenceList } from 'src/app/models/employee-presence-list';
+import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material';
+import { WorksheetsPresenceStatus} from 'src/app/models/enums/worksheets-prsence-status';
 
 
 @Component({
@@ -23,10 +25,11 @@ export class WorksheetsFormComponent implements OnInit {
   loggedUser: any;
   employeePresenceList: any;
   loginUserId: number;
+  presenceListStatus: any;
+  checkedRes: boolean;
+  
 
-   
-
-  constructor(private _fromBuilder: FormBuilder, public subService: SubstituteService, public loginService: LoginService) {
+  constructor(private _fromBuilder: FormBuilder, public subService: SubstituteService, public loginService: LoginService, public dialog: MatDialog) {
     this.worksheetsForm = this._fromBuilder.group({
       orgUnit: [''],
       year: [''],
@@ -44,9 +47,9 @@ export class WorksheetsFormComponent implements OnInit {
     this.subService.getAbsenceType().subscribe (res => {this.absenceTypeOptions = res})
     this.subService.getPresenceDetailType().subscribe(res => {this.presenceDetailTypeOptions = res});
     this.dateList =  this.dateArrayListDetails(31);   
-    this.worksheetsForm.get('month').setValue(1);
-    this.worksheetsForm.get('year').setValue(2018);
-    
+    //this.worksheetsForm.get('month').setValue(1);
+    //this.worksheetsForm.get('year').setValue(2018);
+        
   }
 
   displayFn(orgUnit: any): string | undefined {
@@ -81,11 +84,45 @@ export class WorksheetsFormComponent implements OnInit {
   saveWorksheets = () => {
     this.loginUserId = this.loggedUser.value.data.employeeId;
     this.employeePresenceList.loginUserId = this.loggedUser.value.data.employeeId;
-    const obj: EmployeePresenceList = this.employeePresenceList;
-    this.subService.putWorksheets(obj, this.loginUserId);
-
-  }
-
+    const empPresenceList: EmployeePresenceList = this.employeePresenceList;
+    this.subService.checkedPresenceStatus(empPresenceList);
+    if(empPresenceList.lockPresenceList)
+    {
+      
+        const dialogRef = this.dialog.open(DialogOverviewWorksheets, {
+          width: '250px'
+        });
     
+        dialogRef.afterClosed().subscribe(result => {
+          if(result)
+          {
+            empPresenceList.presenceListStatus = WorksheetsPresenceStatus.Lock;
+            this.subService.putWorksheets(empPresenceList);
+          }
+                    
+        });
+    }
+    else
+    {
+      this.subService.putWorksheets(empPresenceList);
+    }   
+
+  } 
   
 }
+
+@Component({
+  selector: 'dialog-overview-worksheets',
+  templateUrl: 'dialog-overview-worksheets.html',
+})
+export class DialogOverviewWorksheets {
+
+  constructor(
+    public dialogRef: MatDialogRef<DialogOverviewWorksheets>) {}
+
+  onClick = (data) => {
+    this.dialogRef.close(data);
+  }
+
+}
+

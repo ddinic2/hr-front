@@ -40,8 +40,6 @@ export class LeaveFormComponent implements OnInit {
       fromDate: ['', Validators.required],
       toDate: ['', Validators.required],
       replaceEmployee: [''],
-      employeeId:[''],
-      employeeEmail: [''],      
       sickType: ['', Validators.required],
       sickLeaveType: ['', Validators.required],
       absenceType: this.absenceTypes.Absence,
@@ -101,7 +99,7 @@ export class LeaveFormComponent implements OnInit {
   saveAbsence() {
     const formResult: EmployeeAbsence = this.employeeAbsenceForm.value;
     formResult.employeeId = this.loggedUser.value.data.employeeId;
-    formResult.employeeEmail = this.loggedUser.value.data.employeeEmail;
+    formResult.employeeEmail =  this.loggedUser.value.data.employeeEmail;
     console.log(JSON.stringify(formResult, null, 2));
     this.subsService.postAbsence(formResult);    
   }

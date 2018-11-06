@@ -32,9 +32,7 @@ export class SickAbsenceFormComponent implements OnInit {
       sickLeaveType: [''],
       absenceSubtype:[''],
       sickLeaveCode: [''],
-      employeeId:[''],
-      employeeEmail: [''],
-      absenceType: this.absenceTypes.PaidAbsence,
+      absenceType: this.absenceTypes.SickAbsence,
       absenceProcessStatus: this.absenceProcessStatus.Created 
     });
   }
@@ -49,7 +47,7 @@ export class SickAbsenceFormComponent implements OnInit {
   saveAbsence() {
     const formResult: EmployeeAbsence = this.employeeSickAbsenceForm.value;
     formResult.employeeId = this.loggedUser.value.data.employeeId;
-    formResult.employeeEmail = this.loggedUser.value.data.employeeEmail;
+    formResult.employeeEmail =  this.loggedUser.value.data.employeeEmail;
     this.subService.postAbsence(formResult);     
   }
 

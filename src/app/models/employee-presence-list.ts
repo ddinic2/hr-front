@@ -6,5 +6,9 @@ export interface EmployeePresenceList{
     employeePresenceListID: number;
     dayStatus: number[];
     loginUserId: number;
-
+    month: number;
+    year: number;
+    employeePresenceRegion: number;
+    presenceListStatus: number,
+    lockPresenceList: boolean;
 }

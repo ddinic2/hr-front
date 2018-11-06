@@ -2,14 +2,14 @@
   <div class="dates-row">
     <div class="date-from">
       <mat-form-field>
-        <input matInput [matDatepicker]="from" placeholder="Početak Odmora" formControlName="fromDate">
+        <input matInput [matDatepicker]="from" placeholder="Početak" formControlName="fromDate">
         <mat-datepicker-toggle matSuffix [for]="from"></mat-datepicker-toggle>
         <mat-datepicker #from></mat-datepicker>
       </mat-form-field>
     </div>
     <div class="date-to">
       <mat-form-field>
-        <input matInput [matDatepicker]="to" placeholder="Kraj Odmora" formControlName="toDate">
+        <input matInput [matDatepicker]="to" placeholder="Kraj" formControlName="toDate">
         <mat-datepicker-toggle matSuffix [for]="to"></mat-datepicker-toggle>
         <mat-datepicker #to></mat-datepicker>
       </mat-form-field>
@@ -18,8 +18,8 @@
 
   <div class="dates-row">
     <mat-form-field>
-      <mat-select placeholder="Tip plaćenog odsustva" formControlName="absenceType">
-        <mat-option *ngFor="let type of absenceTypeOptions" [value]="type.HRAbsenceTypeID">
+      <mat-select placeholder="Tip plaćenog odsustva" formControlName="absenceSubtype">
+        <mat-option *ngFor="let type of absenceSubtypeOptions" [value]="type.HRabsenceSubtypeId">
           {{ type.Name }}
         </mat-option>
       </mat-select>

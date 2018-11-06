@@ -2,8 +2,8 @@
   <div class="dates-row>">
     <mat-form-field>
       <mat-select placeholder="Mesec" formControlName="month">
-        <mat-option *ngFor="let item of worksheetsMonthsOptions" [value]="item">
-          {{ item }}
+        <mat-option *ngFor="let item of worksheetsMonthsOptions" [value]="item.Id">
+          {{ item.Name }}
         </mat-option>
       </mat-select>
     </mat-form-field>

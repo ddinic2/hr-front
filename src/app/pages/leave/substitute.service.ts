@@ -15,6 +15,8 @@ import { AbsenceType } from 'src/app/models/absence-type';
 import {MatSnackBar} from '@angular/material';
 import { EmployeePresenceList } from 'src/app/models/employee-presence-list';
 import { Headers, RequestOptions } from '@angular/http';
+import { keyframes } from '@angular/animations';
+import { TouchSequence } from 'selenium-webdriver';
 
 
 const moment = _moment;
@@ -31,6 +33,7 @@ export class SubstituteService {
   holidayDateslist = [];//['Wed Oct 3 2018', 'Fri Oct 12 2018', 'Mon Oct 15 2018', 'Wed Oct 17 2018', 'Fri Oct 19 2018'];
   holidayObservable: Observable<string[]>;
   canSave = false;
+  checkedRes = [];
  
   extractData(res: Response) {
     const body = res.json();
@@ -103,6 +106,7 @@ export class SubstituteService {
     const url = environment.db.ROOT + environment.db.WORKSHEETS + environment.db.WORKSHEETS_YEAR;
     return this.http.get<number[]>(url);
   }
+  
   getPresenceDetailType = () => {
     const url = environment.db.ROOT + environment.db.WORKSHEETS + environment.db.PRESENCE_DETAIL_TYPE;
     return this.http.get<number[]>(url);
@@ -124,6 +128,28 @@ export class SubstituteService {
     const url = environment.db.ROOT + environment.db.WORKSHEETS;
     return this.http.get<any[]>(url, obj);
   }
+
+  checkedPresenceStatus = (empPresenceList: any) => {
+    let result = empPresenceList.map(m => m.DayStatus);
+    for(var i = 0; i < result.length; i++)
+    {
+      for(var ii = 0; ii < result[i].length; ii++)
+      {
+        let res = result[i];
+        if(res[ii] == null)
+        {
+            this.checkedRes.push(1);
+        }
+      }
+    }
+    
+  if(this.checkedRes.length > 0)// postavi da je jednako 0 to znači da su sve liste popunjene
+    {
+      empPresenceList.lockPresenceList = true;
+    }
+  }
+    
+  
 
   getSubstitutesByDate = (dateFrom: Date, dateTo: Date, employeeId: number) => {
     const startDate = moment(dateFrom);
@@ -204,14 +230,15 @@ export class SubstituteService {
     
   };
 
-  putWorksheets(employeePresenceList: EmployeePresenceList, loginUserId: number) {
+  putWorksheets(employeePresenceList: EmployeePresenceList) {
       const url = environment.db.ROOT + environment.db.WORKSHEETS;
       const obj = { 
         params: new HttpParams() 
         .set('LoginUserId', employeePresenceList.loginUserId.toString())
+        .set('PresenceListStausId', employeePresenceList.presenceListStatus.toString())
       };
 
-      this.http.put(url,employeePresenceList, obj).subscribe(data => {
+      this.http.put(url, employeePresenceList, obj).subscribe(data => {
         this.retPostData = data;
         this.snackBar.open(this.retPostData, 'OK', {
           duration: 5000,

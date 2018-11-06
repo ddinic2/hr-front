@@ -10,8 +10,10 @@ export interface EmployeeAbsence {
     procesStatus: number;
     absenceType: number;
     absenceTypeName: string;
-    //employee: Employee;
+    absenceSubtype: number;
+    absenceSubtypeName: string;
     replacementEmployee: Employee;
     exceptionAbsence: boolean;
-    employeeEmail: string,
+    employeeEmail: string;
+    //employee: Employee;
 }
