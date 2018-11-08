@@ -19,18 +19,31 @@
   </div>
   <div class="dates-row>">
     <mat-form-field class="substitute-auto">
-      <input type="text" placeholder="Organizacione jedinice" aria-label="Organizacione jedinice" matInput
-        formControlName="orgUnit" [matAutocomplete]="auto">
-      <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
-        <mat-option *ngFor="let orgUnit of orgUnitOptions" [value]="orgUnit">
+      <mat-select placeholder="Organizacione jedinice" formControlName="orgUnit" >
+       <mat-option *ngFor="let orgUnit of orgUnitOptions" [value]="orgUnit">
           {{orgUnit.Name}}
         </mat-option>
-      </mat-autocomplete>
+      </mat-select>
+      </mat-form-field>
+  </div>
+
+  <div class="dates-row>">
+    <mat-form-field class="substitute-auto">
+      <mat-select placeholder="Evidentičari" formControlName="registrator">
+        <mat-option *ngFor="let reg of registratorOptions" [value]="reg.EmployeeID">
+          {{reg.EmployeeFullName}}
+        </mat-option>
+      </mat-select>
+     
     </mat-form-field>
   </div>
   <div>
     <button type="submit" mat-raised-button (click)="detailsPresence()">Prikaži</button>
   </div>
+  <br />
+<div>
+  <button type="submit" mat-raised-button (click)="compareWorksheets()"> Uporedi radne liste</button>
+</div>
 
   <br />
   <br />
@@ -60,3 +73,5 @@
 <div>
   <button type="submit" mat-raised-button (click)="saveWorksheets()"> Sačuvaj</button>
 </div>
+
+

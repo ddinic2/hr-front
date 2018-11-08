@@ -18,8 +18,8 @@
 <script>
   window.onload = function () {
     window.addEventListener("message", function (event) {
-      const objData =  (JSON.parse(event.data)); //za produkciju
-      //const objData = (JSON.parse('{"data":{"username":"djvitorovic","employeeId":"2","roleId":"4", "employeeEmail":"djordje.vitorovic@timsystems.rs"}}'));
+      //const objData =  (JSON.parse(event.data)); //za produkciju
+      const objData = (JSON.parse('{"data":{"username":"djvitorovic","employeeId":"2","roleId":"4", "employeeEmail":"djordje.vitorovic@timsystems.rs"}}'));
       localStorage.setItem('loggedUserEmployee', JSON.stringify(objData))
     });
 

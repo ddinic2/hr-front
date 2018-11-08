@@ -18,8 +18,8 @@ export class PaidAbsenceFormComponent implements OnInit {
   public retPostData;
   employeePaidAbsenceForm: FormGroup;
   loggedUser: any;
-  absenceTypes = AbsenceTypes;
-  absenceProcessStatus = AbsenceProcessStatus;
+  absenceType = AbsenceTypes.PaidAbsence;
+  absenceProcessStatus = AbsenceProcessStatus.Created;
   absenceSubtypeOptions: AbsenceSubtype[] = [];
 
   disableWeekdays = (d: Date): boolean => {
@@ -32,8 +32,7 @@ export class PaidAbsenceFormComponent implements OnInit {
       fromDate: [''],
       toDate: [''],
       absenceSubtype: [''],
-      absenceType: this.absenceTypes.PaidAbsence,
-      absenceProcessStatus: this.absenceProcessStatus.Created 
+      
     });
     
    }
@@ -45,7 +44,7 @@ export class PaidAbsenceFormComponent implements OnInit {
     
     this.employeePaidAbsenceForm.controls['toDate'].valueChanges.subscribe(value => {
       if (value && this.employeePaidAbsenceForm.controls['fromDate'].value) {
-        this.subsService.getSubstitutesByDate(this.employeePaidAbsenceForm.controls['fromDate'].value, value, this.loggedUser.value.data.employeeId).subscribe((result) => {
+        this.subsService.getSubstitutesByDate(this.employeePaidAbsenceForm.controls['fromDate'].value, value, this.loggedUser.value.data.employeeId, this.absenceType).subscribe((result) => {
           if(result == null)
           {
             this.snackBar.open('Postoji odsustvo za ovaj vremenski period!', 'OK', {
@@ -64,12 +63,15 @@ export class PaidAbsenceFormComponent implements OnInit {
     const formResult: EmployeeAbsence = this.employeePaidAbsenceForm.value;
     formResult.employeeId = this.loggedUser.value.data.employeeId;
     formResult.employeeEmail =  this.loggedUser.value.data.employeeEmail;
+    formResult.absenceType = this.absenceType;
+    formResult.absenceProcessStatus = this.absenceProcessStatus; 
     this.subsService.postAbsence(formResult).subscribe(res => {
       this.retPostData = res;
       this.snackBar.open(this.retPostData, 'OK', {
       duration: 10000,
       verticalPosition: 'top'
     });
+    this.employeePaidAbsenceForm.reset();
   });  
   console.log(JSON.stringify(formResult, null, 2));   
   }

@@ -27,6 +27,7 @@ export class WorksheetsFormComponent implements OnInit {
   loginUserId: number;
   presenceListStatus: any;
   checkedRes: boolean;
+  registratorOptions: any;
   
 
   constructor(private _fromBuilder: FormBuilder, public subService: SubstituteService, public loginService: LoginService, public dialog: MatDialog) {
@@ -34,7 +35,8 @@ export class WorksheetsFormComponent implements OnInit {
       orgUnit: [''],
       year: [''],
       month: [''],
-      absenceTypeControl: ['']       
+      absenceTypeControl: [''],
+      registrator: ['']      
     });
    
    }
@@ -49,6 +51,14 @@ export class WorksheetsFormComponent implements OnInit {
     this.dateList =  this.dateArrayListDetails(31);   
     //this.worksheetsForm.get('month').setValue(1);
     //this.worksheetsForm.get('year').setValue(2018);
+
+    this.worksheetsForm.controls['year'].valueChanges.subscribe(value => {
+      if (value && this.worksheetsForm.controls['month'].value) {
+        this.subService.getRegistratorByDate(this.worksheetsForm.controls['month'].value, value).subscribe((result) => {
+          this.registratorOptions = result;
+        });
+      }
+    });
         
   }
 
@@ -70,6 +80,12 @@ export class WorksheetsFormComponent implements OnInit {
     this.subService.getEmployeePresenceList(formResult, this.loggedUser.value.data.employeeId)
     .subscribe(res => { this.employeePresenceList = res });
     
+  }
+  
+  compareWorksheets() {
+    const formResult = this.worksheetsForm.value;
+    this.subService.compareWorksheetsByRegistrator(formResult)
+    .subscribe(res => { this.employeePresenceList = res });
   }
 
   selectedItem = (item,index,event) => {

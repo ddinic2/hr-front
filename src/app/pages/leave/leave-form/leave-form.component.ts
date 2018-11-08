@@ -25,8 +25,8 @@ export class LeaveFormComponent implements OnInit {
   holidayDays: any;
   isDisabled = false;
   loggedUser: any;
-  absenceTypes = AbsenceTypes;
-  absenceProcessStatus = AbsenceProcessStatus;
+  absenceType = AbsenceTypes.Absence;
+  absenceProcessStatus = AbsenceProcessStatus.Created;  
   test: EmployeeAbsence;
 
 
@@ -43,12 +43,8 @@ export class LeaveFormComponent implements OnInit {
     this.employeeAbsenceForm = this._formBuilder.group({
       fromDate: [''],
       toDate: [''],
-      replaceEmployee: [''],
-      sickType: ['', Validators.required],
-      sickLeaveType: ['', Validators.required],
-      absenceType: this.absenceTypes.Absence,
-      absenceProcessStatus: this.absenceProcessStatus.Created     
-      
+      replaceEmployee: ['']
+            
     });
 
        
@@ -56,7 +52,7 @@ export class LeaveFormComponent implements OnInit {
     
     this.employeeAbsenceForm.controls['fromDate'].valueChanges.subscribe(value => {
       if (value && this.employeeAbsenceForm.controls['toDate'].value) {
-        this.subsService.getSubstitutesByDate(value, this.employeeAbsenceForm.controls['toDate'].value, this.loggedUser.value.data.employeeId).subscribe(result => {
+        this.subsService.getSubstitutesByDate(value, this.employeeAbsenceForm.controls['toDate'].value, this.loggedUser.value.data.employeeId, this.absenceType).subscribe(result => {
           //this.employeeAbsenceForm.controls['replaceEmployee'].setValue(undefined);
           this.options =  result;
         });
@@ -65,7 +61,7 @@ export class LeaveFormComponent implements OnInit {
 
     this.employeeAbsenceForm.controls['toDate'].valueChanges.subscribe(value => {
       if (value && this.employeeAbsenceForm.controls['fromDate'].value) {
-        this.subsService.getSubstitutesByDate(this.employeeAbsenceForm.controls['fromDate'].value, value, this.loggedUser.value.data.employeeId).subscribe((result) => {
+        this.subsService.getSubstitutesByDate(this.employeeAbsenceForm.controls['fromDate'].value, value, this.loggedUser.value.data.employeeId, this.absenceType).subscribe((result) => {
           //this.employeeAbsenceForm.controls['replaceEmployee'].setValue(undefined);
           if(result == null)
           {
@@ -107,8 +103,12 @@ export class LeaveFormComponent implements OnInit {
   }
 
   displayFn(employee: any): string | undefined {
-    //return typeof (option) === 'string' ? option : `${option.FirstName ? option.FirstName : 'nema ime'} ${option.Surname ? option.Surname : 'nema prezime'}`;
-    return typeof (employee) === 'string' ? employee : `${employee.FirstName} ${employee.Surname}`;
+    if(employee != null)
+    {
+        //return typeof (option) === 'string' ? option : `${option.FirstName ? option.FirstName : 'nema ime'} ${option.Surname ? option.Surname : 'nema prezime'}`;
+        return typeof (employee) === 'string' ? employee : `${employee.FirstName} ${employee.Surname}`;
+    }
+    
   }
 
    
@@ -116,6 +116,8 @@ export class LeaveFormComponent implements OnInit {
     const formResult: EmployeeAbsence = this.employeeAbsenceForm.value;
     formResult.employeeId = this.loggedUser.value.data.employeeId;
     formResult.employeeEmail =  this.loggedUser.value.data.employeeEmail;
+    formResult.absenceType = this.absenceType;
+    formResult.absenceProcessStatus = this.absenceProcessStatus;  
     //console.log(JSON.stringify(formResult, null, 2));
     this.subsService.postAbsence(formResult).subscribe(res => {
        this.retPostData = res;
@@ -123,7 +125,9 @@ export class LeaveFormComponent implements OnInit {
         duration: 10000,
         verticalPosition: 'top'
       });
+      this.employeeAbsenceForm.reset();
     });  
+    
     console.log(JSON.stringify(formResult, null, 2));
   }
 

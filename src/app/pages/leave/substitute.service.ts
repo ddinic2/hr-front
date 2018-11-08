@@ -149,9 +149,28 @@ export class SubstituteService {
     }
   }
     
-  
+  getRegistratorByDate = (month: number, year: number) => {
+    const obj = {
+      params: new HttpParams()
+      .set('Month', month.toString())
+      .set('Year', year.toString())
+    }
+      const url = environment.db.ROOT + environment.db.WORKSHEETS + environment.db.PRESENCE_REGISTRATOR;
+      return this.http.get(url, obj);
+  }
 
-  getSubstitutesByDate = (dateFrom: Date, dateTo: Date, employeeId: number) => {
+  compareWorksheetsByRegistrator = (data: any) => {
+    const obj = {
+      params: new HttpParams()
+      .set('RegistratorId', data.registrator.toString())
+      .set('Month', data.month.toString())
+      .set('Year', data.year.toString())
+    }
+      const url = environment.db.ROOT + environment.db.WORKSHEETS + environment.db.COMPARE_WORKSHEETS;
+      return this.http.get(url, obj);
+  }
+
+  getSubstitutesByDate = (dateFrom: Date, dateTo: Date, employeeId: number, absenceType: any) => {
     const startDate = moment(dateFrom);
     const endDate = moment(dateTo);
 
@@ -160,6 +179,7 @@ export class SubstituteService {
         .set('DateFrom', startDate.format(this.dateFormat))
         .set('DateTo', endDate.format(this.dateFormat))
         .set('EmployeeId', employeeId.toString())
+        .set('AbsenceType', absenceType.toString())
     };
     const url = environment.db.ROOT + environment.db.ABSCENCE + environment.db.EMPLOYEE_SUBSITUTE;
     console.log(obj);

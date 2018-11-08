@@ -17,7 +17,9 @@ export const environment = {
     WORKSHEETS_YEAR: '/worksheets-year',
     WORKSHEETS_MONTH: '/worksheets-month',
     ORG_UNIT: '/org-unit',
-    PRESENCE_DETAIL_TYPE: '/presence-detail-type'
+    PRESENCE_DETAIL_TYPE: '/presence-detail-type',
+    PRESENCE_REGISTRATOR: '/presence-registrator',
+    COMPARE_WORKSHEETS: '/compare-worksheets'
   }
 
 };

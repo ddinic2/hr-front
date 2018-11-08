@@ -24,8 +24,8 @@ export class SickAbsenceFormComponent implements OnInit {
   absenceSubtypeOptions: AbsenceSubtype[] = [];
   sickLeaveCodeOptions: SickLeaveCode[] = [];
   loggedUser: any;
-  absenceTypes = AbsenceTypes;
-  absenceProcessStatus = AbsenceProcessStatus;
+  absenceType = AbsenceTypes.SickAbsence;
+  absenceProcessStatus = AbsenceProcessStatus.Created;
 
   disableWeekdays = (d: Date): boolean => {
     const day = d.getDay();
@@ -39,8 +39,7 @@ export class SickAbsenceFormComponent implements OnInit {
       sickLeaveType: [''],
       absenceSubtype:[''],
       sickLeaveCode: [''],
-      absenceType: this.absenceTypes.SickAbsence,
-      absenceProcessStatus: this.absenceProcessStatus.Created 
+      
     });
   }
 
@@ -52,7 +51,7 @@ export class SickAbsenceFormComponent implements OnInit {
 
     this.employeeSickAbsenceForm.controls['toDate'].valueChanges.subscribe(value => {
       if (value && this.employeeSickAbsenceForm.controls['fromDate'].value) {
-        this.subService.getSubstitutesByDate(this.employeeSickAbsenceForm.controls['fromDate'].value, value, this.loggedUser.value.data.employeeId).subscribe((result) => {
+        this.subService.getSubstitutesByDate(this.employeeSickAbsenceForm.controls['fromDate'].value, value, this.loggedUser.value.data.employeeId, this.absenceType).subscribe((result) => {
           if(result == null)
           {
             this.snackBar.open('Postoji odsustvo za ovaj vremenski period!', 'OK', {
@@ -70,12 +69,15 @@ export class SickAbsenceFormComponent implements OnInit {
     const formResult: EmployeeAbsence = this.employeeSickAbsenceForm.value;
     formResult.employeeId = this.loggedUser.value.data.employeeId;
     formResult.employeeEmail =  this.loggedUser.value.data.employeeEmail;
+    formResult.absenceType = this.absenceType;
+    formResult.absenceProcessStatus = this.absenceProcessStatus;  
     this.subService.postAbsence(formResult).subscribe(res => {
       this.retPostData = res;
       this.snackBar.open(this.retPostData, 'OK', {
       duration: 5000,
       verticalPosition: 'top'
     });
+    this.employeeSickAbsenceForm.reset();
   });  
   console.log(JSON.stringify(formResult, null, 2));    
   }
