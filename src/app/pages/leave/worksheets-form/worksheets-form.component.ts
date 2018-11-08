@@ -48,8 +48,7 @@ export class WorksheetsFormComponent implements OnInit {
     this.subService.getWorksheetsMonths().subscribe (res=> {this.worksheetsMonthsOptions = res});
     this.subService.getAbsenceType().subscribe (res => {this.absenceTypeOptions = res})
     this.subService.getPresenceDetailType().subscribe(res => {this.presenceDetailTypeOptions = res});
-    //this.dateList =  this.dateArrayListDetails(31); 
-    
+       
 
     //this.worksheetsForm.get('month').setValue(1);
     //this.worksheetsForm.get('year').setValue(2018);
@@ -64,23 +63,14 @@ export class WorksheetsFormComponent implements OnInit {
         
   }
 
-  displayFn(orgUnit: any): string | undefined {
-    return typeof (orgUnit) === 'string' ? orgUnit : `${orgUnit.Name}`;
-  }
-
-  
-
-
-  detailsPresence() {
+   detailsPresence() {
     const formResult = this.worksheetsForm.value;
     this.subService.getEmployeePresenceList(formResult, this.loggedUser.value.data.employeeId)
     .subscribe(res => { this.employeePresenceList = res;
       let result = this.employeePresenceList.map(m => m.DayStatus); 
       this.dateList = this.dateArrayListDetails(result[0].length) ;
     });
-
-
-    
+   
   }
 
   dateArrayListDetails = function (dates)
@@ -125,6 +115,7 @@ export class WorksheetsFormComponent implements OnInit {
     }
     else
     {
+      empPresenceList.presenceListStatus = WorksheetsPresenceStatus.Created;
       this.subService.putWorksheets(empPresenceList);
     }   
 

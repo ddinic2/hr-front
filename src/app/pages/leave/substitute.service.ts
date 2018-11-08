@@ -262,7 +262,8 @@ export class SubstituteService {
       this.http.put(url, employeePresenceList, obj).subscribe(data => {
         this.retPostData = data;
         this.snackBar.open(this.retPostData, 'OK', {
-          duration: 5000,
+          duration: 10000,
+          verticalPosition: 'top'
         });
       });
   }
