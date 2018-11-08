@@ -15,5 +15,6 @@ export interface EmployeeAbsence {
     replacementEmployee: Employee;
     exceptionAbsence: boolean;
     employeeEmail: string;
+    message: string;
     //employee: Employee;
 }

@@ -17,14 +17,9 @@
 </html>
 <script>
   window.onload = function () {
-
-    console.log('TESTIRANJE');
-    //const eventdata = 'test';
     window.addEventListener("message", function (event) {
-      console.log('Usao u win');
-      console.log(event.data);
-      //const objData =  (JSON.parse(event.data)); //za produkciju
-      const objData = (JSON.parse('{"data":{"username":"djvitorovic","employeeId":"2","roleId":"4", "employeeEmail":"djordje.vitorovic@timsystems.rs"}}'));
+      const objData =  (JSON.parse(event.data)); //za produkciju
+      //const objData = (JSON.parse('{"data":{"username":"djvitorovic","employeeId":"2","roleId":"4", "employeeEmail":"djordje.vitorovic@timsystems.rs"}}'));
       localStorage.setItem('loggedUserEmployee', JSON.stringify(objData))
     });
 

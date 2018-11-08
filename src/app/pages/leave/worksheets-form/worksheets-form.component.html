@@ -43,8 +43,8 @@
         <td *ngFor="let date of item.DayStatus; let i=index" >
           <div class="dates-row">
             <mat-form-field>
-              <mat-select (selectionChange)="selectedItem(item,i,$event.value)" [value]="date" disabled="item.disabled">
-                <mat-option *ngFor="let selectOption of presenceDetailTypeOptions" [value]="selectOption.Id"> 
+              <mat-select (selectionChange)="selectedItem(item,i,$event.value)" [value]="date">
+                <mat-option *ngFor="let selectOption of presenceDetailTypeOptions" [value]="selectOption.Id" > 
                   {{ selectOption.Code }}
                 </mat-option>
               </mat-select>

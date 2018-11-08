@@ -143,7 +143,7 @@ export class SubstituteService {
       }
     }
     
-  if(this.checkedRes.length > 0)// postavi da je jednako 0 to znači da su sve liste popunjene
+  if(this.checkedRes.length == 0)// postavi da je jednako 0 to znači da su sve liste popunjene
     {
       empPresenceList.lockPresenceList = true;
     }
@@ -167,7 +167,7 @@ export class SubstituteService {
     // .subscribe(res => this.substitutesList.next(res));
   }
 
-  public postAbsence(employeeAbsence: EmployeeAbsence) {  
+  public postAbsence(employeeAbsence: EmployeeAbsence): Observable<EmployeeAbsence> {  
     const url = environment.db.ROOT + environment.db.ABSCENCE;
     const startDate = moment(employeeAbsence.fromDate);
     const endDate = moment(employeeAbsence.toDate);
@@ -192,12 +192,13 @@ export class SubstituteService {
       employeeAbsence.numOfdays = dateArray.length;
     });
 
-    this.http.post(url, employeeAbsence).subscribe(data => {
-      this.retPostData = data;
-      this.snackBar.open(this.retPostData, 'OK', {
-        duration: 5000,
-      });
-    });
+     return this.http.post<EmployeeAbsence>(url, employeeAbsence);
+    //  .subscribe(data => {
+    //   this.retPostData = data;
+    //   this.snackBar.open(this.retPostData, 'OK', {
+    //     duration: 5000,
+    //   });
+    // });
   }
 
   getDateArray = function (start, end) {

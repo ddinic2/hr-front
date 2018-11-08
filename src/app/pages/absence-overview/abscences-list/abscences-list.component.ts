@@ -2,6 +2,7 @@ import { AbscenceService } from './../abscence.service';
 import { Component, OnInit, Input } from '@angular/core';
 import { AbsenceProcessStatus } from "src/app/models/enums/absence-process-satatus";
 import { LoginService } from 'src/app/shared/shared/login.service';
+import { Observable } from 'rxjs';
 
 
 
@@ -12,13 +13,12 @@ import { LoginService } from 'src/app/shared/shared/login.service';
 })
 export class AbscencesListComponent implements OnInit {
   pipesToApply = [];  
-  data: any 
   absenceProcessStatus = AbsenceProcessStatus;
   loggedUser: any;
    
   @Input() absenceType: number;
   @Input() absProcessStatus: number;
-    
+      
   columnNameArray = [
     'Ime',
     'Datum od',
@@ -82,12 +82,12 @@ export class AbscencesListComponent implements OnInit {
       item.AbsenceProcessStatusName = res;
     });
   };
-  edit = (item) =>
-  console.log('edit');
-  save = (item) =>
-  console.log('save');
-  view = (item) =>
-  console.log('view');
+  // edit = (item) =>
+  // console.log('edit');
+  // save = (item) =>
+  // console.log('save');
+  // view = (item) =>
+  // console.log('view');
 
 
 }

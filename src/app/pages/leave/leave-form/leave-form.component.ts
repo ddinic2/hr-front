@@ -8,6 +8,8 @@ import { Employee } from 'src/app/models/employee';
 import { LoginService } from 'src/app/shared/shared/login.service';
 import { AbsenceTypes } from "src/app/models/enums/absence-type";
 import { AbsenceProcessStatus } from 'src/app/models/enums/absence-process-satatus';
+import {MatSnackBar } from '@angular/material';
+
 
 
 @Component({
@@ -16,6 +18,7 @@ import { AbsenceProcessStatus } from 'src/app/models/enums/absence-process-satat
   styleUrls: ['./leave-form.component.scss']
 })
 export class LeaveFormComponent implements OnInit {
+  public retPostData;
   employeeAbsenceForm: FormGroup;
   filteredSubEmployeeOptions: Observable<Employee[]>;
   options: Employee[] = [];
@@ -24,21 +27,22 @@ export class LeaveFormComponent implements OnInit {
   loggedUser: any;
   absenceTypes = AbsenceTypes;
   absenceProcessStatus = AbsenceProcessStatus;
+  test: EmployeeAbsence;
 
 
   disableWeekdays = (d: Date): boolean => {
     const day = d.getDay();
     return day !== 0 && day !== 6;
-  }
+  }  
   
 
-  constructor(private _formBuilder: FormBuilder, public subsService: SubstituteService, public loginService: LoginService) { 
+  constructor(private _formBuilder: FormBuilder, public subsService: SubstituteService, public loginService: LoginService, public snackBar: MatSnackBar) { 
   }
 
   ngOnInit() {
     this.employeeAbsenceForm = this._formBuilder.group({
-      fromDate: ['', Validators.required],
-      toDate: ['', Validators.required],
+      fromDate: [''],
+      toDate: [''],
       replaceEmployee: [''],
       sickType: ['', Validators.required],
       sickLeaveType: ['', Validators.required],
@@ -47,6 +51,7 @@ export class LeaveFormComponent implements OnInit {
       
     });
 
+       
     this.loggedUser =  this.loginService.getLoggedInUser();
     
     this.employeeAbsenceForm.controls['fromDate'].valueChanges.subscribe(value => {
@@ -62,6 +67,14 @@ export class LeaveFormComponent implements OnInit {
       if (value && this.employeeAbsenceForm.controls['fromDate'].value) {
         this.subsService.getSubstitutesByDate(this.employeeAbsenceForm.controls['fromDate'].value, value, this.loggedUser.value.data.employeeId).subscribe((result) => {
           //this.employeeAbsenceForm.controls['replaceEmployee'].setValue(undefined);
+          if(result == null)
+          {
+            this.snackBar.open('Postoji odsustvo za ovaj vremenski period', 'OK', {
+              duration: 10000,
+              verticalPosition: 'top'
+            });
+          }
+          
           this.options = result;
         });
       }
@@ -75,7 +88,10 @@ export class LeaveFormComponent implements OnInit {
         }),
 
       );
+      
   }
+
+ 
 
   private _filter(name: string): any[] {
     if (this.options !== undefined) {
@@ -100,8 +116,15 @@ export class LeaveFormComponent implements OnInit {
     const formResult: EmployeeAbsence = this.employeeAbsenceForm.value;
     formResult.employeeId = this.loggedUser.value.data.employeeId;
     formResult.employeeEmail =  this.loggedUser.value.data.employeeEmail;
+    //console.log(JSON.stringify(formResult, null, 2));
+    this.subsService.postAbsence(formResult).subscribe(res => {
+       this.retPostData = res;
+        this.snackBar.open(this.retPostData, 'OK', {
+        duration: 10000,
+        verticalPosition: 'top'
+      });
+    });  
     console.log(JSON.stringify(formResult, null, 2));
-    this.subsService.postAbsence(formResult);    
   }
 
 }

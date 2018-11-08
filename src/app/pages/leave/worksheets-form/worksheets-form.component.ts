@@ -73,12 +73,7 @@ export class WorksheetsFormComponent implements OnInit {
   }
 
   selectedItem = (item,index,event) => {
-    console.log(item);
-    console.log(event);
-    console.log(index);
     item.DayStatus[index] = event;
-    console.log(item);
-    
   }
   
   saveWorksheets = () => {
@@ -98,7 +93,7 @@ export class WorksheetsFormComponent implements OnInit {
           {
             empPresenceList.presenceListStatus = WorksheetsPresenceStatus.Lock;
             this.subService.putWorksheets(empPresenceList);
-            
+           
           }
                     
         });
