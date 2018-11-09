@@ -19,6 +19,7 @@ export class PaidAbsenceFormComponent implements OnInit {
   employeePaidAbsenceForm: FormGroup;
   loggedUser: any;
   absenceType = AbsenceTypes.PaidAbsence;
+  absenceTypeName = 'Plaćena odsustva';
   absenceProcessStatus = AbsenceProcessStatus.Created;
   absenceSubtypeOptions: AbsenceSubtype[] = [];
 
@@ -64,6 +65,7 @@ export class PaidAbsenceFormComponent implements OnInit {
     formResult.employeeId = this.loggedUser.value.data.employeeId;
     formResult.employeeEmail =  this.loggedUser.value.data.employeeEmail;
     formResult.absenceType = this.absenceType;
+    formResult.absenceTypeName = this.absenceTypeName;
     formResult.absenceProcessStatus = this.absenceProcessStatus; 
     this.subsService.postAbsence(formResult).subscribe(res => {
       this.retPostData = res;

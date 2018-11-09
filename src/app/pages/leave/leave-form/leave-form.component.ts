@@ -26,6 +26,7 @@ export class LeaveFormComponent implements OnInit {
   isDisabled = false;
   loggedUser: any;
   absenceType = AbsenceTypes.Absence;
+  absenceTypeName = 'Godišnji odmor';
   absenceProcessStatus = AbsenceProcessStatus.Created;  
   test: EmployeeAbsence;
 
@@ -117,7 +118,9 @@ export class LeaveFormComponent implements OnInit {
     formResult.employeeId = this.loggedUser.value.data.employeeId;
     formResult.employeeEmail =  this.loggedUser.value.data.employeeEmail;
     formResult.absenceType = this.absenceType;
+    formResult.absenceTypeName = this.absenceTypeName;
     formResult.absenceProcessStatus = this.absenceProcessStatus;  
+    //formResult.absenceTypeName = this.absence
     //console.log(JSON.stringify(formResult, null, 2));
     this.subsService.postAbsence(formResult).subscribe(res => {
        this.retPostData = res;

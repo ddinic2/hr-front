@@ -25,6 +25,7 @@ export class SickAbsenceFormComponent implements OnInit {
   sickLeaveCodeOptions: SickLeaveCode[] = [];
   loggedUser: any;
   absenceType = AbsenceTypes.SickAbsence;
+  absenceTypeName = 'Bolovanje';
   absenceProcessStatus = AbsenceProcessStatus.Created;
 
   disableWeekdays = (d: Date): boolean => {
@@ -70,6 +71,7 @@ export class SickAbsenceFormComponent implements OnInit {
     formResult.employeeId = this.loggedUser.value.data.employeeId;
     formResult.employeeEmail =  this.loggedUser.value.data.employeeEmail;
     formResult.absenceType = this.absenceType;
+    formResult.absenceTypeName = this.absenceTypeName;
     formResult.absenceProcessStatus = this.absenceProcessStatus;  
     this.subService.postAbsence(formResult).subscribe(res => {
       this.retPostData = res;
