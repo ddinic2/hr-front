@@ -1,7 +1,7 @@
 export const environment = {
   production: true,
   db: {
-    //ROOT: 'http://localhost:54278/',
+    //ROOT: 'http://10.10.1.56:22900/',// OBS
     ROOT: 'http://10.111.10.41:22900/',    
     SUBSTITUTE: 'work-leave',
     ABSCENCE: 'absences',

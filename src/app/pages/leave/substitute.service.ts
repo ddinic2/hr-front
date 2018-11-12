@@ -92,7 +92,11 @@ export class SubstituteService {
     const url = environment.db.ROOT + environment.db.ABSENCE_TYPE;
     return this.http.get<AbsenceType[]>(url);
   }
-
+  getAbsenceTypeWorksheets = () => {
+    const url = environment.db.ROOT + environment.db.ABSENCE_TYPE + environment.db.ABSENCE_TYPE_WORKSHEETS;
+    return this.http.get<AbsenceType[]>(url);
+  }
+  
   getEmployee = () => {
     const url = environment.db.ROOT + environment.db.EMPLOYEE;
     return this.http.get<Employee[]>(url);
@@ -159,12 +163,13 @@ export class SubstituteService {
       return this.http.get(url, obj);
   }
 
-  compareWorksheetsByRegistrator = (data: any) => {
+  compareWorksheetsByRegistrator = (data: any, loginUserId: number) => {
     const obj = {
       params: new HttpParams()
       .set('RegistratorId', data.registrator.toString())
       .set('Month', data.month.toString())
       .set('Year', data.year.toString())
+      .set('LoginUser', loginUserId.toString())
     }
       const url = environment.db.ROOT + environment.db.WORKSHEETS + environment.db.COMPARE_WORKSHEETS;
       return this.http.get(url, obj);

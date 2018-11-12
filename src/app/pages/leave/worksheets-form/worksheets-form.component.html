@@ -57,7 +57,7 @@
           <div class="dates-row">
             <mat-form-field>
               <mat-select (selectionChange)="selectedItem(item,i,$event.value)" [value]="date">
-                <mat-option *ngFor="let selectOption of presenceDetailTypeOptions" [value]="selectOption.Id"> 
+                <mat-option *ngFor="let selectOption of absenceTypeOptions" [value]="selectOption.HRAbsenceTypeID"> 
                   {{ selectOption.Code }}
                 </mat-option>
               </mat-select>
@@ -68,10 +68,30 @@
 
     </table>
   </div>
+  <br />
+  <div>
+    <button type="submit" mat-raised-button (click)="saveWorksheets()"> Sačuvaj</button>
+  </div>
+  <br />
+  <br />
+  <div>
+    <table class="mat-elevation-z8">
+      <th>Zaposleni</th>
+      <th>Organizaciona jedinica</th>
+      <th *ngFor="let item of dateList">{{item}}</th>
+      <tr *ngFor="let item of comparePresenceList">
+        <td>{{ item.EmployeeFullName }} </td>
+        <td>{{ item.OrgUnitName }} </td>
+        <td *ngFor="let date of item.PresenceTypeCode" [style.background-color]="item.PresenceListConflictType != null ? 'red' : 'white'">
+          {{date}}
+        </td>
+      </tr>
+      <!-- <td [style.background-color]="i == rowNum ? 'red' : 'green'" ></td> -->
+    </table>
+  </div>
+
 </form>
 <br />
-<div>
-  <button type="submit" mat-raised-button (click)="saveWorksheets()"> Sačuvaj</button>
-</div>
+
 
 

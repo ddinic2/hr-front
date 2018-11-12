@@ -24,6 +24,7 @@ export class WorksheetsFormComponent implements OnInit {
   presenceDetailTypeOptions: any;
   loggedUser: any;
   employeePresenceList: any;
+  comparePresenceList: any;
   loginUserId: number;
   presenceListStatus: any;
   checkedRes: boolean;
@@ -46,9 +47,9 @@ export class WorksheetsFormComponent implements OnInit {
     this.subService.getOrgUnit().subscribe(res => {this.orgUnitOptions = res});
     this.subService.getWorksheetsYears().subscribe (res=> {this.worksheetsYearsOptions = res});
     this.subService.getWorksheetsMonths().subscribe (res=> {this.worksheetsMonthsOptions = res});
-    this.subService.getAbsenceType().subscribe (res => {this.absenceTypeOptions = res})
+    this.subService.getAbsenceTypeWorksheets().subscribe (res => {this.absenceTypeOptions = res})
     this.subService.getPresenceDetailType().subscribe(res => {this.presenceDetailTypeOptions = res});
-       
+    
 
     //this.worksheetsForm.get('month').setValue(1);
     //this.worksheetsForm.get('year').setValue(2018);
@@ -75,6 +76,7 @@ export class WorksheetsFormComponent implements OnInit {
 
   dateArrayListDetails = function (dates)
   {
+    this.dateList.length = 0;
     for(var i = 1; i <= dates; i++) { 
      this.dateList.push(i);
     };
@@ -83,8 +85,11 @@ export class WorksheetsFormComponent implements OnInit {
   
   compareWorksheets() {
     const formResult = this.worksheetsForm.value;
-    this.subService.compareWorksheetsByRegistrator(formResult)
-    .subscribe(res => { this.employeePresenceList = res });
+    this.subService.compareWorksheetsByRegistrator(formResult, this.loggedUser.value.data.employeeId)
+    .subscribe(res => { this.comparePresenceList = res
+      let result = this.comparePresenceList.map(m => m.PresenceTypeCode); 
+      this.dateList = this.dateArrayListDetails(result[0].length) ;
+    });
   }
 
   selectedItem = (item,index,event) => {
