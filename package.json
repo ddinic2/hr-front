@@ -42,6 +42,7 @@
     "reflect-metadata": "^0.1.12",
     "rxjs": "^6.2.2",
     "systemjs": "^2.0.2",
+    "timsystems-lib": "file:libs/timsystems-lib",
     "zone.js": "^0.8.26"
   },
   "devDependencies": {

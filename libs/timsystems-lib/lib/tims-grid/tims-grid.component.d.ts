@@ -19,6 +19,7 @@ export declare class TimsGridComponent implements OnInit {
     constructor();
     getField: (source: any, fieldPath: string) => any;
     ngOnInit(): void;
+    refresh: () => void;
     removeElement: (elementToDelete: any) => void;
     toggleExpand: (clickedElement: any) => any;
 }
