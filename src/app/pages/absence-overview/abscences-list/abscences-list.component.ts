@@ -48,13 +48,8 @@ export class AbscencesListComponent implements OnInit {
   constructor(private service: AbscenceService, private loginService: LoginService, public dialog: MatDialog) {}
 
   ngOnInit() {
-    this.loggedUser = this.loginService.getLoggedInUser();\
+    this.loggedUser = this.loginService.getLoggedInUser();
     console.log(this.grid);
-  }
-
-  ngOnInit() {
-    this.loggedUser =  this.loginService.getLoggedInUser();
-    //console.log(this.grid);
   }
 
     getRepoIssues = (
@@ -72,6 +67,7 @@ export class AbscencesListComponent implements OnInit {
       .changeAbsenceStatus(item.EmployeeAbsence, (item.AbsenceProcessStatus = this.absenceProcessStatus.Approved), null)
       .subscribe(res => {
         item.AbsenceProcessStatusName = res;
+        
       });
   };
   //Ponistavanje odsustva

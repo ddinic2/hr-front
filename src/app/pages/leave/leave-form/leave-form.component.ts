@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
@@ -9,6 +9,8 @@ import { LoginService } from 'src/app/shared/shared/login.service';
 import { AbsenceTypes } from "src/app/models/enums/absence-type";
 import { AbsenceProcessStatus } from 'src/app/models/enums/absence-process-satatus';
 import {MatSnackBar } from '@angular/material';
+import { TimsGridComponent } from 'timsystems-lib';
+import { AbscenceService } from 'src/app/pages/absence-overview/abscence.service';
 
 
 @Component({
@@ -17,6 +19,8 @@ import {MatSnackBar } from '@angular/material';
   styleUrls: ['./leave-form.component.scss']
 })
 export class LeaveFormComponent implements OnInit {
+  @ViewChild(TimsGridComponent) grid: TimsGridComponent;
+  
   public retPostData;
   employeeAbsenceForm: FormGroup;
   filteredSubEmployeeOptions: Observable<Employee[]>;
@@ -36,7 +40,8 @@ export class LeaveFormComponent implements OnInit {
   }
 
 
-  constructor(private _formBuilder: FormBuilder, public subsService: SubstituteService, public loginService: LoginService, public snackBar: MatSnackBar) {
+  constructor(private _formBuilder: FormBuilder, public subsService: SubstituteService, 
+    public loginService: LoginService, public snackBar: MatSnackBar, public absenceService : AbscenceService) {
   }
 
   ngOnInit() {
@@ -110,7 +115,6 @@ export class LeaveFormComponent implements OnInit {
     }
 
   }
-
 
   saveAbsence() {
     const formResult: EmployeeAbsence = this.employeeAbsenceForm.value;

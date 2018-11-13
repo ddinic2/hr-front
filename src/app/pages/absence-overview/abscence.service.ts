@@ -3,13 +3,16 @@ import { Observable, from, } from 'rxjs';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
+import { TimsGridComponent } from 'timsystems-lib';
+
+
 
 @Injectable({
   providedIn: 'root'
 })
 export class AbscenceService {
   abscences: Observable<any>;
-  
+ 
   constructor(private http: HttpClient) {}
 
   getAbscences = (

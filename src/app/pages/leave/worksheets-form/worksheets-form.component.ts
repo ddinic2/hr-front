@@ -16,6 +16,7 @@ import { WorksheetsPresenceStatus } from 'src/app/models/enums/worksheets-prsenc
   styleUrls: ['./worksheets-form.component.scss']
 })
 export class WorksheetsFormComponent implements OnInit {
+  public retPostData;
   worksheetsForm: FormGroup;
   worksheetsMonthsOptions: number[] = [];
   worksheetsYearsOptions: number[] = [];
@@ -99,7 +100,13 @@ export class WorksheetsFormComponent implements OnInit {
   }
   unlockWorksheets() {
     const formResult = this.worksheetsForm.value;
-    this.subService.unlockWorksheetsByManager(formResult, this.loggedUser.value.data.employeeId);
+    this.subService.unlockWorksheetsByManager(formResult, this.loggedUser.value.data.employeeId).subscribe(res => {
+      this.retPostData = res;
+      this.snackBar.open(this.retPostData, 'OK', {
+        duration: 10000,
+        verticalPosition: 'top'
+      });
+    });
       
   }
 
