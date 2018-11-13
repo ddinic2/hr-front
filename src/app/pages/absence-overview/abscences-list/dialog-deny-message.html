@@ -1,0 +1,12 @@
+<form [formGroup]="dialogFormGroup">
+    <h1 mat-dialog-title>Poništavanje odsustva</h1>
+    <div mat-dialog-content>
+      <p>Molim Vas da upišete komentar za poništavanje odsustva</p>
+      <textarea matInput placeholder="Komentar" formControlName="description"></textarea>
+    </div>
+    <div mat-dialog-actions>
+      <button mat-button (click)="onClick(false)">Odustani</button>
+      <button mat-button (click)="onClick(true)" >Poništi</button>
+    </div>
+</form>
+

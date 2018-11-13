@@ -6,8 +6,8 @@
         <mat-datepicker-toggle matSuffix [for]="from"></mat-datepicker-toggle>
         <mat-datepicker #from></mat-datepicker>
       </mat-form-field>
-    </div>
-    <div class="date-to">
+    <!-- </div>
+    <div class="date-to"> -->
       <mat-form-field>
         <input matInput [min]="employeeSickAbsenceForm.controls.fromDate.value" [matDatepickerFilter]="disableWeekdays" [matDatepicker]="to" placeholder="Kraj" formControlName="toDate">
         <mat-datepicker-toggle matSuffix [for]="to"></mat-datepicker-toggle>
@@ -24,9 +24,9 @@
         </mat-option>
       </mat-select>
     </mat-form-field>
-  </div>
+  <!-- </div>
 
-  <div class="dates-row">
+  <div class="dates-row"> -->
     <mat-form-field>
       <mat-select placeholder="Šifra bolesti" formControlName="sickLeaveType">
         <mat-option *ngFor="let type of sickLeaveTypeOptions" [value]="type.HRAbsenceSickLeaveTypeID">
@@ -34,9 +34,9 @@
         </mat-option>
       </mat-select>
     </mat-form-field>
-  </div>
+  <!-- </div>
 
-  <div class="dates-row">
+  <div class="dates-row"> -->
     <mat-form-field>
       <mat-select placeholder="Tip bolovanja" formControlName="sickLeaveCode">
         <mat-option *ngFor="let type of sickLeaveCodeOptions" [value]="type.HRSickLeaveCodeId">

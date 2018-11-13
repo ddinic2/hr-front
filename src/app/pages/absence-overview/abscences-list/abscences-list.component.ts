@@ -3,8 +3,8 @@ import { Component, OnInit, Input } from '@angular/core';
 import { AbsenceProcessStatus } from "src/app/models/enums/absence-process-satatus";
 import { LoginService } from 'src/app/shared/shared/login.service';
 import { Observable } from 'rxjs';
-
-
+import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material';
+import { FormBuilder, FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'hr-abscences-list',
@@ -15,6 +15,8 @@ export class AbscencesListComponent implements OnInit {
   pipesToApply = [];  
   absenceProcessStatus = AbsenceProcessStatus;
   loggedUser: any;
+  data: any;
+  ok: boolean;
    
   @Input() absenceType: number;
   @Input() absProcessStatus: number;
@@ -42,7 +44,7 @@ export class AbscencesListComponent implements OnInit {
     'EmployeeAbsence'
   ];
 
-  constructor(private service: AbscenceService, private loginService: LoginService) {
+  constructor(private service: AbscenceService, private loginService: LoginService, public dialog: MatDialog) {
    
   }
   
@@ -72,15 +74,28 @@ export class AbscencesListComponent implements OnInit {
 
   //Odobravanje odsustva
   approve = (item) => {
-    this.service.changeAbsenceStatus(item.EmployeeAbsence, item.AbsenceProcessStatus = this.absenceProcessStatus.Approved).subscribe(res=> {
+    this.service.changeAbsenceStatus(item.EmployeeAbsence, item.AbsenceProcessStatus = this.absenceProcessStatus.Approved, null).subscribe(res=> {
       item.AbsenceProcessStatusName =  res;          
     });
   };
   //Ponistavanje odsustva
   deny = (item) => {
-    this.service.changeAbsenceStatus(item.EmployeeAbsence, item.AbsenceProcessStatus = this.absenceProcessStatus.Deny).subscribe(res => {
-      item.AbsenceProcessStatusName = res;
+    const dialogRef = this.dialog.open(DialogDenyMessage, {
+      width: '250px'
     });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if(result.value.deny)
+      {
+        
+        this.service.changeAbsenceStatus(item.EmployeeAbsence, item.AbsenceProcessStatus = this.absenceProcessStatus.Deny, result.value.description).subscribe(res => {
+          item.AbsenceProcessStatusName = res;
+        });
+       
+      }
+                
+    });
+
   };
   // edit = (item) =>
   // console.log('edit');
@@ -90,4 +105,26 @@ export class AbscencesListComponent implements OnInit {
   // console.log('view');
 
 
+}
+@Component({
+  selector: 'dialog-deny-message',
+  templateUrl: 'dialog-deny-message.html',
+})
+export class DialogDenyMessage {
+  dialogFormGroup: FormGroup;
+
+  constructor(private _formBuilder: FormBuilder,
+    public dialogRef: MatDialogRef<DialogDenyMessage>) {
+      this.dialogFormGroup = this._formBuilder.group ({
+        description: [''], 
+        deny:['']
+      });
+    }
+
+   
+  onClick = (data) => {      
+    this.dialogFormGroup.controls['deny'].setValue(data);
+    this.dialogRef.close(this.dialogFormGroup);
+  }
+  
 }

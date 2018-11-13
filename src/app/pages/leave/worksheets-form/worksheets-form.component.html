@@ -1,5 +1,5 @@
 <form [formGroup]="worksheetsForm">
-  <div class="dates-row>">
+  <div class="dates-row">
     <mat-form-field>
       <mat-select placeholder="Mesec" formControlName="month">
         <mat-option *ngFor="let item of worksheetsMonthsOptions" [value]="item.Id">
@@ -7,8 +7,7 @@
         </mat-option>
       </mat-select>
     </mat-form-field>
-  </div>
-  <div class="dates-row>">
+
     <mat-form-field>
       <mat-select placeholder="Godina" formControlName="year">
         <mat-option *ngFor="let item of worksheetsYearsOptions" [value]="item">
@@ -16,52 +15,47 @@
         </mat-option>
       </mat-select>
     </mat-form-field>
-  </div>
-  <div class="dates-row>">
+
     <mat-form-field class="substitute-auto">
-      <mat-select placeholder="Organizacione jedinice" formControlName="orgUnit" >
-       <mat-option *ngFor="let orgUnit of orgUnitOptions" [value]="orgUnit">
+      <mat-select placeholder="Organizacione jedinice" formControlName="orgUnit">
+        <mat-option *ngFor="let orgUnit of orgUnitOptions" [value]="orgUnit">
           {{orgUnit.Name}}
         </mat-option>
       </mat-select>
-      </mat-form-field>
-  </div>
+    </mat-form-field>
 
-  <div class="dates-row>">
     <mat-form-field class="substitute-auto">
       <mat-select placeholder="Evidentičari" formControlName="registrator">
         <mat-option *ngFor="let reg of registratorOptions" [value]="reg.EmployeeID">
           {{reg.EmployeeFullName}}
         </mat-option>
       </mat-select>
-     
+
     </mat-form-field>
   </div>
-  <div>
+  <div class="dates-row">
     <button type="submit" mat-raised-button (click)="detailsPresence()">Prikaži</button>
+
+    <button type="submit" mat-raised-button (click)="compareWorksheets()"> Uporedi radne liste</button>
   </div>
-  <br />
-<div>
-  <button type="submit" mat-raised-button (click)="compareWorksheets()"> Uporedi radne liste</button>
-</div>
 
   <br />
   <br />
   <div>
     <table class="mat-elevation-z8">
       <th>Zaposleni</th>
-      <th *ngFor="let item of dateList">{{item}}</th>
+      <th *ngFor="let dates of dateList">{{dates}}</th>
       <tr *ngFor="let item of employeePresenceList">
         <td>{{ item.EmployeeFullName }} </td>
-        <td *ngFor="let date of item.DayStatus; let i=index" >
+        <td *ngFor="let dayStatus of item.DayStatus; let i=index">
           <div class="dates-row">
             <mat-form-field>
-              <mat-select (selectionChange)="selectedItem(item,i,$event.value)" [value]="date">
-                <mat-option *ngFor="let selectOption of absenceTypeOptions" [value]="selectOption.HRAbsenceTypeID"> 
+              <mat-select  (selectionChange)="selectedItem(item,i,$event.value)" [value]="dayStatus">
+                <mat-option *ngFor="let selectOption of absenceTypeOptions" [value]="selectOption.HRAbsenceTypeID">
                   {{ selectOption.Code }}
                 </mat-option>
               </mat-select>
-            </mat-form-field> 
+            </mat-form-field>
           </div>
         </td>
       </tr>
@@ -92,6 +86,3 @@
 
 </form>
 <br />
-
-
-

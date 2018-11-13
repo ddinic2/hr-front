@@ -39,9 +39,9 @@ export class AbscenceService {
     
   };
 
-  changeAbsenceStatus = (employeeAbsence: number, absenceProcessStatus: number) => {
+  changeAbsenceStatus = (employeeAbsence: number, absenceProcessStatus: number, description: string) => {
       const url = environment.db.ROOT + environment.db.ABSCENCE + environment.db.CHANGE_ABSENCE_STATUS;
-      const obj = {employeeAbsence, absenceProcessStatus}
+      const obj = {employeeAbsence, absenceProcessStatus, description}
       return this.http.post(url, obj);
   };
 

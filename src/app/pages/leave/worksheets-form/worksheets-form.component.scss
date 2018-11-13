@@ -1,16 +1,17 @@
 td{
-    max-width: 50px;
+    max-width: 45px;
     overflow: hidden;
     //mat-form-field{
         //display:hidden;
     //}
     .dates-row{
         overflow: hidden;
-        font-size: 12px;
+        font-size: 10px;
     }
     .mat-form-field{
-        width: 45px;
+        width: 40px;
         overflow: hidden;
+        padding:0px;
     }
   
 }
@@ -19,6 +20,46 @@ th{
     font-family: Roboto,"Helvetica Neue",sans-serif;
     font-size: 15px;
     font-weight: 500;
+    background-color: rgb(210, 221, 221);
     
 }
+table {
+    width: 100%;
+  }
 
+  .form-container {
+    margin: 16px;
+    padding: 16px;
+  
+    .dates-row {
+      width: 100%;
+      display: flex;
+      align-content: space-between;
+    }
+  
+    .date {
+      margin-right: 8px;
+    }
+    .date-from {
+      @extend .date;
+    }
+  
+    .date-to {
+      @extend .date;
+    }
+    .substitute-auto{
+      width: 300px;
+    }
+  
+    .color{
+      background: #42A948; /* green */
+    }
+  }
+  table {
+    width: 100%;
+  }
+  .mat-form-field{
+    padding: 10px;
+    //padding-top: 10px;
+  }
+  
