@@ -26,17 +26,17 @@ export class LeaveFormComponent implements OnInit {
   loggedUser: any;
   absenceType = AbsenceTypes.Absence;
   absenceTypeName = 'Godišnji odmor';
-  absenceProcessStatus = AbsenceProcessStatus.Created;  
+  absenceProcessStatus = AbsenceProcessStatus.Created;
   test: EmployeeAbsence;
 
 
   disableWeekdays = (d: Date): boolean => {
     const day = d.getDay();
     return day !== 0 && day !== 6;
-  }  
-  
+  }
 
-  constructor(private _formBuilder: FormBuilder, public subsService: SubstituteService, public loginService: LoginService, public snackBar: MatSnackBar) { 
+
+  constructor(private _formBuilder: FormBuilder, public subsService: SubstituteService, public loginService: LoginService, public snackBar: MatSnackBar) {
   }
 
   ngOnInit() {
@@ -44,12 +44,12 @@ export class LeaveFormComponent implements OnInit {
       fromDate: [''],
       toDate: [''],
       replaceEmployee: ['']
-            
+
     });
 
-       
+
     this.loggedUser =  this.loginService.getLoggedInUser();
-    
+
     this.employeeAbsenceForm.controls['fromDate'].valueChanges.subscribe(value => {
       if (value && this.employeeAbsenceForm.controls['toDate'].value) {
         this.subsService.getSubstitutesByDate(value, this.employeeAbsenceForm.controls['toDate'].value, this.loggedUser.value.data.employeeId, this.absenceType).subscribe(result => {
@@ -70,7 +70,7 @@ export class LeaveFormComponent implements OnInit {
               verticalPosition: 'top'
             });
           }
-          
+
           this.options = result;
         });
       }
@@ -84,10 +84,10 @@ export class LeaveFormComponent implements OnInit {
         }),
 
       );
-      
+
   }
 
- 
+
 
   private _filter(name: string): any[] {
     if (this.options !== undefined) {
@@ -108,17 +108,17 @@ export class LeaveFormComponent implements OnInit {
         //return typeof (option) === 'string' ? option : `${option.FirstName ? option.FirstName : 'nema ime'} ${option.Surname ? option.Surname : 'nema prezime'}`;
         return typeof (employee) === 'string' ? employee : `${employee.FirstName} ${employee.Surname}`;
     }
-    
+
   }
 
-   
+
   saveAbsence() {
     const formResult: EmployeeAbsence = this.employeeAbsenceForm.value;
     formResult.employeeId = this.loggedUser.value.data.employeeId;
     formResult.employeeEmail =  this.loggedUser.value.data.employeeEmail;
     formResult.absenceType = this.absenceType;
     formResult.absenceTypeName = this.absenceTypeName;
-    formResult.absenceProcessStatus = this.absenceProcessStatus;  
+    formResult.absenceProcessStatus = this.absenceProcessStatus;
     //formResult.absenceTypeName = this.absence
     //console.log(JSON.stringify(formResult, null, 2));
     this.subsService.postAbsence(formResult).subscribe(res => {
@@ -128,8 +128,8 @@ export class LeaveFormComponent implements OnInit {
         verticalPosition: 'top'
       });
       this.employeeAbsenceForm.reset();
-    });  
-    
+    });
+
     console.log(JSON.stringify(formResult, null, 2));
   }
 
