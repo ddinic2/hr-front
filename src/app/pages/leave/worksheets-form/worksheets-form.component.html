@@ -76,8 +76,8 @@
       <tr *ngFor="let item of comparePresenceList">
         <td>{{ item.EmployeeFullName }} </td>
         <td>{{ item.OrgUnitName }} </td>
-        <td *ngFor="let date of item.PresenceTypeCode" [style.background-color]="item.PresenceListConflictType != null ? 'red' : 'white'">
-          {{date}}
+        <td *ngFor="let typeCode of item.PresenceListConflictType" [style.background-color]="typeCode.ConflictType != null ? 'red' : 'white'">
+              {{typeCode.PresenceTypeCode}}
         </td>
       </tr>
       <!-- <td [style.background-color]="i == rowNum ? 'red' : 'green'" ></td> -->
