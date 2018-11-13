@@ -1,10 +1,13 @@
 import { AbscenceService } from './../abscence.service';
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, ViewChild } from '@angular/core';
 import { AbsenceProcessStatus } from "src/app/models/enums/absence-process-satatus";
 import { LoginService } from 'src/app/shared/shared/login.service';
 import { Observable } from 'rxjs';
 import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material';
 import { FormBuilder, FormGroup } from '@angular/forms';
+import { TimsGridComponent } from 'timsystems-lib/lib/tims-grid/tims-grid.component';
+
+
 
 @Component({
   selector: 'hr-abscences-list',
@@ -20,6 +23,8 @@ export class AbscencesListComponent implements OnInit {
    
   @Input() absenceType: number;
   @Input() absProcessStatus: number;
+
+ // @ViewChild(TimsGridComponent) grid: TimsGridComponent;
       
   columnNameArray = [
     'Ime',
@@ -51,6 +56,7 @@ export class AbscencesListComponent implements OnInit {
 
   ngOnInit() {    
     this.loggedUser =  this.loginService.getLoggedInUser();
+    //console.log(this.grid);
   }  
   
     getRepoIssues = (

@@ -5,8 +5,9 @@ import { AbsenceType } from 'src/app/models/absence-type';
 import { LoginService } from 'src/app/shared/shared/login.service';
 import { Worksheets } from 'src/app/models/worksheets';
 import { EmployeePresenceList } from 'src/app/models/employee-presence-list';
-import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA , MatSnackBar} from '@angular/material';
 import { WorksheetsPresenceStatus } from 'src/app/models/enums/worksheets-prsence-status';
+
 
 
 @Component({
@@ -29,9 +30,10 @@ export class WorksheetsFormComponent implements OnInit {
   presenceListStatus: any;
   checkedRes: boolean;
   registratorOptions: any;
+  message: string;
 
 
-  constructor(private _fromBuilder: FormBuilder, public subService: SubstituteService, public loginService: LoginService, public dialog: MatDialog) {
+  constructor(private _fromBuilder: FormBuilder, public subService: SubstituteService, public loginService: LoginService, public dialog: MatDialog, public snackBar: MatSnackBar) {
     this.worksheetsForm = this._fromBuilder.group({
       orgUnit: [''],
       year: [''],
@@ -94,6 +96,11 @@ export class WorksheetsFormComponent implements OnInit {
         let result = this.comparePresenceList.map(m => m.PresenceTypeCode);
         this.dateList = this.dateArrayListDetails(result[0].length);
       });
+  }
+  unlockWorksheets() {
+    const formResult = this.worksheetsForm.value;
+    this.subService.unlockWorksheetsByManager(formResult, this.loggedUser.value.data.employeeId);
+      
   }
 
   selectedItem = (item, index, event) => {

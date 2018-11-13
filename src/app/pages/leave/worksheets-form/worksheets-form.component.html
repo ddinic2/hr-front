@@ -37,6 +37,7 @@
     <button type="submit" mat-raised-button (click)="detailsPresence()">Prikaži</button>
 
     <button type="submit" mat-raised-button (click)="compareWorksheets()"> Uporedi radne liste</button>
+    <button type="submit" mat-raised-button (click)="unlockWorksheets()"> Otključaj radnu listu</button>
   </div>
 
   <br />
@@ -80,7 +81,7 @@
               {{typeCode.PresenceTypeCode}}
         </td>
       </tr>
-      <!-- <td [style.background-color]="i == rowNum ? 'red' : 'green'" ></td> -->
+      
     </table>
   </div>
 

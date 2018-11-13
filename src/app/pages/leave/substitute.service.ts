@@ -170,9 +170,22 @@ export class SubstituteService {
       .set('Month', data.month.toString())
       .set('Year', data.year.toString())
       .set('LoginUser', loginUserId.toString())
+      .set('OrgUnit', data.orgUnit.toString())
     }
       const url = environment.db.ROOT + environment.db.WORKSHEETS + environment.db.COMPARE_WORKSHEETS;
       return this.http.get(url, obj);
+  }
+
+  unlockWorksheetsByManager= (data: any, loginUserId: number) => {
+    const obj = {
+      params: new HttpParams()
+      .set('RegistratorId', data.registrator.toString())
+      .set('Month', data.month.toString())
+      .set('Year', data.year.toString())
+      .set('LoginUser', loginUserId.toString())
+    }
+      const url = environment.db.ROOT + environment.db.WORKSHEETS + environment.db.UNLOCK_WORKSHEETS;
+      return this.http.put(url, obj);
   }
 
   getSubstitutesByDate = (dateFrom: Date, dateTo: Date, employeeId: number, absenceType: any) => {

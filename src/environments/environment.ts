@@ -23,7 +23,8 @@ export const environment = {
     ORG_UNIT: '/org-unit',
     PRESENCE_DETAIL_TYPE: '/presence-detail-type',
     PRESENCE_REGISTRATOR: '/presence-registrator',
-    COMPARE_WORKSHEETS: '/compare-worksheets'
+    COMPARE_WORKSHEETS: '/compare-worksheets',
+    UNLOCK_WORKSHEETS: '/unlock-worksheets'
   }
 };
 
