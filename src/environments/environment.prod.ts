@@ -6,6 +6,7 @@ export const environment = {
     SUBSTITUTE: 'work-leave',
     ABSCENCE: 'absences',
     ABSENCE_TYPE: '/absence-types',
+    ABSENCE_TYPE_WORKSHEETS:'/absence-types-worksheets',
     EMPLOYEE_SUBSITUTE: '/employee-substitute',
     HOLIDAY_DAYS: '/holiday-days',
     ABSENCE_SICK_LEAVE_TYPE: '/absence-sick-leave-type',
@@ -20,7 +21,8 @@ export const environment = {
     PRESENCE_DETAIL_TYPE: '/presence-detail-type',
     PRESENCE_REGISTRATOR: '/presence-registrator',
     COMPARE_WORKSHEETS: '/compare-worksheets',
-    UNLOCK_WORKSHEETS: '/unlock-worksheets'
+    UNLOCK_WORKSHEETS: '/unlock-worksheets',
+    GENERATE_DOCUMENT: '/generate-document'
   }
 
 };

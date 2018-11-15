@@ -33,6 +33,8 @@
 
     </mat-form-field>
   </div>
+  <br/>
+  <p>Uneti podaci utiču na zaradu</p>
   <div class="dates-row">
     <button type="submit" mat-raised-button (click)="detailsPresence()">Prikaži</button>
 
@@ -42,6 +44,7 @@
 
   <br />
   <br />
+
   <div>
     <table class="mat-elevation-z8">
       <th>Zaposleni</th>
@@ -50,13 +53,18 @@
         <td>{{ item.EmployeeFullName }} </td>
         <td *ngFor="let dayStatus of item.DayStatus; let i=index">
           <div class="dates-row">
-            <mat-form-field>
-              <mat-select  (selectionChange)="selectedItem(item,i,$event.value)" [value]="dayStatus">
-                <mat-option *ngFor="let selectOption of absenceTypeOptions" [value]="selectOption.HRAbsenceTypeID">
-                  {{ selectOption.Code }}
-                </mat-option>
-              </mat-select>
-            </mat-form-field>
+            <div>
+              <form>
+              <mat-form-field> 
+                <mat-select (selectionChange)="selectedItem(item,i,$event)"  [(value)]="item.DayStatus[i]">
+                  <!--  -->
+                  <mat-option  *ngFor="let selectOption of absenceTypeOptions" [value]="selectOption.HRAbsenceTypeID">
+                    {{ selectOption.Code }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </form>
+            </div>
           </div>
         </td>
       </tr>
@@ -78,10 +86,10 @@
         <td>{{ item.EmployeeFullName }} </td>
         <td>{{ item.OrgUnitName }} </td>
         <td *ngFor="let typeCode of item.PresenceListConflictType" [style.background-color]="typeCode.ConflictType != null ? 'red' : 'white'">
-              {{typeCode.PresenceTypeCode}}
+          {{typeCode.PresenceTypeCode}}
         </td>
       </tr>
-      
+
     </table>
   </div>
 

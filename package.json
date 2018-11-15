@@ -39,8 +39,10 @@
     "moment": "^2.22.2",
     "moment-business": "^3.0.1",
     "moment-weekday-calc": "^1.1.3",
+    "ng2-handsontable": "^2.1.0-rc.3",
     "reflect-metadata": "^0.1.12",
     "rxjs": "^6.2.2",
+    "rxjs-compat": "^6.3.3",
     "systemjs": "^2.0.2",
     "timsystems-lib": "file:libs/timsystems-lib",
     "zone.js": "^0.8.26"

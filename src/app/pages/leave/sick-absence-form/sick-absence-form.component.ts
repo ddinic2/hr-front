@@ -9,6 +9,7 @@ import { AbsenceProcessStatus } from 'src/app/models/enums/absence-process-satat
 import { EmployeeAbsence } from 'src/app/models/employee-absence';
 import { LoginService } from 'src/app/shared/shared/login.service';
 import {MatSnackBar} from '@angular/material';
+import { Employee } from 'src/app/models/employee';
 
 
 @Component({
@@ -23,6 +24,7 @@ export class SickAbsenceFormComponent implements OnInit {
   sickLeaveTypeOptions: AbsenceSickLeaveType[] = [];
   absenceSubtypeOptions: AbsenceSubtype[] = [];
   sickLeaveCodeOptions: SickLeaveCode[] = [];
+  employeeOptions: Employee[] = [];
   loggedUser: any;
   absenceType = AbsenceTypes.SickAbsence;
   absenceTypeName = 'Bolovanje';
@@ -33,13 +35,14 @@ export class SickAbsenceFormComponent implements OnInit {
     return day !== 0 && day !== 6;
   }
   
-  constructor(private _formBuilder: FormBuilder, public subService: SubstituteService, public loginService: LoginService, public snackBar: MatSnackBar) {
+  constructor(private _formBuilder: FormBuilder, public subService: SubstituteService, public loginService: LoginService, public snackBar: MatSnackBar, public subsService: SubstituteService) {
     this.employeeSickAbsenceForm = this._formBuilder.group({
       fromDate: [''],
       toDate: [''],
       sickLeaveType: [''],
       absenceSubtype:[''],
       sickLeaveCode: [''],
+      employeeControl: ['']
       
     });
   }
@@ -49,6 +52,8 @@ export class SickAbsenceFormComponent implements OnInit {
     this.subService.getAbsenceSubtype().subscribe(res => {this.absenceSubtypeOptions = res});
     this.subService.getSickLeaveCode().subscribe(res => {this.sickLeaveCodeOptions = res});
     this.loggedUser =  this.loginService.getLoggedInUser();
+    this.subsService.getEmployee().subscribe(res => {this.employeeOptions = res; 
+      console.log('Zaposleni:' + JSON.stringify(this.employeeOptions, null, 2)); });
 
     this.employeeSickAbsenceForm.controls['toDate'].valueChanges.subscribe(value => {
       if (value && this.employeeSickAbsenceForm.controls['fromDate'].value) {
@@ -64,6 +69,28 @@ export class SickAbsenceFormComponent implements OnInit {
         });
       }
     });
+  }
+
+  private _filter(name: string): any[] {
+    if (this.employeeOptions !== undefined) {
+      this.employeeOptions = this.employeeOptions;
+      return this.employeeOptions.filter(
+        (option: any) =>
+          option.FirstName!.toLowerCase().indexOf(name.toLowerCase()) === 0
+      );
+      // return this.options.filter(
+      //   (option: any) =>  option.FullName.includes(name.toLocaleLowerCase())
+      // );
+    }
+  }
+
+  displayFn(employee: any): string | undefined {
+    if(employee != null)
+    {
+        //return typeof (option) === 'string' ? option : `${option.FirstName ? option.FirstName : 'nema ime'} ${option.Surname ? option.Surname : 'nema prezime'}`;
+        return typeof (employee) === 'string' ? employee : `${employee.FirstName} ${employee.Surname}`;
+    }
+
   }
 
   saveAbsence() {

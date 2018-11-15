@@ -44,6 +44,17 @@
         </mat-option>
       </mat-select>
     </mat-form-field>
+
+    <mat-form-field class="substitute-auto">
+      <input type="text" placeholder="Zaposleni" aria-label="Zaposleni" matInput formControlName="employeeControl"
+        [matAutocomplete]="auto">
+      <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
+        <mat-option *ngFor="let employee of employeeOptions" [value]="employee">
+          {{employee.FirstName}} {{employee.Surname}}
+          <!-- {{option.FirstName}} {{option.Surname}} : {{option.OrgUnitName}} -->
+        </mat-option>
+      </mat-autocomplete>
+    </mat-form-field>
   </div>
   <div>
     <button type="submit" mat-raised-button (click)="saveAbsence()">Sačuvaj</button>

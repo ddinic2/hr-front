@@ -11,9 +11,10 @@ import { DialogOverviewWorksheets } from 'src/app/pages/leave/worksheets-form/wo
 import { DialogDenyMessage } from 'src/app/pages/absence-overview/abscences-list/abscences-list.component';
 
 
+
 @NgModule({
   declarations: [AppComponent, DialogOverviewWorksheets, DialogDenyMessage],
-  imports: [BrowserModule, AppRoutingModule, LeaveModule, MatButtonModule, MatDialogModule, MatFormFieldModule,ReactiveFormsModule ],
+  imports: [BrowserModule, AppRoutingModule, LeaveModule, MatButtonModule, MatDialogModule, MatFormFieldModule,ReactiveFormsModule],
   providers: [],
   bootstrap: [AppComponent], 
   entryComponents: [DialogOverviewWorksheets, DialogDenyMessage]

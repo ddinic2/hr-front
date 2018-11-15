@@ -47,6 +47,20 @@ export class AbscenceService {
       const obj = {employeeAbsence, absenceProcessStatus, description}
       return this.http.post(url, obj);
   };
+  generateDocument = (employeeAbsence: number, employeeId: number, absenceType: number ) => {
+    const url = environment.db.ROOT + environment.db.ABSCENCE + environment.db.GENERATE_DOCUMENT;
+    const obj = {
+        params: new HttpParams()
+        .set('EmployeeAbsence', employeeAbsence.toString())
+        .set('EmployeeId', employeeId.toString())
+        .set('AbsenceType', absenceType.toString())
+      }
+      return this.http.get<any>(url, obj);
+    };
+    
+    
+
+
 
    
     

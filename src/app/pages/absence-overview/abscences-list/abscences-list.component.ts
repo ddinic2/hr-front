@@ -24,14 +24,14 @@ export class AbscencesListComponent implements OnInit {
  @ViewChild(TimsGridComponent) grid: TimsGridComponent;
 
   columnNameArray = [
-    'Ime',
+    'Ime i Prezime',
     'Datum od',
     'Datum do',
     'Broj radnih dana',
     //'HRJobTypePosition',
     'Status odsustva',
-    'Tip odsustva',
-    'HREmployeeAbsence',
+    'Tip odsustva'
+    //'HREmployeeAbsence',
   ];
 
   displayedColumns = [
@@ -41,8 +41,8 @@ export class AbscencesListComponent implements OnInit {
     'NumOfdays',
     //'JobTypePosition',
     'AbsenceProcessStatusName',
-    'AbsenceTypeName',
-    'EmployeeAbsence',
+    'AbsenceTypeName'
+    //'EmployeeAbsence',
   ];
 
   constructor(private service: AbscenceService, private loginService: LoginService, public dialog: MatDialog) {}
@@ -67,6 +67,7 @@ export class AbscencesListComponent implements OnInit {
       .changeAbsenceStatus(item.EmployeeAbsence, (item.AbsenceProcessStatus = this.absenceProcessStatus.Approved), null)
       .subscribe(res => {
         item.AbsenceProcessStatusName = res;
+        this.grid.refresh();
         
       });
   };
@@ -90,6 +91,11 @@ export class AbscencesListComponent implements OnInit {
       }
     });
   };
+
+  generate = item => {
+    this.service.generateDocument(item.EmployeeAbsence, item.EmployeeId, item.AbsenceType).subscribe(res => {console.log('Generisanje dokumenata: ' + res);});
+  };
+
   // edit = (item) =>
   // console.log('edit');
   // save = (item) =>

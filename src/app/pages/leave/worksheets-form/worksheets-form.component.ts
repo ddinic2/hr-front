@@ -32,7 +32,7 @@ export class WorksheetsFormComponent implements OnInit {
   checkedRes: boolean;
   registratorOptions: any;
   message: string;
-
+  
 
   constructor(private _fromBuilder: FormBuilder, public subService: SubstituteService, public loginService: LoginService, public dialog: MatDialog, public snackBar: MatSnackBar) {
     this.worksheetsForm = this._fromBuilder.group({
@@ -53,7 +53,7 @@ export class WorksheetsFormComponent implements OnInit {
     this.subService.getAbsenceTypeWorksheets().subscribe(res => {
     this.absenceTypeOptions = res;
       //this.absenceTypeOptions.push({ hrAbsenceTypeID: 0, name: '' })
-    })
+    });
     this.subService.getPresenceDetailType().subscribe(res => { this.presenceDetailTypeOptions = res });
 
 
@@ -111,9 +111,11 @@ export class WorksheetsFormComponent implements OnInit {
   }
 
   selectedItem = (item, index, event) => {
-    item.DayStatus[index] = event;
+      item.DayStatus[index] = event.value;
+         
   }
 
+  
   saveWorksheets = () => {
     this.loginUserId = this.loggedUser.value.data.employeeId;
     this.employeePresenceList.loginUserId = this.loggedUser.value.data.employeeId;

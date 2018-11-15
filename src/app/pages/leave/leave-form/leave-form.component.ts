@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, EventEmitter, Output } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
@@ -21,6 +21,8 @@ import { AbscenceService } from 'src/app/pages/absence-overview/abscence.service
 export class LeaveFormComponent implements OnInit {
   @ViewChild(TimsGridComponent) grid: TimsGridComponent;
   
+  @Output()
+  abscenceSaved = new EventEmitter<any>();
   public retPostData;
   employeeAbsenceForm: FormGroup;
   filteredSubEmployeeOptions: Observable<Employee[]>;
@@ -132,6 +134,7 @@ export class LeaveFormComponent implements OnInit {
         verticalPosition: 'top'
       });
       this.employeeAbsenceForm.reset();
+      this.abscenceSaved.next(true);
     });
 
     console.log(JSON.stringify(formResult, null, 2));

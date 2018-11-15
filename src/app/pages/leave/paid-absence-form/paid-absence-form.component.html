@@ -6,25 +6,32 @@
         <mat-datepicker-toggle matSuffix [for]="from"></mat-datepicker-toggle>
         <mat-datepicker #from></mat-datepicker>
       </mat-form-field>
-    <!-- </div>
-    <div class="date-to"> -->
+    
       <mat-form-field>
         <input matInput [min]="employeePaidAbsenceForm.controls.fromDate.value" [matDatepickerFilter]="disableWeekdays" [matDatepicker]="to" placeholder="Kraj" formControlName="toDate">
         <mat-datepicker-toggle matSuffix [for]="to"></mat-datepicker-toggle>
         <mat-datepicker #to></mat-datepicker>
       </mat-form-field>
-    <!-- </div> -->
-  <!-- </div>
+   
+      <mat-form-field>
+        <mat-select placeholder="Tip plaćenog odsustva" formControlName="absenceSubtype">
+          <mat-option *ngFor="let type of absenceSubtypeOptions" [value]="type.HRabsenceSubtypeId">
+            {{ type.Name }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
 
-  <div class="dates-row"> -->
-    <mat-form-field>
-      <mat-select placeholder="Tip plaćenog odsustva" formControlName="absenceSubtype">
-        <mat-option *ngFor="let type of absenceSubtypeOptions" [value]="type.HRabsenceSubtypeId">
-          {{ type.Name }}
-        </mat-option>
-      </mat-select>
-    </mat-form-field>
-  </div>
+      <mat-form-field class="substitute-auto">
+        <input type="text" placeholder="Zaposleni" aria-label="Zaposleni" matInput formControlName="employeeControl"
+          [matAutocomplete]="auto">
+        <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
+          <mat-option *ngFor="let employee of employeeOptions" [value]="employee">
+            {{employee.FirstName}} {{employee.Surname}}
+            <!-- {{option.FirstName}} {{option.Surname}} : {{option.OrgUnitName}} -->
+          </mat-option>
+        </mat-autocomplete>
+      </mat-form-field>
+    </div>
   </div>
 
   <div>

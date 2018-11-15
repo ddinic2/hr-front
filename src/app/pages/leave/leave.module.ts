@@ -12,6 +12,7 @@ import { PaidAbsenceFormComponent } from './paid-absence-form/paid-absence-form.
 import { WorksheetsFormComponent } from './worksheets-form/worksheets-form.component';
 
 import { TimsystemsLibModule, TimsGridModule } from 'timsystems-lib';
+import { HotTableModule } from 'ng2-handsontable';
 
 
 const buttons = new Map([
@@ -20,13 +21,14 @@ const buttons = new Map([
   ['view', { text: 'Detalji', icon: 'address-card-o' }],
   ['save', { text: 'Sačuvaj', icon: 'floppy-o' }],
   ['approve', { text: 'Odobri', icon: 'check' }],
-  ['deny', { text: 'Odbij', icon: 'ban' }],
+  ['deny', { text: 'Poništi', icon: 'ban' }],
   ['generate', { text: 'Generiši dokument', icon: 'file-text' }],
 ]);
 
 @NgModule({
   imports: [
     TimsystemsLibModule,
+    HotTableModule,
     TimsGridModule.setConfig({
       buttons: buttons,
     }),

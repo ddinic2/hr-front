@@ -7,6 +7,7 @@ import { AbsenceProcessStatus } from 'src/app/models/enums/absence-process-satat
 import { EmployeeAbsence } from 'src/app/models/employee-absence';
 import { LoginService } from 'src/app/shared/shared/login.service';
 import {MatSnackBar} from '@angular/material';
+import { Employee } from 'src/app/models/employee';
 
 
 @Component({
@@ -22,6 +23,7 @@ export class PaidAbsenceFormComponent implements OnInit {
   absenceTypeName = 'Plaćena odsustva';
   absenceProcessStatus = AbsenceProcessStatus.Created;
   absenceSubtypeOptions: AbsenceSubtype[] = [];
+  employeeOptions: Employee[] = [];
 
   disableWeekdays = (d: Date): boolean => {
     const day = d.getDay();
@@ -33,6 +35,7 @@ export class PaidAbsenceFormComponent implements OnInit {
       fromDate: [''],
       toDate: [''],
       absenceSubtype: [''],
+      employeeControl:['']
       
     });
     
@@ -41,6 +44,7 @@ export class PaidAbsenceFormComponent implements OnInit {
   ngOnInit() {
     this.subsService.getAbsenceSubtype().subscribe (res => {this.absenceSubtypeOptions = res});
     this.loggedUser =  this.loginService.getLoggedInUser();
+    this.subsService.getEmployee().subscribe(res => {this.employeeOptions = res});
 
     
     this.employeePaidAbsenceForm.controls['toDate'].valueChanges.subscribe(value => {
@@ -59,6 +63,28 @@ export class PaidAbsenceFormComponent implements OnInit {
     });
 
   }  
+  displayFn(employee: any): string | undefined {
+    if(employee != null)
+    {
+        //return typeof (option) === 'string' ? option : `${option.FirstName ? option.FirstName : 'nema ime'} ${option.Surname ? option.Surname : 'nema prezime'}`;
+        return typeof (employee) === 'string' ? employee : `${employee.FirstName} ${employee.Surname}`;
+    }
+
+  }
+
+  private _filter(name: string): any[] {
+    if (this.employeeOptions !== undefined) {
+      this.employeeOptions = this.employeeOptions;
+      return this.employeeOptions.filter(
+        (option: any) =>
+          option.FirstName!.toLowerCase().indexOf(name.toLowerCase()) === 0
+      );
+      // return this.options.filter(
+      //   (option: any) =>  option.FullName.includes(name.toLocaleLowerCase())
+      // );
+    }
+  }
+
 
   saveAbsence() {
     const formResult: EmployeeAbsence = this.employeePaidAbsenceForm.value;

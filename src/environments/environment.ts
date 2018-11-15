@@ -24,7 +24,10 @@ export const environment = {
     PRESENCE_DETAIL_TYPE: '/presence-detail-type',
     PRESENCE_REGISTRATOR: '/presence-registrator',
     COMPARE_WORKSHEETS: '/compare-worksheets',
-    UNLOCK_WORKSHEETS: '/unlock-worksheets'
+    UNLOCK_WORKSHEETS: '/unlock-worksheets',
+    GENERATE_DOCUMENT: '/generate-document',
+    GET_EMPLOYEE: '/get-employee'
+    
   }
 };
 

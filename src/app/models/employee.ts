@@ -7,5 +7,14 @@ export interface Employee {
     jobTypePosition?: number;
     employeeEmail: string;
     roleId: number;
+    position: number;
+    jobTypeName: string;
+    hRNumber: string;
+    startDate: Date;
+    endDate: Date;
+    OrgUnit: number;
+    contractNumber2: string;
+    message: string;
+
     
 }
