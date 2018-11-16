@@ -8,6 +8,8 @@ import { EmployeeAbsence } from 'src/app/models/employee-absence';
 import { LoginService } from 'src/app/shared/shared/login.service';
 import {MatSnackBar} from '@angular/material';
 import { Employee } from 'src/app/models/employee';
+import { Observable } from 'rxjs';
+import { startWith, map } from 'rxjs/operators';
 
 
 @Component({
@@ -24,7 +26,7 @@ export class PaidAbsenceFormComponent implements OnInit {
   absenceProcessStatus = AbsenceProcessStatus.Created;
   absenceSubtypeOptions: AbsenceSubtype[] = [];
   employeeOptions: Employee[] = [];
-
+  
   disableWeekdays = (d: Date): boolean => {
     const day = d.getDay();
     return day !== 0 && day !== 6;
@@ -35,7 +37,8 @@ export class PaidAbsenceFormComponent implements OnInit {
       fromDate: [''],
       toDate: [''],
       absenceSubtype: [''],
-      employeeControl:['']
+      employeeControl:[''] 
+      
       
     });
     
@@ -62,28 +65,29 @@ export class PaidAbsenceFormComponent implements OnInit {
       }
     });
 
-  }  
-  displayFn(employee: any): string | undefined {
-    if(employee != null)
-    {
-        //return typeof (option) === 'string' ? option : `${option.FirstName ? option.FirstName : 'nema ime'} ${option.Surname ? option.Surname : 'nema prezime'}`;
-        return typeof (employee) === 'string' ? employee : `${employee.FirstName} ${employee.Surname}`;
-    }
-
-  }
-
-  private _filter(name: string): any[] {
-    if (this.employeeOptions !== undefined) {
-      this.employeeOptions = this.employeeOptions;
-      return this.employeeOptions.filter(
-        (option: any) =>
-          option.FirstName!.toLowerCase().indexOf(name.toLowerCase()) === 0
-      );
-      // return this.options.filter(
-      //   (option: any) =>  option.FullName.includes(name.toLocaleLowerCase())
-      // );
-    }
-  }
+      }
+   
+      private _filter(name: string): any[] {
+        if (this.employeeOptions !== undefined) {
+          this.employeeOptions = this.employeeOptions;
+          return this.employeeOptions.filter(
+            (option: any) =>
+              option.FirstName!.toLowerCase().indexOf(name.toLowerCase()) === 0
+          );
+          // return this.options.filter(
+          //   (option: any) =>  option.FullName.includes(name.toLocaleLowerCase())
+          // );
+        }
+      }
+    
+      displayFn(employee: any): string | undefined {
+        if(employee != null)
+        {
+            //return typeof (option) === 'string' ? option : `${option.FirstName ? option.FirstName : 'nema ime'} ${option.Surname ? option.Surname : 'nema prezime'}`;
+            return typeof (employee) === 'string' ? employee : `${employee.FirstName} ${employee.Surname}`;
+        }
+    
+      }
 
 
   saveAbsence() {

@@ -4,6 +4,8 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
 import { TimsGridComponent } from 'timsystems-lib';
+import { tap } from 'rxjs/operators';
+
 
 
 
@@ -49,13 +51,12 @@ export class AbscenceService {
   };
   generateDocument = (employeeAbsence: number, employeeId: number, absenceType: number ) => {
     const url = environment.db.ROOT + environment.db.ABSCENCE + environment.db.GENERATE_DOCUMENT;
-    const obj = {
-        params: new HttpParams()
-        .set('EmployeeAbsence', employeeAbsence.toString())
-        .set('EmployeeId', employeeId.toString())
-        .set('AbsenceType', absenceType.toString())
-      }
-      return this.http.get<any>(url, obj);
+    const obj = {employeeAbsence, employeeId, absenceType}
+      return this.http.post(url, obj, {
+        responseType: 'blob',
+        observe: 'response',
+      }).pipe(tap(response => console.log(response)));
+
     };
     
     

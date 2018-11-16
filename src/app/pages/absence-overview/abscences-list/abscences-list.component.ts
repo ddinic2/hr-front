@@ -93,7 +93,23 @@ export class AbscencesListComponent implements OnInit {
   };
 
   generate = item => {
-    this.service.generateDocument(item.EmployeeAbsence, item.EmployeeId, item.AbsenceType).subscribe(res => {console.log('Generisanje dokumenata: ' + res);});
+    this.service.generateDocument(item.EmployeeAbsence, item.EmployeeId, item.AbsenceType)
+    .subscribe(data => {
+      let thefile = {};
+      thefile = data;
+      // thefile = new File(data, 'data.xlsx');
+      const url = URL.createObjectURL(data.body);
+      const disposition = data.headers.getAll('content-disposition');
+      let filename = '';
+      
+      const a = document.createElement('a');
+      document.body.appendChild(a);
+      a.setAttribute('style', 'display: none');
+      a.href = url;
+      a.download = filename;
+      a.click();
+      a.remove();
+    });
   };
 
   // edit = (item) =>
