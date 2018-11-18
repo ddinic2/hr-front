@@ -19,8 +19,8 @@ import { AbscenceService } from 'src/app/pages/absence-overview/abscence.service
   styleUrls: ['./leave-form.component.scss']
 })
 export class LeaveFormComponent implements OnInit {
-  //@ViewChild(TimsGridComponent) grid: TimsGridComponent;
-  
+  @ViewChild(TimsGridComponent) grid: TimsGridComponent;
+
   @Output()
   abscenceSaved = new EventEmitter<any>();
   public retPostData;
@@ -33,7 +33,7 @@ export class LeaveFormComponent implements OnInit {
   absenceType = AbsenceTypes.Absence;
   absenceTypeName = 'Godišnji odmor';
   absenceProcessStatus = AbsenceProcessStatus.Created;
-  
+
 
   disableWeekdays = (d: Date): boolean => {
     const day = d.getDay();
@@ -41,7 +41,7 @@ export class LeaveFormComponent implements OnInit {
   }
 
 
-  constructor(private _formBuilder: FormBuilder, public subsService: SubstituteService, 
+  constructor(private _formBuilder: FormBuilder, public subsService: SubstituteService,
     public loginService: LoginService, public snackBar: MatSnackBar, public absenceService : AbscenceService) {
   }
 
