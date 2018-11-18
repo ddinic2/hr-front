@@ -50,7 +50,7 @@
         [matAutocomplete]="auto">
       <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
         <mat-option *ngFor="let employee of employeeOptions" [value]="employee">
-          {{employee.FirstName}} {{employee.Surname}}
+          {{employee.FirstName}} {{employee.Surname}} {{employee.JobTypeName}}
           <!-- {{option.FirstName}} {{option.Surname}} : {{option.OrgUnitName}} -->
         </mat-option>
       </mat-autocomplete>

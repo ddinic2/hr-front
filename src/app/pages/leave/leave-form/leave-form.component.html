@@ -20,11 +20,11 @@
   <!-- </div>
   <div class="dates-row"> -->
     <mat-form-field class="substitute-auto">
-      <input type="text" placeholder="Zamena" aria-label="Zamena" matInput formControlName="replaceEmployee"
+      <input type="text" placeholder="Zamena" aria-label="Zamena" matInput formControlName="replaceEmployee" 
         [matAutocomplete]="auto">
       <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
         <mat-option *ngFor="let employee of options" [value]="employee">
-          {{employee.FirstName}} {{employee.Surname}}
+          {{employee.FirstName}} {{employee.Surname}} {{employee.JobTypeName}}
           <!-- {{option.FirstName}} {{option.Surname}} : {{option.OrgUnitName}} -->
         </mat-option>
       </mat-autocomplete>
