@@ -5,6 +5,8 @@ import { Injectable } from '@angular/core';
 
 import { TimsGridComponent } from 'timsystems-lib';
 import { tap } from 'rxjs/operators';
+import { EmployeeAbsence } from 'src/app/models/employee-absence';
+import { LoggedUser } from 'src/app/models/logged-user';
 
 
 
@@ -44,10 +46,9 @@ export class AbscenceService {
     
   };
 
-  changeAbsenceStatus = (employeeAbsence: number, absenceProcessStatus: number, description: string) => {
-      const url = environment.db.ROOT + environment.db.ABSCENCE + environment.db.CHANGE_ABSENCE_STATUS;
-      const obj = {employeeAbsence, absenceProcessStatus, description}
-      return this.http.post(url, obj);
+  changeAbsenceStatus = (item:EmployeeAbsence) => { 
+   const url = environment.db.ROOT + environment.db.ABSCENCE + environment.db.CHANGE_ABSENCE_STATUS;
+      return this.http.post(url, item);
   };
   generateDocument = (employeeAbsence: number, employeeId: number, absenceType: number ) => {
     const url = environment.db.ROOT + environment.db.ABSCENCE + environment.db.GENERATE_DOCUMENT;

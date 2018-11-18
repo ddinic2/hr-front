@@ -4,7 +4,8 @@ import { AbsenceProcessStatus } from 'src/app/models/enums/absence-process-satat
 import { LoginService } from 'src/app/shared/shared/login.service';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { TimsGridComponent } from 'timsystems-lib';
+import { LoggedUser } from 'src/app/models/logged-user';
+//import { TimsGridComponent } from 'timsystems-lib';
 
 @Component({
   selector: 'hr-abscences-list',
@@ -21,17 +22,16 @@ export class AbscencesListComponent implements OnInit {
   @Input() absenceType: number;
   @Input() absProcessStatus: number;
 
- @ViewChild(TimsGridComponent) grid: TimsGridComponent;
+ //@ViewChild(TimsGridComponent) grid: TimsGridComponent;
 
   columnNameArray = [
     'Ime i Prezime',
     'Datum od',
     'Datum do',
     'Broj radnih dana',
-    //'HRJobTypePosition',
     'Status odsustva',
     'Tip odsustva'
-    //'HREmployeeAbsence',
+    
   ];
 
   displayedColumns = [
@@ -39,18 +39,16 @@ export class AbscencesListComponent implements OnInit {
     'FromDate',
     'ToDate',
     'NumOfdays',
-    //'JobTypePosition',
     'AbsenceProcessStatusName',
     'AbsenceTypeName'
-    //'EmployeeAbsence',
+    
   ];
 
   constructor(private service: AbscenceService, private loginService: LoginService, public dialog: MatDialog) {}
 
   ngOnInit() {
     this.loggedUser = this.loginService.getLoggedInUser();
-    console.log(this.grid);
-  }
+    }
 
     getRepoIssues = (
     order: string,
@@ -61,13 +59,18 @@ export class AbscencesListComponent implements OnInit {
     absenceType: number = this.absenceType
   ) => this.service.getAbscences(order, direction, page, count, status, absenceType);
 
-  //Odobravanje odsustva
+  //Odobravanje odsustva NAPOMENA: LoggedUser da se zameni sa objektom
   approve = item => {
+    item.AbsenceProcessStatus = this.absenceProcessStatus.Approved;
+    item.LoggedUserId = this.loggedUser.value.data.employeeId;
+      item.LoggedUserEmail = this.loggedUser.value.data.employeeEmail;
+      item.LoggedUserRoleId = this.loggedUser.value.data.roleId;
+      item.LoggedUsername = this.loggedUser.value.data.username;
     this.service
-      .changeAbsenceStatus(item.EmployeeAbsence, (item.AbsenceProcessStatus = this.absenceProcessStatus.Approved), null)
+      .changeAbsenceStatus(item)
       .subscribe(res => {
         item.AbsenceProcessStatusName = res;
-        this.grid.refresh();
+        //this.grid.refresh();
         
       });
   };
@@ -79,12 +82,14 @@ export class AbscencesListComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result.value.deny) {
-        this.service
-          .changeAbsenceStatus(
-            item.EmployeeAbsence,
-            (item.AbsenceProcessStatus = this.absenceProcessStatus.Deny),
-            result.value.description
-          )
+        item.AbsenceProcessStatus = this.absenceProcessStatus.Deny;
+        item.description = result.value.description;
+        item.LoggedUserId = this.loggedUser.value.data.employeeId;
+      item.LoggedUserEmail = this.loggedUser.value.data.employeeEmail;
+      item.LoggedUserRoleId = this.loggedUser.value.data.roleId;
+      item.LoggedUsername = this.loggedUser.value.data.username;
+      console.log('Item je :' + item);
+        this.service.changeAbsenceStatus(item)
           .subscribe(res => {
             item.AbsenceProcessStatusName = res;
           });

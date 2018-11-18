@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { SubstituteService } from '../substitute.service';
 import { AbsenceType } from 'src/app/models/absence-type';
@@ -7,6 +7,7 @@ import { Worksheets } from 'src/app/models/worksheets';
 import { EmployeePresenceList } from 'src/app/models/employee-presence-list';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA , MatSnackBar} from '@angular/material';
 import { WorksheetsPresenceStatus } from 'src/app/models/enums/worksheets-prsence-status';
+import { SlicePipe } from '@angular/common';
 
 
 
@@ -33,6 +34,7 @@ export class WorksheetsFormComponent implements OnInit {
   registratorOptions: any;
   message: string;
   
+  @ViewChild('newInput') firstNameElement: ElementRef;
 
   constructor(private _fromBuilder: FormBuilder, public subService: SubstituteService, public loginService: LoginService, public dialog: MatDialog, public snackBar: MatSnackBar) {
     this.worksheetsForm = this._fromBuilder.group({
@@ -110,11 +112,35 @@ export class WorksheetsFormComponent implements OnInit {
       
   }
 
-  selectedItem = (item, index, event) => {
+  selectedItem = (item, index, event, maxLength) => {
       item.DayStatus[index] = event.value;
+      this.firstNameElement.nativeElement.focus();
          
   }
 
+  // onKey = (item,index,event) =>{
+  //   const test = event;
+    
+  //   // if(event.target.value === "b" || event.target.value ==='g' || event.target.value === 'p')
+  //   if(event.which == 66 || event.which == 80 ||event.which == 71)
+  //   {
+
+  //     let nextControl: any = event.target.nextElementSibling;
+  //     let element = event.target.nextElementSibling; // get the sibling element
+
+  //     if(element == null)  // check if its null
+  //         return;
+  //     else
+  //         element.focus();   // focus if not null
+        
+  //   }
+  //  else
+  //  {
+  //    console.log(event.code)
+  //    event.target.value = '';
+  //  }
+  // }
+ 
   
   saveWorksheets = () => {
     this.loginUserId = this.loggedUser.value.data.employeeId;

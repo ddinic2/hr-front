@@ -13,6 +13,8 @@ import { WorksheetsFormComponent } from './worksheets-form/worksheets-form.compo
 
 import { TimsystemsLibModule, TimsGridModule } from 'timsystems-lib';
 import { HotTableModule } from 'ng2-handsontable';
+import { DialogOverviewWorksheets } from 'src/app/pages/leave/worksheets-form/worksheets-form.component';
+import { DialogDenyMessage } from 'src/app/pages/absence-overview/abscences-list/abscences-list.component';
 
 
 const buttons = new Map([
@@ -38,7 +40,8 @@ const buttons = new Map([
     ReactiveFormsModule,
     SharedModule,
   ],
-  declarations: [LeaveComponent, LeaveFormComponent, AbscencesListComponent, SickAbsenceFormComponent, PaidAbsenceFormComponent, WorksheetsFormComponent],
-  exports: [LeaveComponent, LeaveFormComponent, AbscencesListComponent]
+  declarations: [LeaveComponent, LeaveFormComponent, AbscencesListComponent, SickAbsenceFormComponent, PaidAbsenceFormComponent, WorksheetsFormComponent,  DialogOverviewWorksheets, DialogDenyMessage],
+  exports: [LeaveComponent, LeaveFormComponent, AbscencesListComponent],
+  entryComponents: [DialogOverviewWorksheets, DialogDenyMessage]
 })
 export class LeaveModule {}

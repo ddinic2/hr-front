@@ -22,7 +22,8 @@ export const environment = {
     PRESENCE_REGISTRATOR: '/presence-registrator',
     COMPARE_WORKSHEETS: '/compare-worksheets',
     UNLOCK_WORKSHEETS: '/unlock-worksheets',
-    GENERATE_DOCUMENT: '/generate-document'
+    GENERATE_DOCUMENT: '/generate-document',
+    GET_EMPLOYEE: '/get-employee'
   }
 
 };
