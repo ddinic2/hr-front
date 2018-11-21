@@ -5,7 +5,7 @@ import { LoginService } from 'src/app/shared/shared/login.service';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { LoggedUser } from 'src/app/models/logged-user';
-//import { TimsGridComponent } from 'timsystems-lib';
+import { TimsGridComponent } from 'timsystems-lib';
 
 @Component({
   selector: 'hr-abscences-list',
@@ -22,7 +22,7 @@ export class AbscencesListComponent implements OnInit {
   @Input() absenceType: number;
   @Input() absProcessStatus: number;
 
- //@ViewChild(TimsGridComponent) grid: TimsGridComponent;
+  @ViewChild(TimsGridComponent) grid: TimsGridComponent;
 
   columnNameArray = [
     'Ime i Prezime',
@@ -31,7 +31,7 @@ export class AbscencesListComponent implements OnInit {
     'Broj radnih dana',
     'Status odsustva',
     'Tip odsustva'
-    
+
   ];
 
   displayedColumns = [
@@ -41,16 +41,16 @@ export class AbscencesListComponent implements OnInit {
     'NumOfdays',
     'AbsenceProcessStatusName',
     'AbsenceTypeName'
-    
+
   ];
 
-  constructor(private service: AbscenceService, private loginService: LoginService, public dialog: MatDialog) {}
+  constructor(private service: AbscenceService, private loginService: LoginService, public dialog: MatDialog) { }
 
   ngOnInit() {
     this.loggedUser = this.loginService.getLoggedInUser();
-    }
+  }
 
-    getRepoIssues = (
+  getRepoIssues = (
     order: string,
     direction: string,
     page = 1,
@@ -63,17 +63,22 @@ export class AbscencesListComponent implements OnInit {
   approve = item => {
     item.AbsenceProcessStatus = this.absenceProcessStatus.Approved;
     item.LoggedUserId = this.loggedUser.value.data.employeeId;
-      item.LoggedUserEmail = this.loggedUser.value.data.employeeEmail;
-      item.LoggedUserRoleId = this.loggedUser.value.data.roleId;
-      item.LoggedUsername = this.loggedUser.value.data.username;
+    item.LoggedUserEmail = this.loggedUser.value.data.employeeEmail;
+    item.LoggedUserRoleId = this.loggedUser.value.data.roleId;
+    item.LoggedUsername = this.loggedUser.value.data.username;
     this.service
       .changeAbsenceStatus(item)
       .subscribe(res => {
         item.AbsenceProcessStatusName = res;
-        //this.grid.refresh();
-        
+        this.performRefresh();
       });
   };
+
+
+  performRefresh = () => {
+    this.grid.refresh();
+
+  }
   //Ponistavanje odsustva
   deny = item => {
     const dialogRef = this.dialog.open(DialogDenyMessage, {
@@ -85,13 +90,14 @@ export class AbscencesListComponent implements OnInit {
         item.AbsenceProcessStatus = this.absenceProcessStatus.Deny;
         item.description = result.value.description;
         item.LoggedUserId = this.loggedUser.value.data.employeeId;
-      item.LoggedUserEmail = this.loggedUser.value.data.employeeEmail;
-      item.LoggedUserRoleId = this.loggedUser.value.data.roleId;
-      item.LoggedUsername = this.loggedUser.value.data.username;
-      console.log('Item je :' + item);
+        item.LoggedUserEmail = this.loggedUser.value.data.employeeEmail;
+        item.LoggedUserRoleId = this.loggedUser.value.data.roleId;
+        item.LoggedUsername = this.loggedUser.value.data.username;
+        console.log('Item je :' + item);
         this.service.changeAbsenceStatus(item)
           .subscribe(res => {
             item.AbsenceProcessStatusName = res;
+            this.performRefresh();
           });
       }
     });
@@ -99,22 +105,22 @@ export class AbscencesListComponent implements OnInit {
 
   generate = item => {
     this.service.generateDocument(item.EmployeeAbsence, item.EmployeeId, item.AbsenceType)
-    .subscribe(data => {
-      let thefile = {};
-      thefile = data;
-      // thefile = new File(data, 'data.xlsx');
-      const url = URL.createObjectURL(data.body);
-      const disposition = data.headers.getAll('content-disposition');
-      let filename = '';
-      
-      const a = document.createElement('a');
-      document.body.appendChild(a);
-      a.setAttribute('style', 'display: none');
-      a.href = url;
-      a.download = filename;
-      a.click();
-      a.remove();
-    });
+      .subscribe(data => {
+        let thefile = {};
+        thefile = data;
+        // thefile = new File(data, 'data.xlsx');
+        const url = URL.createObjectURL(data.body);
+        const disposition = data.headers.getAll('content-disposition');
+        let filename = '';
+
+        const a = document.createElement('a');
+        document.body.appendChild(a);
+        a.setAttribute('style', 'display: none');
+        a.href = url;
+        a.download = filename;
+        a.click();
+        a.remove();
+      });
   };
 
   // edit = (item) =>
@@ -137,7 +143,7 @@ export class DialogDenyMessage {
       deny: [''],
     });
   }
-
+  
   onClick = data => {
     this.dialogFormGroup.controls['deny'].setValue(data);
     this.dialogRef.close(this.dialogFormGroup);

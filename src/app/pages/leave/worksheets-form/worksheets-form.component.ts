@@ -8,6 +8,7 @@ import { EmployeePresenceList } from 'src/app/models/employee-presence-list';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA , MatSnackBar} from '@angular/material';
 import { WorksheetsPresenceStatus } from 'src/app/models/enums/worksheets-prsence-status';
 import { SlicePipe } from '@angular/common';
+import { AbsenceTypes } from 'src/app/models/enums/absence-type';
 
 
 
@@ -118,28 +119,49 @@ export class WorksheetsFormComponent implements OnInit {
          
   }
 
-  // onKey = (item,index,event) =>{
-  //   const test = event;
+  onKey = (item,index,event) =>{
+    const test = event;
     
-  //   // if(event.target.value === "b" || event.target.value ==='g' || event.target.value === 'p')
-  //   if(event.which == 66 || event.which == 80 ||event.which == 71)
-  //   {
+    // if(event.target.value === "b" || event.target.value ==='g' || event.target.value === 'p' || event.target.value === 'o'  || event.target.value === 'p' )
+    if(event.which == 66 || event.which == 80 || event.which == 71 || event.which == 79 ||event.which == 82)
+    {
+      switch (event.which) {
+        case 71:
+          item.DayStatus[index] = AbsenceTypes.Absence;
+            break;
+        case 80:
+          item.DayStatus[index] = AbsenceTypes.PaidAbsence;
+            break;
+        case 66:
+          item.DayStatus[index] = AbsenceTypes.SickAbsence;
+            break;
+        case 79:
+          item.DayStatus[index] = AbsenceTypes.Maternally;
+            break;
+        case 82:
+          item.DayStatus[index] = AbsenceTypes.Worksheet;
+            break;
+    }
+      //item.DayStatus[index] = event.value;
 
-  //     let nextControl: any = event.target.nextElementSibling;
-  //     let element = event.target.nextElementSibling; // get the sibling element
+      let nextControl: any = event.target.nextElementSibling;
+      console.log('Next sibiling' + event.target.nextElementSibling)
+      let element = event.target.nextElementSibling; // get the sibling element
+      
+      console.log('Next control' + nextControl.nextElementSibling)
 
-  //     if(element == null)  // check if its null
-  //         return;
-  //     else
-  //         element.focus();   // focus if not null
+      if(nextControl == null)  // check if its null
+          return;
+      else
+        nextControl.focus();   // focus if not null
         
-  //   }
-  //  else
-  //  {
-  //    console.log(event.code)
-  //    event.target.value = '';
-  //  }
-  // }
+    }
+   else
+   {
+     console.log(event.code)
+     event.target.value = '';
+   }
+  }
  
   
   saveWorksheets = () => {

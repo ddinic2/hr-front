@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, EventEmitter } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { SubstituteService } from '../substitute.service';
 import { AbsenceSubtype } from 'src/app/models/absence-subtype';
@@ -18,6 +18,7 @@ import { startWith, map } from 'rxjs/operators';
   styleUrls: ['./paid-absence-form.component.scss']
 })
 export class PaidAbsenceFormComponent implements OnInit {
+  abscenceSaved = new EventEmitter<any>();
   public retPostData;
   employeePaidAbsenceForm: FormGroup;
   loggedUser: any;
@@ -26,10 +27,21 @@ export class PaidAbsenceFormComponent implements OnInit {
   absenceProcessStatus = AbsenceProcessStatus.Created;
   absenceSubtypeOptions: AbsenceSubtype[] = [];
   employeeOptions: Employee[] = [];
+  holidayDays: any;
   
   disableWeekdays = (d: Date): boolean => {
     const day = d.getDay();
-    return day !== 0 && day !== 6;
+    const month = d.getMonth() + 1;
+    const year = d.getFullYear();
+    const date = d.getDate();
+    const holidayDays = new Array();
+    this.holidayDays.filter(function(days){
+      if( days.Month == month && days.Year == year)
+      {
+        holidayDays.push(days.DateOfHoliday);       
+      }
+    });
+    return day !== 0 && day !== 6 && !holidayDays.includes(date);
   }
   
   constructor(private _fromBuilder: FormBuilder, public subsService: SubstituteService, public loginService: LoginService, public snackBar: MatSnackBar) {
@@ -37,9 +49,7 @@ export class PaidAbsenceFormComponent implements OnInit {
       fromDate: [''],
       toDate: [''],
       absenceSubtype: [''],
-      employeeControl:[''] 
-      
-      
+      employeeAbsenceDetail:[''] 
     });
     
    }
@@ -48,17 +58,23 @@ export class PaidAbsenceFormComponent implements OnInit {
     this.subsService.getAbsenceSubtype().subscribe (res => {this.absenceSubtypeOptions = res});
     this.loggedUser =  this.loginService.getLoggedInUser();
     this.subsService.getEmployee().subscribe(res => {this.employeeOptions = res});
+    this.subsService.getHolidayDaysForCalendar().subscribe(res => {
+      this.holidayDays = res;        
+  });
 
     
     this.employeePaidAbsenceForm.controls['toDate'].valueChanges.subscribe(value => {
-      if (value && this.employeePaidAbsenceForm.controls['fromDate'].value) {
-        this.subsService.getSubstitutesByDate(this.employeePaidAbsenceForm.controls['fromDate'].value, value, this.loggedUser.value.data.employeeId, this.absenceType).subscribe((result) => {
+      const employee = this.employeePaidAbsenceForm.controls['employeeAbsenceDetail'].value;
+      if (value && this.employeePaidAbsenceForm.controls['fromDate'].value && employee) {
+        this.subsService.getSubstitutesByDate(this.employeePaidAbsenceForm.controls['fromDate'].value, value, employee.EmployeeId, this.absenceType).subscribe((result) => {
           if(result == null)
           {
             this.snackBar.open('Postoji odsustvo za ovaj vremenski period!', 'OK', {
               duration: 10000,
               verticalPosition: 'top'
             });
+            this.employeePaidAbsenceForm.controls['fromDate'].reset();
+            this.employeePaidAbsenceForm.controls['toDate'].reset();
           }
           
         });
@@ -92,11 +108,12 @@ export class PaidAbsenceFormComponent implements OnInit {
 
   saveAbsence() {
     const formResult: EmployeeAbsence = this.employeePaidAbsenceForm.value;
-    formResult.employeeId = this.loggedUser.value.data.employeeId;
-    formResult.employeeEmail =  this.loggedUser.value.data.employeeEmail;
+    formResult.loggedUserId = this.loggedUser.value.data.employeeId;
+    formResult.loggedUserEmail =  this.loggedUser.value.data.employeeEmail;
     formResult.absenceType = this.absenceType;
     formResult.absenceTypeName = this.absenceTypeName;
     formResult.absenceProcessStatus = this.absenceProcessStatus; 
+    
     this.subsService.postAbsence(formResult).subscribe(res => {
       this.retPostData = res;
       this.snackBar.open(this.retPostData, 'OK', {
@@ -104,6 +121,7 @@ export class PaidAbsenceFormComponent implements OnInit {
       verticalPosition: 'top'
     });
     this.employeePaidAbsenceForm.reset();
+    this.abscenceSaved.emit(null);
   });  
   console.log(JSON.stringify(formResult, null, 2));   
   }

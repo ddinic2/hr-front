@@ -14,6 +14,7 @@ import {  ReactiveFormsModule } from '@angular/forms';
   imports: [BrowserModule, AppRoutingModule, LeaveModule, MatButtonModule, MatDialogModule, MatFormFieldModule,ReactiveFormsModule],
   providers: [],
   bootstrap: [AppComponent]
-  
 })
 export class AppModule {}
+
+

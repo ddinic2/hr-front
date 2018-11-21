@@ -11,34 +11,44 @@ import { SickAbsenceFormComponent } from './sick-absence-form/sick-absence-form.
 import { PaidAbsenceFormComponent } from './paid-absence-form/paid-absence-form.component';
 import { WorksheetsFormComponent } from './worksheets-form/worksheets-form.component';
 
+
 import { TimsystemsLibModule, TimsGridModule } from 'timsystems-lib';
 import { HotTableModule } from 'ng2-handsontable';
 import { DialogOverviewWorksheets } from 'src/app/pages/leave/worksheets-form/worksheets-form.component';
 import { DialogDenyMessage } from 'src/app/pages/absence-overview/abscences-list/abscences-list.component';
 
 
-const buttons = new Map([
-  ['edit', { text: 'Izmeni', icon: 'pencil-square-o' }],
-  ['delete', { text: 'Obriši', icon: 'trash-o' }],
-  ['view', { text: 'Detalji', icon: 'address-card-o' }],
-  ['save', { text: 'Sačuvaj', icon: 'floppy-o' }],
-  ['approve', { text: 'Odobri', icon: 'check' }],
-  ['deny', { text: 'Poništi', icon: 'ban' }],
-  ['generate', { text: 'Generiši dokument', icon: 'file-text' }],
-]);
+// const buttons = new Map([
+//   ['edit', { text: 'Izmeni', icon: 'pencil-square-o' }],
+//   ['delete', { text: 'Obriši', icon: 'trash-o' }],
+//   ['view', { text: 'Detalji', icon: 'address-card-o' }],
+//   ['save', { text: 'Sačuvaj', icon: 'floppy-o' }],
+//   ['approve', { text: 'Odobri', icon: 'check' }],
+//   ['deny', { text: 'Poništi', icon: 'ban' }],
+//   ['generate', { text: 'Generiši dokument', icon: 'file-text' }]
+// ]);
 
 @NgModule({
   imports: [
     TimsystemsLibModule,
     HotTableModule,
     TimsGridModule.setConfig({
-      buttons: buttons,
+      //buttons: buttons
+      buttons: new Map([
+        ['edit', { text: 'Izmeni', icon: 'pencil-square-o' }],
+        ['delete', { text: 'Obriši', icon: 'trash-o' }],
+        ['view', { text: 'Detalji', icon: 'address-card-o' }],
+        ['save', { text: 'Sačuvaj', icon: 'floppy-o' }],
+        ['approve', { text: 'Odobri', icon: 'check' }],
+        ['deny', { text: 'Poništi', icon: 'ban' }],
+        ['generate', { text: 'Generiši dokument', icon: 'file-text' }]
+      ])
     }),
     AngularFontAwesomeModule,
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
-    SharedModule,
+    SharedModule
   ],
   declarations: [LeaveComponent, LeaveFormComponent, AbscencesListComponent, SickAbsenceFormComponent, PaidAbsenceFormComponent, WorksheetsFormComponent,  DialogOverviewWorksheets, DialogDenyMessage],
   exports: [LeaveComponent, LeaveFormComponent, AbscencesListComponent],

@@ -19,7 +19,7 @@ import { AbscenceService } from 'src/app/pages/absence-overview/abscence.service
   styleUrls: ['./leave-form.component.scss']
 })
 export class LeaveFormComponent implements OnInit {
-  @ViewChild(TimsGridComponent) grid: TimsGridComponent;
+ @ViewChild(TimsGridComponent) grid: TimsGridComponent;
 
   @Output()
   abscenceSaved = new EventEmitter<any>();
@@ -33,11 +33,32 @@ export class LeaveFormComponent implements OnInit {
   absenceType = AbsenceTypes.Absence;
   absenceTypeName = 'Godišnji odmor';
   absenceProcessStatus = AbsenceProcessStatus.Created;
+  filteredOptions: Observable<any[]>;
+  employeeFamilyDay: any;
+  employeeFamilyHoliday: any;
 
 
   disableWeekdays = (d: Date): boolean => {
     const day = d.getDay();
-    return day !== 0 && day !== 6;
+    const month = d.getMonth() + 1;
+    const year = d.getFullYear();
+    const date = d.getDate();
+    const holidayDays = new Array();
+    this.holidayDays.filter(function(days){
+      if( days.Month == month && days.Year == year)
+      {
+        holidayDays.push(days.DateOfHoliday);       
+      }
+    });
+    if(this.employeeFamilyDay.FamilyHolidayMonth && this.employeeFamilyDay.FamilyHolidayMonth == month)
+    {
+      return day !== 0 && day !== 6 && !holidayDays.includes(date) && date !== this.employeeFamilyDay.FamilyHolidayDay;
+    }
+    else
+    {
+      return day !== 0 && day !== 6 && !holidayDays.includes(date);
+    }
+    
   }
 
 
@@ -55,15 +76,25 @@ export class LeaveFormComponent implements OnInit {
 
 
     this.loggedUser =  this.loginService.getLoggedInUser();
-
-    this.employeeAbsenceForm.controls['fromDate'].valueChanges.subscribe(value => {
-      if (value && this.employeeAbsenceForm.controls['toDate'].value) {
-        this.subsService.getSubstitutesByDate(value, this.employeeAbsenceForm.controls['toDate'].value, this.loggedUser.value.data.employeeId, this.absenceType).subscribe(result => {
-          //this.employeeAbsenceForm.controls['replaceEmployee'].setValue(undefined);
-          this.options =  result;
-        });
-      }
+    this.subsService.getHolidayDaysForCalendar().subscribe(res => {
+        this.holidayDays = res;        
     });
+
+    this.subsService.getEmployeeFamilyHoliday(this.loggedUser.value.data.employeeId).subscribe(res => {
+      this.employeeFamilyHoliday = res;  
+      this.employeeFamilyDay = res;       
+  });
+    
+
+
+    // this.employeeAbsenceForm.controls['fromDate'].valueChanges.subscribe(value => {
+    //   if (value && this.employeeAbsenceForm.controls['toDate'].value) {
+    //     this.subsService.getSubstitutesByDate(value, this.employeeAbsenceForm.controls['toDate'].value, this.loggedUser.value.data.employeeId, this.absenceType).subscribe(result => {
+    //       //this.employeeAbsenceForm.controls['replaceEmployee'].setValue(undefined);
+    //       this.options =  result;
+    //     });
+    //   }
+    // });
 
     this.employeeAbsenceForm.controls['toDate'].valueChanges.subscribe(value => {
       if (value && this.employeeAbsenceForm.controls['fromDate'].value) {
@@ -75,6 +106,8 @@ export class LeaveFormComponent implements OnInit {
               duration: 10000,
               verticalPosition: 'top'
             });
+            this.employeeAbsenceForm.controls['fromDate'].reset();
+            this.employeeAbsenceForm.controls['toDate'].reset();
           }
 
           this.options = result;
@@ -82,31 +115,35 @@ export class LeaveFormComponent implements OnInit {
       }
     });
 
-    this.employeeAbsenceForm.controls['replaceEmployee'].valueChanges
-      .pipe(startWith<string | Employee>(''),
+   this.employeeAbsenceForm.controls['replaceEmployee'].valueChanges
+  .pipe(startWith<string | Employee>(''),
         map((name: string) => {
           console.log(name);
           return name && name.length >= 0 ? this._filter(name) : this.options.slice()
         }),
 
       );
-
   }
 
-
+  // onKey = (event) => {
+  //   this._filter(event.target.value);
+  // } 
 
   private _filter(name: string): any[] {
     if (this.options !== undefined) {
       this.options = this.options;
       return this.options.filter(
         (option: any) =>
-          option.FirstName!.toLowerCase().indexOf(name.toLowerCase()) === 0
+          option.FirstName.toLowerCase().indexOf(name.toLowerCase()) === 0
       );
       // return this.options.filter(
-      //   (option: any) =>  option.FullName.includes(name.toLocaleLowerCase())
+      //   (option: any) =>  option.FirstName.includes(name.toLocaleLowerCase())
       // );
     }
   }
+ 
+  
+  
 
   displayFn(employee: any): string | undefined {
     if(employee != null)
@@ -119,11 +156,13 @@ export class LeaveFormComponent implements OnInit {
 
   saveAbsence() {
     const formResult: EmployeeAbsence = this.employeeAbsenceForm.value;
-    formResult.employeeId = this.loggedUser.value.data.employeeId;
-    formResult.employeeEmail =  this.loggedUser.value.data.employeeEmail;
+    formResult.loggedUserId = this.loggedUser.value.data.employeeId;
+    formResult.loggedUserEmail =  this.loggedUser.value.data.employeeEmail;
     formResult.absenceType = this.absenceType;
     formResult.absenceTypeName = this.absenceTypeName;
     formResult.absenceProcessStatus = this.absenceProcessStatus;
+    formResult.familyHolidayDay = this.employeeFamilyHoliday.FamilyHolidayDay;
+    formResult.familyHolidayMonth = this.employeeFamilyHoliday.FamilyHolidayMonth;
     //formResult.absenceTypeName = this.absence
     //console.log(JSON.stringify(formResult, null, 2));
     this.subsService.postAbsence(formResult).subscribe(res => {
@@ -133,7 +172,10 @@ export class LeaveFormComponent implements OnInit {
         verticalPosition: 'top'
       });
       this.employeeAbsenceForm.reset();
-      //this.abscenceSaved.next(true);
+      this.abscenceSaved.next(true);
+     // this.grid.refresh();
+     //this.abscenceSaved.emit(null);
+      
     });
 
     console.log(JSON.stringify(formResult, null, 2));

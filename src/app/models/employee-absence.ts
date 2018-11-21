@@ -27,10 +27,12 @@ export interface EmployeeAbsence {
     jobTypePosition: null;
     position: number;
     replaceEmployee: number;
-    LoggedUserId: string;
-    LoggedUserEmailId: string;
-    LoggedUserRoleId: string;
-    LoggedUsername: string;
+    loggedUserId: string;
+    loggedUserEmail: string;
+    loggedUserRoleId: string;
+    loggedUsername: string;
+    familyHolidayDay: number;
+    familyHolidayMonth: number;
 
 }
 

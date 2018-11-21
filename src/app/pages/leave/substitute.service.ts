@@ -17,6 +17,7 @@ import { EmployeePresenceList } from 'src/app/models/employee-presence-list';
 import { Headers, RequestOptions } from '@angular/http';
 import { keyframes } from '@angular/animations';
 import { TouchSequence } from 'selenium-webdriver';
+import { AbsenceTypes } from 'src/app/models/enums/absence-type';
 
 
 const moment = _moment;
@@ -34,6 +35,8 @@ export class SubstituteService {
   holidayObservable: Observable<string[]>;
   canSave = false;
   checkedRes = [];
+  employeeFamilyDay: any;
+    
  
   extractData(res: Response) {
     const body = res.json();
@@ -52,6 +55,8 @@ export class SubstituteService {
       this.holidayDateslist = res;
       this.canSave = true;
     });
+
+    
   }
 
   // getSubstitutes(val: string): Observable<any[]> {
@@ -73,6 +78,25 @@ export class SubstituteService {
     const url = environment.db.ROOT + environment.db.HOLIDAY_DAYS;
     return this.http.get<string[]>(url);
   }
+
+  getHolidayDaysForCalendar = () => {
+    const url = environment.db.ROOT + environment.db.HOLIDAY_DAYS + environment.db.HOLIDAY_DAYS_CALENDAR;
+    return this.http.get<any[]>(url);
+  }
+  getFamilyHoliday = () => {
+    const url = environment.db.ROOT + environment.db.FAMILY_HOLIDAY;
+    return this.http.get<any[]>(url);
+  }
+
+  getEmployeeFamilyHoliday = (employeeId: number) => {
+    const url = environment.db.ROOT + environment.db.FAMILY_HOLIDAY + environment.db.EMPLOYEE_FAMILY_HOLIDAY;
+    const obj = {
+      params: new HttpParams()
+      .set('EmployeeId', employeeId.toString())
+    };
+    return this.http.get<any[]>(url, obj);
+  }
+
 
   getAbsenceSickLeaveType = () => {
     const url = environment.db.ROOT + environment.db.ABSENCE_SICK_LEAVE_TYPE;
@@ -205,6 +229,7 @@ export class SubstituteService {
     // .subscribe(res => this.substitutesList.next(res));
   }
 
+  //Save absence
   public postAbsence(employeeAbsence: EmployeeAbsence): Observable<EmployeeAbsence> {  
     const url = environment.db.ROOT + environment.db.ABSCENCE;
     const startDate = moment(employeeAbsence.fromDate);
@@ -219,9 +244,11 @@ export class SubstituteService {
       }
 
     });
- 
 
-    const dateArray = this.getDateArray(startDate, endDate);
+  const dateArray = this.getDateArray(startDate, endDate, employeeAbsence.absenceType, employeeAbsence.familyHolidayDay, employeeAbsence.familyHolidayMonth);
+
+    
+
     this.holidayDateslist.forEach(function (item) {
       const index = dateArray.indexOf(item.Date);
       if (index !== -1) {
@@ -239,14 +266,26 @@ export class SubstituteService {
     // });
   }
 
-  getDateArray = function (start, end) {
+  getDateArray = function (start, end, absenceType, familyHolidayDay, familyHolidayMonth) {
     const dateArray = new Array();
     const startDate = new Date(start);
+            
     while (startDate <= end) {
-      if (startDate.getDay() !== 0 && startDate.getDay() !== 6) {
-        dateArray.push(new Date(startDate).toDateString().substring(0, 15));
-      }
-      startDate.setDate(startDate.getDate() + 1);
+      if(absenceType == AbsenceTypes.Absence)  
+      {
+        if (startDate.getDay() !== 0 && startDate.getDay() !== 6 && (familyHolidayDay && startDate.getDate() != familyHolidayDay) && (familyHolidayMonth && startDate.getDate() != familyHolidayMonth)) {
+          dateArray.push(new Date(startDate).toDateString().substring(0, 15));
+        }
+        startDate.setDate(startDate.getDate() + 1);
+      }  
+      else
+      {
+        if (startDate.getDay() !== 0 && startDate.getDay() !== 6 && startDate.getDate()) {
+          dateArray.push(new Date(startDate).toDateString().substring(0, 15));
+        }
+        startDate.setDate(startDate.getDate() + 1);
+      }   
+      
     }
     return dateArray;
   };
@@ -257,12 +296,12 @@ export class SubstituteService {
     const startDate = new Date(start)
     
       dateExArray.push(new Date(startDate).toDateString().substring(0, 15));
-      startDate.setDate(startDate.getDate() - 1);
+      startDate.setDate(startDate.getDate() + 1);
       while(dateExArray.length <= 2){
         if(startDate.getDay() !== 0 && startDate.getDay() !== 6){
           dateExArray.push(new Date(startDate).toDateString().substring(0, 15));
         }
-        startDate.setDate(startDate.getDate() - 1);
+        startDate.setDate(startDate.getDate() + 1);
       }
       
     return dateExArray;

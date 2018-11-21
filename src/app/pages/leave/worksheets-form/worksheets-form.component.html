@@ -45,7 +45,7 @@
   <br />
   <br />
 
-  <div>
+  <!-- <div>
     <table class="mat-elevation-z8">
       <th>Zaposleni</th>
       <th *ngFor="let dates of dateList">{{dates}}</th>
@@ -57,7 +57,7 @@
               <form>
               <mat-form-field> 
                 <mat-select (selectionChange)="selectedItem(item,i,$event)" [(value)]="item.DayStatus[i]">
-                  <!--  -->
+                  
                   <mat-option  *ngFor="let selectOption of absenceTypeOptions" [value]="selectOption.HRAbsenceTypeID">
                     {{ selectOption.Code }}
                   </mat-option>
@@ -70,7 +70,7 @@
       </tr>
 
     </table>
-  </div>
+  </div> -->
   <br />
   <div>
     <button type="submit" mat-raised-button (click)="saveWorksheets()"> Sačuvaj</button>
@@ -86,11 +86,11 @@
         <td>{{ item.EmployeeFullName }} </td>
         <td *ngFor="let dayStatus of item.DayStatus; let i=index">
         <div class="dates-row">            
-              <form>
-              <mat-form-field> 
+              <!-- <form>
+              <mat-form-field>  -->
                   <input matInput [value]="item.DayStatus[i]"   (keyup)="onKey(item,i,$event)" maxlength="1">                  
-              </mat-form-field>
-            </form>
+              <!-- </mat-form-field>
+            </form> -->
             
           </div>
         </td>
@@ -101,27 +101,7 @@
 
   <br/>
   <br/>
-  <table class="mat-elevation-z8">
-      <th>Test</th>
-      <th *ngFor="let dates of dateList">{{dates}}</th>
-      <tr *ngFor="let item of employeePresenceList">
-        <td>{{ item.EmployeeFullName }} </td>
-        <td *ngFor="let dayStatus of item.DayStatus; let i=index">
-        <div class="dates-row">            
-              <form>
-              <mat-form-field> 
-                  <input matInput [value]="item.DayStatus[i]"   (keyup)="onKey(item,i,$event)" maxlength="1">                  
-              </mat-form-field>
-            </form>
-            
-          </div>
-        </td>
-        
-      </tr>     
-    </table>
-
-  <br />
-  <br />
+ 
   <div>
     <table class="mat-elevation-z8">
       <th>Zaposleni</th>

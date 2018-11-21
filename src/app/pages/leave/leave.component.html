@@ -1,23 +1,21 @@
 <mat-tab-group #tabGroup > 
     <mat-tab label="Godisnji odmori">
-        <hr-leave-form (savedAbsence)="leaveFormTable.refresh()"></hr-leave-form>
+        <hr-leave-form (abscenceSaved)="doARefresh('leave')"></hr-leave-form>
         <h4>Lista odsustva</h4>
         <hr-abscences-list #leaveFormTable [absenceType]="absenceTypes.Absence" [absProcessStatus]="absenceProcessStatus.Created"></hr-abscences-list>              
     </mat-tab>
     <mat-tab label="Placeno odsustvo">
-        <hr-paid-absence-form></hr-paid-absence-form>
+        <hr-paid-absence-form (abscenceSaved)="doARefresh('paid')"></hr-paid-absence-form>
         <h4>Lista odsustva</h4>
-        <hr-abscences-list [absenceType]="absenceTypes.PaidAbsence" [absProcessStatus]="absenceProcessStatus.Created"></hr-abscences-list>
+        <hr-abscences-list #paidFormTable [absenceType]="absenceTypes.PaidAbsence" [absProcessStatus]="absenceProcessStatus.Created"></hr-abscences-list>
     </mat-tab>
     <mat-tab label="Bolovanja">
-        <hr-sick-absence-form></hr-sick-absence-form>
+        <hr-sick-absence-form (abscenceSaved)="doARefresh('sick')"></hr-sick-absence-form>
         <h4>Lista odsustva</h4>
-        <hr-abscences-list [absenceType]="absenceTypes.SickAbsence" [absProcessStatus]="absenceProcessStatus.Created"></hr-abscences-list>
+        <hr-abscences-list #sickFormTable [absenceType]="absenceTypes.SickAbsence" [absProcessStatus]="absenceProcessStatus.Created"></hr-abscences-list>
     </mat-tab>    
     <mat-tab label ="Radne liste">
         <hr-worksheets-form></hr-worksheets-form>
     </mat-tab>
-    
-  
     
 </mat-tab-group>

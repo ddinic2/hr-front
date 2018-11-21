@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, EventEmitter, ViewChild } from '@angular/core';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { SubstituteService } from '../substitute.service';
 import { AbsenceSickLeaveType } from 'src/app/models/absence-sick-leave-type';
@@ -10,6 +10,7 @@ import { EmployeeAbsence } from 'src/app/models/employee-absence';
 import { LoginService } from 'src/app/shared/shared/login.service';
 import {MatSnackBar} from '@angular/material';
 import { Employee } from 'src/app/models/employee';
+import { TimsGridComponent } from 'timsystems-lib';
 
 
 @Component({
@@ -18,6 +19,9 @@ import { Employee } from 'src/app/models/employee';
   styleUrls: ['./sick-absence-form.component.scss']
 })
 export class SickAbsenceFormComponent implements OnInit {
+  @ViewChild(TimsGridComponent) grid: TimsGridComponent;
+
+  abscenceSaved = new EventEmitter<any>();
   public retPostData;
   employeeSickAbsenceForm: FormGroup;
   // filteredSickLeaveTypeOptions: Observable<AbsenceSickLeaveType[]>;
@@ -29,10 +33,21 @@ export class SickAbsenceFormComponent implements OnInit {
   absenceType = AbsenceTypes.SickAbsence;
   absenceTypeName = 'Bolovanje';
   absenceProcessStatus = AbsenceProcessStatus.Created;
+  holidayDays: any;
 
   disableWeekdays = (d: Date): boolean => {
-    const day = d.getDay();
-    return day !== 0 && day !== 6;
+    const dayIndex = d.getDay();
+    const month = d.getMonth() + 1;
+    const year = d.getFullYear();
+    const date = d.getDate();
+    const holidayDays = new Array();
+    this.holidayDays.filter(function(days){
+      if( days.Month == month && days.Year == year)
+      {
+        holidayDays.push(days.DateOfHoliday);       
+      }
+    });
+    return dayIndex !== 0 && dayIndex !== 6 && !holidayDays.includes(date);
   }
   
   constructor(private _formBuilder: FormBuilder, public subService: SubstituteService, public loginService: LoginService, public snackBar: MatSnackBar, public subsService: SubstituteService) {
@@ -42,7 +57,7 @@ export class SickAbsenceFormComponent implements OnInit {
       sickLeaveType: [''],
       absenceSubtype:[''],
       sickLeaveCode: [''],
-      employeeControl: ['']
+      employeeAbsenceDetail: ['']
       
     });
   }
@@ -52,18 +67,23 @@ export class SickAbsenceFormComponent implements OnInit {
     this.subService.getAbsenceSubtype().subscribe(res => {this.absenceSubtypeOptions = res});
     this.subService.getSickLeaveCode().subscribe(res => {this.sickLeaveCodeOptions = res});
     this.loggedUser =  this.loginService.getLoggedInUser();
-    this.subsService.getEmployee().subscribe(res => {this.employeeOptions = res; 
-      console.log('Zaposleni:' + JSON.stringify(this.employeeOptions, null, 2)); });
+    this.subsService.getEmployee().subscribe(res => {this.employeeOptions = res });
+    this.subsService.getHolidayDaysForCalendar().subscribe(res => {
+      this.holidayDays = res;        
+  });
 
     this.employeeSickAbsenceForm.controls['toDate'].valueChanges.subscribe(value => {
-      if (value && this.employeeSickAbsenceForm.controls['fromDate'].value) {
-        this.subService.getSubstitutesByDate(this.employeeSickAbsenceForm.controls['fromDate'].value, value, this.loggedUser.value.data.employeeId, this.absenceType).subscribe((result) => {
+      const employee = this.employeeSickAbsenceForm.controls['employeeAbsenceDetail'].value;
+      if (value && this.employeeSickAbsenceForm.controls['fromDate'].value && employee) {
+        this.subService.getSubstitutesByDate(this.employeeSickAbsenceForm.controls['fromDate'].value, value, employee.EmployeeId, this.absenceType).subscribe((result) => {
           if(result == null)
           {
             this.snackBar.open('Postoji odsustvo za ovaj vremenski period!', 'OK', {
               duration: 10000,
               verticalPosition: 'top'
             });
+            this.employeeSickAbsenceForm.controls['fromDate'].reset();
+            this.employeeSickAbsenceForm.controls['toDate'].reset();
           }
           
         });
@@ -95,8 +115,8 @@ export class SickAbsenceFormComponent implements OnInit {
 
   saveAbsence() {
     const formResult: EmployeeAbsence = this.employeeSickAbsenceForm.value;
-    formResult.employeeId = this.loggedUser.value.data.employeeId;
-    formResult.employeeEmail =  this.loggedUser.value.data.employeeEmail;
+    formResult.loggedUserId = this.loggedUser.value.data.employeeId;
+    formResult.loggedUserEmail =  this.loggedUser.value.data.employeeEmail;
     formResult.absenceType = this.absenceType;
     formResult.absenceTypeName = this.absenceTypeName;
     formResult.absenceProcessStatus = this.absenceProcessStatus;  
@@ -107,6 +127,8 @@ export class SickAbsenceFormComponent implements OnInit {
       verticalPosition: 'top'
     });
     this.employeeSickAbsenceForm.reset();
+    //this.abscenceSaved.emit(null);
+    this.abscenceSaved.next(true);
   });  
   console.log(JSON.stringify(formResult, null, 2));    
   }
