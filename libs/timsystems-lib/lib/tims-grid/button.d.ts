@@ -4,3 +4,7 @@ export interface Button {
     animation?: string;
     alternateIcon?: string;
 }
+export interface ButtonDefinition {
+    name: string;
+    button: Button;
+}

@@ -1,6 +1,6 @@
-import { Button } from './button';
+import { ButtonDefinition } from './button';
 import { InjectionToken } from '@angular/core';
 export interface GridConfig {
-    buttons: Map<string, Button>;
+    buttons: ButtonDefinition[];
 }
 export declare const GridConfigService: InjectionToken<GridConfig>;
