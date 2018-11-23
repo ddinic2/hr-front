@@ -101,6 +101,23 @@ export class WorksheetsFormComponent implements OnInit {
         this.dateList = this.dateArrayListDetails(result[0].length);
       });
   }
+
+  lockWorksheets() {
+    this.employeePresenceList.loginUserId = this.loggedUser.value.data.employeeId;
+    this.employeePresenceList.presenceListStatus = WorksheetsPresenceStatus.Lock;
+    const empPresenceList: EmployeePresenceList = this.employeePresenceList;
+
+    const dialogRef = this.dialog.open(DialogOverviewWorksheets, {
+        width: '250px'
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+          empPresenceList.presenceListStatus = WorksheetsPresenceStatus.Lock;
+          this.subService.lockWorksheets(empPresenceList);
+        }
+      });      
+  }
+
   unlockWorksheets() {
     const formResult = this.worksheetsForm.value;
     this.subService.unlockWorksheetsByManager(formResult, this.loggedUser.value.data.employeeId).subscribe(res => {
@@ -113,47 +130,55 @@ export class WorksheetsFormComponent implements OnInit {
       
   }
 
-  selectedItem = (item, index, event, maxLength) => {
-      item.DayStatus[index] = event.value;
-      this.firstNameElement.nativeElement.focus();
-         
+
+
+  selectedItem = (item, index, event) => {
+      item.DayStatus[index] = event.value;         
   }
 
-  onKey = (item,index,event) =>{
+ 
+
+  onKey = (item, index, event) =>{
     const test = event;
     
     // if(event.target.value === "b" || event.target.value ==='g' || event.target.value === 'p' || event.target.value === 'o'  || event.target.value === 'p' )
-    if(event.which == 66 || event.which == 80 || event.which == 71 || event.which == 79 ||event.which == 82)
+    if(event.which == 66 || event.which == 80 || event.which == 71 || event.which == 78 ||event.which == 82)
     {
       switch (event.which) {
         case 71:
-          item.DayStatus[index] = AbsenceTypes.Absence;
+          item.DayStatus[index] = (AbsenceTypes.Absence);
+          item.PresenceTypeCode[index] = 'GO';         
             break;
         case 80:
           item.DayStatus[index] = AbsenceTypes.PaidAbsence;
+          item.PresenceTypeCode[index] = 'PO';
             break;
         case 66:
           item.DayStatus[index] = AbsenceTypes.SickAbsence;
+          item.PresenceTypeCode[index] = 'B';
             break;
-        case 79:
+        case 78:
           item.DayStatus[index] = AbsenceTypes.Maternally;
+          item.PresenceTypeCode[index] = 'NPO';
             break;
         case 82:
           item.DayStatus[index] = AbsenceTypes.Worksheet;
+          item.PresenceTypeCode[index] = 'R';
             break;
     }
-      //item.DayStatus[index] = event.value;
+      // //item.DayStatus[index] = event.value;
 
-      let nextControl: any = event.target.nextElementSibling;
-      console.log('Next sibiling' + event.target.nextElementSibling)
-      let element = event.target.nextElementSibling; // get the sibling element
+      // let nextControl: any = event.target.nextElementSibling;
+      // console.log('Next sibiling' + event.target.nextElementSibling)
+      // let element = event.target.nextElementSibling; // get the sibling element
       
-      console.log('Next control' + nextControl.nextElementSibling)
+      // console.log('Next control' + nextControl.nextElementSibling)
 
-      if(nextControl == null)  // check if its null
-          return;
-      else
-        nextControl.focus();   // focus if not null
+      // if(nextControl == null)  // check if its null
+      //     return;
+      // else
+      //   nextControl.focus();   // focus if not null
+
         
     }
    else
@@ -168,26 +193,28 @@ export class WorksheetsFormComponent implements OnInit {
     this.loginUserId = this.loggedUser.value.data.employeeId;
     this.employeePresenceList.loginUserId = this.loggedUser.value.data.employeeId;
     const empPresenceList: EmployeePresenceList = this.employeePresenceList;
-    this.subService.checkedPresenceStatus(empPresenceList);
-    if (empPresenceList.lockPresenceList) {
+    empPresenceList.presenceListStatus = WorksheetsPresenceStatus.Created;
+    this.subService.putWorksheets(empPresenceList);
+    //this.subService.checkedPresenceStatus(empPresenceList);
+    // if (empPresenceList.lockPresenceList) {
 
-      const dialogRef = this.dialog.open(DialogOverviewWorksheets, {
-        width: '250px'
-      });
+    //   const dialogRef = this.dialog.open(DialogOverviewWorksheets, {
+    //     width: '250px'
+    //   });
 
-      dialogRef.afterClosed().subscribe(result => {
-        if (result) {
-          empPresenceList.presenceListStatus = WorksheetsPresenceStatus.Lock;
-          this.subService.putWorksheets(empPresenceList);
+    //   dialogRef.afterClosed().subscribe(result => {
+    //     if (result) {
+    //       empPresenceList.presenceListStatus = WorksheetsPresenceStatus.Lock;
+    //       this.subService.putWorksheets(empPresenceList);
 
-        }
+    //     }
 
-      });
-    }
-    else {
-      empPresenceList.presenceListStatus = WorksheetsPresenceStatus.Created;
-      this.subService.putWorksheets(empPresenceList);
-    }
+    //   });
+    // }
+    // else {
+    //   empPresenceList.presenceListStatus = WorksheetsPresenceStatus.Created;
+    //   this.subService.putWorksheets(empPresenceList);
+    // }
 
   }
 

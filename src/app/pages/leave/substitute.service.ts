@@ -200,6 +200,22 @@ export class SubstituteService {
       return this.http.get(url, obj);
   }
 
+  lockWorksheets = (empPresenceList: EmployeePresenceList) => {
+    const obj = { 
+      params: new HttpParams() 
+      .set('LoginUserId', empPresenceList.loginUserId.toString())
+      .set('PresenceListStausId', empPresenceList.presenceListStatus.toString())
+    };
+    const url = environment.db.ROOT + environment.db.WORKSHEETS + environment.db.LOCK_WORKSHEETS;
+    this.http.put(url, empPresenceList, obj).subscribe(data => {
+      this.retPostData = data;
+      this.snackBar.open(this.retPostData, 'OK', {
+        duration: 10000,
+        verticalPosition: 'top'
+      });
+    });
+  }
+
   unlockWorksheetsByManager = (data: any, loginUserId: number) => {
     const obj = {
       params: new HttpParams()

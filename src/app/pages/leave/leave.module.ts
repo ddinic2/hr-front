@@ -18,31 +18,22 @@ import { DialogOverviewWorksheets } from 'src/app/pages/leave/worksheets-form/wo
 import { DialogDenyMessage } from 'src/app/pages/absence-overview/abscences-list/abscences-list.component';
 
 
-// const buttons = new Map([
-//   ['edit', { text: 'Izmeni', icon: 'pencil-square-o' }],
-//   ['delete', { text: 'Obriši', icon: 'trash-o' }],
-//   ['view', { text: 'Detalji', icon: 'address-card-o' }],
-//   ['save', { text: 'Sačuvaj', icon: 'floppy-o' }],
-//   ['approve', { text: 'Odobri', icon: 'check' }],
-//   ['deny', { text: 'Poništi', icon: 'ban' }],
-//   ['generate', { text: 'Generiši dokument', icon: 'file-text' }]
-// ]);
+const buttons = [
+  { name: 'edit', button: { text: 'Izmeni', icon: 'pencil-square-o' } },
+  { name: 'delete', button: { text: 'Obriši', icon: 'trash-o' } },
+  { name: 'view', button: { text: 'Detalji', icon: 'address-card-o' } },
+  { name: 'save', button: { text: 'Sačuvaj', icon: 'floppy-o' } },
+  { name: 'approve', button: { text: 'Odobri', icon: 'check' } },
+  { name: 'deny', button: { text: 'Poništi', icon: 'ban' } },
+  { name: 'generate', button: { text: 'Generiši dokument', icon: 'file-text' } }
+];
 
 @NgModule({
   imports: [
     TimsystemsLibModule,
     HotTableModule,
     TimsGridModule.setConfig({
-      //buttons: buttons
-      buttons: new Map([
-        ['edit', { text: 'Izmeni', icon: 'pencil-square-o' }],
-        ['delete', { text: 'Obriši', icon: 'trash-o' }],
-        ['view', { text: 'Detalji', icon: 'address-card-o' }],
-        ['save', { text: 'Sačuvaj', icon: 'floppy-o' }],
-        ['approve', { text: 'Odobri', icon: 'check' }],
-        ['deny', { text: 'Poništi', icon: 'ban' }],
-        ['generate', { text: 'Generiši dokument', icon: 'file-text' }]
-      ])
+      buttons: buttons
     }),
     AngularFontAwesomeModule,
     CommonModule,
@@ -50,8 +41,8 @@ import { DialogDenyMessage } from 'src/app/pages/absence-overview/abscences-list
     ReactiveFormsModule,
     SharedModule
   ],
-  declarations: [LeaveComponent, LeaveFormComponent, AbscencesListComponent, SickAbsenceFormComponent, PaidAbsenceFormComponent, WorksheetsFormComponent,  DialogOverviewWorksheets, DialogDenyMessage],
+  declarations: [LeaveComponent, LeaveFormComponent, AbscencesListComponent, SickAbsenceFormComponent, PaidAbsenceFormComponent, WorksheetsFormComponent, DialogOverviewWorksheets, DialogDenyMessage],
   exports: [LeaveComponent, LeaveFormComponent, AbscencesListComponent],
   entryComponents: [DialogOverviewWorksheets, DialogDenyMessage]
 })
-export class LeaveModule {}
+export class LeaveModule { }

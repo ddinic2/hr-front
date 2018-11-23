@@ -10,7 +10,7 @@ export const environment = {
     EMPLOYEE_SUBSITUTE: '/employee-substitute',
     HOLIDAY_DAYS: '/holiday-days',
     HOLIDAY_DAYS_CALENDAR: '/holiday-days-calendar',
-    FAMILY_HOLIDAY: '/family-holiday-days-calendar',
+    FAMILY_HOLIDAY: '/family-holiday',
     EMPLOYEE_FAMILY_HOLIDAY: '/employee-family-holiday',
     ABSENCE_SICK_LEAVE_TYPE: '/absence-sick-leave-type',
     ABSENCE_SUBTYPE:'/absence-subtype' ,
@@ -24,6 +24,7 @@ export const environment = {
     PRESENCE_DETAIL_TYPE: '/presence-detail-type',
     PRESENCE_REGISTRATOR: '/presence-registrator',
     COMPARE_WORKSHEETS: '/compare-worksheets',
+    LOCK_WORKSHEETS: '/lock-worksheets',
     UNLOCK_WORKSHEETS: '/unlock-worksheets',
     GENERATE_DOCUMENT: '/generate-document',
     GET_EMPLOYEE: '/get-employee'

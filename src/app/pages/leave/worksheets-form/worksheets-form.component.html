@@ -37,8 +37,8 @@
   <p>Uneti podaci utiču na zaradu</p>
   <div class="dates-row">
     <button type="submit" mat-raised-button (click)="detailsPresence()">Prikaži</button>
-
     <button type="submit" mat-raised-button (click)="compareWorksheets()"> Uporedi radne liste</button>
+    <button type="submit" mat-raised-button (click)="lockWorksheets()"> Zaključaj radnu listu</button>
     <button type="submit" mat-raised-button (click)="unlockWorksheets()"> Otključaj radnu listu</button>
   </div>
 
@@ -84,13 +84,13 @@
       <th *ngFor="let dates of dateList">{{dates}}</th>
       <tr *ngFor="let item of employeePresenceList">
         <td>{{ item.EmployeeFullName }} </td>
-        <td *ngFor="let dayStatus of item.DayStatus; let i=index">
+        <td *ngFor="let dayStatus of item.PresenceTypeCode; let i=index;">
         <div class="dates-row">            
-              <!-- <form>
-              <mat-form-field>  -->
-                  <input matInput [value]="item.DayStatus[i]"   (keyup)="onKey(item,i,$event)" maxlength="1">                  
-              <!-- </mat-form-field>
-            </form> -->
+            <form>
+              <mat-form-field> 
+                  <input matInput [value]="item.PresenceTypeCode[i]"  (keyup)="onKey(item,i,$event)"    maxlength="1" [disabled]="dayStatus == 'NN'">                   
+              </mat-form-field>
+            </form>  
             
           </div>
         </td>
@@ -101,6 +101,8 @@
 
   <br/>
   <br/>
+
+  
  
   <div>
     <table class="mat-elevation-z8">
@@ -119,4 +121,6 @@
   </div>
 
 </form>
+
+
 <br />
