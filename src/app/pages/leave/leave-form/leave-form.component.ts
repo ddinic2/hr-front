@@ -21,8 +21,7 @@ import { AbscenceService } from 'src/app/pages/absence-overview/abscence.service
 export class LeaveFormComponent implements OnInit {
  @ViewChild(TimsGridComponent) grid: TimsGridComponent;
 
-  @Output()
-  abscenceSaved = new EventEmitter<any>();
+  @Output() abscenceSaved = new EventEmitter<any>();
   public retPostData;
   employeeAbsenceForm: FormGroup;
   filteredSubEmployeeOptions: Observable<Employee[]>;

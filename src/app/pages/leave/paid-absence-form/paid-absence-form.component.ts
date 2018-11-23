@@ -1,4 +1,4 @@
-import { Component, OnInit, EventEmitter } from '@angular/core';
+import { Component, OnInit, EventEmitter, Output } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { SubstituteService } from '../substitute.service';
 import { AbsenceSubtype } from 'src/app/models/absence-subtype';
@@ -18,7 +18,7 @@ import { startWith, map } from 'rxjs/operators';
   styleUrls: ['./paid-absence-form.component.scss']
 })
 export class PaidAbsenceFormComponent implements OnInit {
-  abscenceSaved = new EventEmitter<any>();
+  
   public retPostData;
   employeePaidAbsenceForm: FormGroup;
   loggedUser: any;
@@ -28,6 +28,8 @@ export class PaidAbsenceFormComponent implements OnInit {
   absenceSubtypeOptions: AbsenceSubtype[] = [];
   employeeOptions: Employee[] = [];
   holidayDays: any;
+
+  @Output() abscenceSaved = new EventEmitter();
   
   disableWeekdays = (d: Date): boolean => {
     const day = d.getDay();
@@ -121,7 +123,7 @@ export class PaidAbsenceFormComponent implements OnInit {
       verticalPosition: 'top'
     });
     this.employeePaidAbsenceForm.reset();
-    this.abscenceSaved.emit(null);
+    this.abscenceSaved.next(true);
   });  
   console.log(JSON.stringify(formResult, null, 2));   
   }

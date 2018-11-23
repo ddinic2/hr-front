@@ -6,6 +6,7 @@ import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { LoggedUser } from 'src/app/models/logged-user';
 import { TimsGridComponent } from 'timsystems-lib';
+import {MatSnackBar } from '@angular/material';
 
 @Component({
   selector: 'hr-abscences-list',
@@ -13,6 +14,7 @@ import { TimsGridComponent } from 'timsystems-lib';
   styleUrls: ['./abscences-list.component.scss'],
 })
 export class AbscencesListComponent implements OnInit {
+  public retPostData;
   pipesToApply = [];
   absenceProcessStatus = AbsenceProcessStatus;
   loggedUser: any;
@@ -44,7 +46,7 @@ export class AbscencesListComponent implements OnInit {
 
   ];
 
-  constructor(private service: AbscenceService, private loginService: LoginService, public dialog: MatDialog) { }
+  constructor(private service: AbscenceService, private loginService: LoginService, public dialog: MatDialog, public snackBar: MatSnackBar) { }
 
   ngOnInit() {
     this.loggedUser = this.loginService.getLoggedInUser();
@@ -58,6 +60,33 @@ export class AbscencesListComponent implements OnInit {
     status: number = this.absProcessStatus,
     absenceType: number = this.absenceType
   ) => this.service.getAbscences(order, direction, page, count, status, absenceType);
+
+  
+  edit = item => {
+    this.service.editAbsence(item).subscribe(res => {
+      this.retPostData = res;
+       this.snackBar.open(this.retPostData, 'OK', {
+       duration: 10000,
+       verticalPosition: 'top'
+       })
+      }
+    )};
+
+
+    
+  remove = item => {
+    const absenceId = item.EmployeeAbsence;
+    this.service.removeAbsence(absenceId).subscribe(res => {
+      this.retPostData = res;
+       this.snackBar.open(this.retPostData, 'OK', {
+       duration: 10000,
+       verticalPosition: 'top'
+       })
+       this.performRefresh();
+      }
+    )}
+
+ 
 
   //Odobravanje odsustva NAPOMENA: LoggedUser da se zameni sa objektom
   approve = item => {
@@ -77,8 +106,14 @@ export class AbscencesListComponent implements OnInit {
 
   performRefresh = () => {
     this.grid.refresh();
-
   }
+
+
+
+  
+
+   
+
   //Ponistavanje odsustva
   deny = item => {
     const dialogRef = this.dialog.open(DialogDenyMessage, {
@@ -123,8 +158,7 @@ export class AbscencesListComponent implements OnInit {
       });
   };
 
-  // edit = (item) =>
-  // console.log('edit');
+  
   // save = (item) =>
   // console.log('save');
   // view = (item) =>

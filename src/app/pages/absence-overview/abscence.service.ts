@@ -16,7 +16,7 @@ import { LoggedUser } from 'src/app/models/logged-user';
 })
 export class AbscenceService {
   abscences: Observable<any>;
- 
+  
   constructor(private http: HttpClient) {}
 
   getAbscences = (
@@ -45,6 +45,20 @@ export class AbscenceService {
     return this.http.get(URL);
     
   };
+  editAbsence = (item: EmployeeAbsence) => {
+    const url = environment.db.ROOT + environment.db.ABSCENCE;
+    return this.http.put(url, item);
+  }
+
+  removeAbsence = (absenceId : number) => {
+
+    const obj = { params: new HttpParams().set('absenceId', '' + absenceId)}
+    const url = environment.db.ROOT + environment.db.ABSCENCE;
+    
+    return this.http.delete(url, obj);
+  }
+
+ 
 
   changeAbsenceStatus = (item:EmployeeAbsence) => { 
    const url = environment.db.ROOT + environment.db.ABSCENCE + environment.db.CHANGE_ABSENCE_STATUS;

@@ -1,4 +1,4 @@
-import { Component, OnInit, EventEmitter, ViewChild } from '@angular/core';
+import { Component, OnInit, EventEmitter, ViewChild, Output } from '@angular/core';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { SubstituteService } from '../substitute.service';
 import { AbsenceSickLeaveType } from 'src/app/models/absence-sick-leave-type';
@@ -21,7 +21,7 @@ import { TimsGridComponent } from 'timsystems-lib';
 export class SickAbsenceFormComponent implements OnInit {
   @ViewChild(TimsGridComponent) grid: TimsGridComponent;
 
-  abscenceSaved = new EventEmitter<any>();
+  
   public retPostData;
   employeeSickAbsenceForm: FormGroup;
   // filteredSickLeaveTypeOptions: Observable<AbsenceSickLeaveType[]>;
@@ -34,6 +34,8 @@ export class SickAbsenceFormComponent implements OnInit {
   absenceTypeName = 'Bolovanje';
   absenceProcessStatus = AbsenceProcessStatus.Created;
   holidayDays: any;
+
+  @Output() abscenceSaved = new EventEmitter();
 
   disableWeekdays = (d: Date): boolean => {
     const dayIndex = d.getDay();

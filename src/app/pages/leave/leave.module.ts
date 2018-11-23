@@ -25,7 +25,8 @@ const buttons = [
   { name: 'save', button: { text: 'Sačuvaj', icon: 'floppy-o' } },
   { name: 'approve', button: { text: 'Odobri', icon: 'check' } },
   { name: 'deny', button: { text: 'Poništi', icon: 'ban' } },
-  { name: 'generate', button: { text: 'Generiši dokument', icon: 'file-text' } }
+  { name: 'generate', button: { text: 'Generiši dokument', icon: 'file-text' } },
+  { name: 'remove', button: { text: 'Obriši', icon: 'trash-o' } }
 ];
 
 @NgModule({
