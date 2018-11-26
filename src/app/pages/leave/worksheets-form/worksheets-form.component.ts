@@ -139,31 +139,35 @@ export class WorksheetsFormComponent implements OnInit {
  
 
   onKey = (item, index, event) =>{
-    const test = event;
+    const test = event.target.value;
     
     // if(event.target.value === "b" || event.target.value ==='g' || event.target.value === 'p' || event.target.value === 'o'  || event.target.value === 'p' )
-    if(event.which == 66 || event.which == 80 || event.which == 71 || event.which == 78 ||event.which == 82)
+    if(event.which == 66 || event.which == 80 || event.which == 71 || event.which == 78 || event.which == 82 || event.which == 9)
     {
       switch (event.which) {
         case 71:
           item.DayStatus[index] = (AbsenceTypes.Absence);
-          item.PresenceTypeCode[index] = 'GO';         
-            break;
+          item.PresenceTypeCode[index] = 'GO';  
+          break;
         case 80:
           item.DayStatus[index] = AbsenceTypes.PaidAbsence;
           item.PresenceTypeCode[index] = 'PO';
-            break;
+          break;
         case 66:
           item.DayStatus[index] = AbsenceTypes.SickAbsence;
           item.PresenceTypeCode[index] = 'B';
-            break;
+          break;
         case 78:
           item.DayStatus[index] = AbsenceTypes.Maternally;
           item.PresenceTypeCode[index] = 'NPO';
-            break;
+          break;
         case 82:
           item.DayStatus[index] = AbsenceTypes.Worksheet;
           item.PresenceTypeCode[index] = 'R';
+          break;
+        case 9:
+          // item.DayStatus[index] = AbsenceTypes.Worksheet;
+          // item.PresenceTypeCode[index] = 'R';
             break;
     }
       // //item.DayStatus[index] = event.value;

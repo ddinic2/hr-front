@@ -180,6 +180,11 @@ export class LeaveFormComponent implements OnInit {
     console.log(JSON.stringify(formResult, null, 2));
   }
 
+  cancelAbsence = () => {
+    this.employeeAbsenceForm.reset();
+    this.employeeAbsenceForm.enable();
+  }
+
 }
 
 

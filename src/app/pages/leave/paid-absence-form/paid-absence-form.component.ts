@@ -1,4 +1,4 @@
-import { Component, OnInit, EventEmitter, Output } from '@angular/core';
+import { Component, OnInit, EventEmitter, Output, Input } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { SubstituteService } from '../substitute.service';
 import { AbsenceSubtype } from 'src/app/models/absence-subtype';
@@ -30,7 +30,8 @@ export class PaidAbsenceFormComponent implements OnInit {
   holidayDays: any;
 
   @Output() abscenceSaved = new EventEmitter();
-  
+
+
   disableWeekdays = (d: Date): boolean => {
     const day = d.getDay();
     const month = d.getMonth() + 1;
@@ -51,7 +52,9 @@ export class PaidAbsenceFormComponent implements OnInit {
       fromDate: [''],
       toDate: [''],
       absenceSubtype: [''],
-      employeeAbsenceDetail:[''] 
+      employeeAbsenceDetail:[''],
+      employeeAbsence:[''],
+      employeeId:['']
     });
     
    }
@@ -62,6 +65,24 @@ export class PaidAbsenceFormComponent implements OnInit {
     this.subsService.getEmployee().subscribe(res => {this.employeeOptions = res});
     this.subsService.getHolidayDaysForCalendar().subscribe(res => {
       this.holidayDays = res;        
+  });
+
+  this.employeePaidAbsenceForm.controls['fromDate'].valueChanges.subscribe(value => {
+    const employee = this.employeePaidAbsenceForm.controls['employeeAbsenceDetail'].value;
+    if (value && this.employeePaidAbsenceForm.controls['toDate'].value && employee) {
+      this.subsService.getSubstitutesByDate(this.employeePaidAbsenceForm.controls['toDate'].value, value, employee.EmployeeId, this.absenceType).subscribe((result) => {
+        if(result == null)
+        {
+          this.snackBar.open('Postoji odsustvo za ovaj vremenski period!', 'OK', {
+            duration: 10000,
+            verticalPosition: 'top'
+          });
+          this.employeePaidAbsenceForm.controls['fromDate'].reset();
+          this.employeePaidAbsenceForm.controls['toDate'].reset();
+        }
+        
+      });
+    }
   });
 
     
@@ -123,9 +144,26 @@ export class PaidAbsenceFormComponent implements OnInit {
       verticalPosition: 'top'
     });
     this.employeePaidAbsenceForm.reset();
+    this.employeePaidAbsenceForm.enable();
     this.abscenceSaved.next(true);
   });  
   console.log(JSON.stringify(formResult, null, 2));   
+  }
+
+  editPaidAbsence = (event) => {
+    this.employeePaidAbsenceForm.controls['employeeAbsenceDetail'].setValue(event.EmployeeName);
+    this.employeePaidAbsenceForm.controls['fromDate'].setValue(event.FromDate);
+    this.employeePaidAbsenceForm.controls['toDate'].setValue(event.ToDate);
+    this.employeePaidAbsenceForm.controls['absenceSubtype'].setValue(event.AbsenceSubtype);
+    this.employeePaidAbsenceForm.controls['employeeAbsence'].setValue(event.EmployeeAbsence);
+    this.employeePaidAbsenceForm.controls['employeeId'].setValue(event.EmployeeId);
+    this.employeePaidAbsenceForm.controls['employeeAbsenceDetail'].disable();
+    
+  }
+
+  cancelAbsence = () => {
+    this.employeePaidAbsenceForm.reset();
+    this.employeePaidAbsenceForm.enable();
   }
 
 }

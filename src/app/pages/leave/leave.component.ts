@@ -2,6 +2,9 @@ import { Component, ViewChild, OnInit } from "@angular/core";
 import { AbsenceTypes } from "src/app/models/enums/absence-type";
 import { AbsenceProcessStatus } from "src/app/models/enums/absence-process-satatus";
 import { AbscencesListComponent } from "../absence-overview/abscences-list/abscences-list.component";
+import { PaidAbsenceFormComponent } from "./paid-absence-form/paid-absence-form.component";
+import { SickAbsenceFormComponent } from "./sick-absence-form/sick-absence-form.component";
+
 @Component({
     selector: 'hr-leave',
     templateUrl: './leave.component.html',
@@ -10,11 +13,15 @@ import { AbscencesListComponent } from "../absence-overview/abscences-list/absce
 
 export class LeaveComponent implements OnInit {
     @ViewChild('leaveFormTable')
-    nekiGrid: AbscencesListComponent;
+    leaveAbsGrid: AbscencesListComponent;
     @ViewChild('paidFormTable')
-    nekidrugiGrid: AbscencesListComponent;
+    paidAbsGrid: AbscencesListComponent;
     @ViewChild('sickFormTable')
-    nekitreciGrid: AbscencesListComponent;
+    sickAbsGrid: AbscencesListComponent;
+    @ViewChild('editPaidAbsence')
+    editPaidAbsence: PaidAbsenceFormComponent;
+    @ViewChild('editSickAbsence')
+    editSickAbsence: SickAbsenceFormComponent;
 
 
     grid: AbscencesListComponent;
@@ -31,15 +38,27 @@ export class LeaveComponent implements OnInit {
     doARefresh = grid => {
         switch (grid) {
             case 'leave':
-                this.nekiGrid.performRefresh();
+                this.leaveAbsGrid.performRefresh();
                 break;
             case 'paid':
-                this.nekidrugiGrid.performRefresh();
+                this.paidAbsGrid.performRefresh();
                 break;
             case 'sick':
-                this.nekitreciGrid.performRefresh();
+                this.sickAbsGrid.performRefresh();
                 break;
         }
+    }
+
+    editEmployeeAbsence = (event) => {
+        if(event.AbsenceType == AbsenceTypes.PaidAbsence)
+        {
+            this.editPaidAbsence.editPaidAbsence(event);
+        }
+        else if(event.AbsenceType == AbsenceTypes.SickAbsence)
+        {
+            this.editSickAbsence.editSickAbsence(event);
+        }
+        
     }
 
 }

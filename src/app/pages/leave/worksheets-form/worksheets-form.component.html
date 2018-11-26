@@ -88,7 +88,7 @@
         <div class="dates-row">            
             <form>
               <mat-form-field> 
-                  <input matInput [value]="item.PresenceTypeCode[i]"  (keyup)="onKey(item,i,$event)"    maxlength="1" [disabled]="dayStatus == 'NN'">                   
+                  <input matInput [value]="item.PresenceTypeCode[i]"    (keyup)="onKey(item,i,$event)"    maxlength="1" [disabled]="dayStatus == 'NN'">                   
               </mat-form-field>
             </form>  
             

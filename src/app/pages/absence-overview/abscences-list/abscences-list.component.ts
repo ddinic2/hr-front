@@ -1,5 +1,5 @@
 import { AbscenceService } from './../abscence.service';
-import { Component, OnInit, Input, ViewChild } from '@angular/core';
+import { Component, OnInit, Input, ViewChild, Output, EventEmitter } from '@angular/core';
 import { AbsenceProcessStatus } from 'src/app/models/enums/absence-process-satatus';
 import { LoginService } from 'src/app/shared/shared/login.service';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
@@ -7,6 +7,7 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { LoggedUser } from 'src/app/models/logged-user';
 import { TimsGridComponent } from 'timsystems-lib';
 import {MatSnackBar } from '@angular/material';
+
 
 @Component({
   selector: 'hr-abscences-list',
@@ -23,8 +24,10 @@ export class AbscencesListComponent implements OnInit {
 
   @Input() absenceType: number;
   @Input() absProcessStatus: number;
-
+  @Output() editAbsence = new EventEmitter;
+  
   @ViewChild(TimsGridComponent) grid: TimsGridComponent;
+  
 
   columnNameArray = [
     'Ime i Prezime',
@@ -63,15 +66,17 @@ export class AbscencesListComponent implements OnInit {
 
   
   edit = item => {
-    this.service.editAbsence(item).subscribe(res => {
-      this.retPostData = res;
-       this.snackBar.open(this.retPostData, 'OK', {
-       duration: 10000,
-       verticalPosition: 'top'
-       })
-      }
-    )};
-
+    this.editAbsence.next(item);
+    console.log("test edit");
+    // this.service.editAbsence(item).subscribe(res => {
+    //   this.retPostData = res;
+    //    this.snackBar.open(this.retPostData, 'OK', {
+    //    duration: 10000,
+    //    verticalPosition: 'top'
+    //    })
+    //   }
+    //)
+  };
 
     
   remove = item => {

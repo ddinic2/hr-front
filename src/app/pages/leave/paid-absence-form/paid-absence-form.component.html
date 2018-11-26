@@ -2,7 +2,7 @@
   <div class="dates-row">
     <div class="date-from">
         <mat-form-field class="substitute-auto">
-            <input type="text" placeholder="Zaposleni" aria-label="Zaposleni" matInput formControlName="employeeAbsenceDetail"
+            <input type="text" placeholder="Zaposleni" aria-label="Zaposleni" matInput formControlName="employeeAbsenceDetail" 
               [matAutocomplete]="auto">
             <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
               <mat-option *ngFor="let employee of employeeOptions" [value]="employee">
@@ -36,5 +36,6 @@
 
   <div>
     <button type="submit" mat-raised-button (click)="saveAbsence()">Sačuvaj</button>
+    <button type="submit" mat-raised-button (click)="cancelAbsence()">Odustani</button>
   </div>
 </form>

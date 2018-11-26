@@ -42,9 +42,7 @@
         </mat-option>
       </mat-select>
     </mat-form-field>
-  <!-- </div>
-
-  <div class="dates-row"> -->
+  
     <mat-form-field>
       <mat-select placeholder="Tip bolovanja" formControlName="sickLeaveCode">
         <mat-option *ngFor="let type of sickLeaveCodeOptions" [value]="type.HRSickLeaveCodeId">
@@ -57,5 +55,6 @@
   </div>
   <div>
     <button type="submit" mat-raised-button (click)="saveAbsence()">Sačuvaj</button>
+    <button type="submit" mat-raised-button (click)="cancelAbsence()">Odustani</button>
   </div>
 </form>

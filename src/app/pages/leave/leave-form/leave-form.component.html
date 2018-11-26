@@ -29,7 +29,7 @@
   <div>
     <!--<button type="submit" [disabled]="!employeeAbsenceForm.valid" mat-raised-button (click)="saveAbsence()">Sačuvaj</button>-->
     <button type="submit" [disabled]="!subsService.canSave" mat-raised-button (click)="saveAbsence()"> Sačuvaj</button>
-    <!-- <button mat-raised-button (click)="goBack()">Odustani</button> -->
+    <button type="submit" mat-raised-button (click)="cancelAbsence()">Odustani</button>
   </div>
 </form>
 

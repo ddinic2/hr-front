@@ -15,6 +15,8 @@ export interface EmployeeAbsence {
     absenceTypeName: string;
     absenceSubtype: number;
     absenceSubtypeName: string;
+    sickLeaveType: number;
+    sickLeaveCode: number;
     replacementEmployee: Employee;
     exceptionAbsence: boolean;
     employeeEmail: string;

@@ -59,7 +59,9 @@ export class SickAbsenceFormComponent implements OnInit {
       sickLeaveType: [''],
       absenceSubtype:[''],
       sickLeaveCode: [''],
-      employeeAbsenceDetail: ['']
+      employeeAbsenceDetail: [''],
+      employeeAbsence:[''],
+      employeeId:['']
       
     });
   }
@@ -72,6 +74,24 @@ export class SickAbsenceFormComponent implements OnInit {
     this.subsService.getEmployee().subscribe(res => {this.employeeOptions = res });
     this.subsService.getHolidayDaysForCalendar().subscribe(res => {
       this.holidayDays = res;        
+  });
+
+  this.employeeSickAbsenceForm.controls['fromDate'].valueChanges.subscribe(value => {
+    const employee = this.employeeSickAbsenceForm.controls['employeeAbsenceDetail'].value;
+    if (value && this.employeeSickAbsenceForm.controls['toDate'].value && employee) {
+      this.subsService.getSubstitutesByDate(this.employeeSickAbsenceForm.controls['toDate'].value, value, employee.EmployeeId, this.absenceType).subscribe((result) => {
+        if(result == null)
+        {
+          this.snackBar.open('Postoji odsustvo za ovaj vremenski period!', 'OK', {
+            duration: 10000,
+            verticalPosition: 'top'
+          });
+          this.employeeSickAbsenceForm.controls['fromDate'].reset();
+          this.employeeSickAbsenceForm.controls['toDate'].reset();
+        }
+        
+      });
+    }
   });
 
     this.employeeSickAbsenceForm.controls['toDate'].valueChanges.subscribe(value => {
@@ -129,10 +149,29 @@ export class SickAbsenceFormComponent implements OnInit {
       verticalPosition: 'top'
     });
     this.employeeSickAbsenceForm.reset();
+    this.employeeSickAbsenceForm.enable();
     //this.abscenceSaved.emit(null);
     this.abscenceSaved.next(true);
   });  
   console.log(JSON.stringify(formResult, null, 2));    
+  }
+
+  editSickAbsence = (event) => {
+    this.employeeSickAbsenceForm.controls['employeeAbsenceDetail'].setValue(event.EmployeeName);
+    this.employeeSickAbsenceForm.controls['fromDate'].setValue(event.FromDate);
+    this.employeeSickAbsenceForm.controls['toDate'].setValue(event.ToDate);
+    this.employeeSickAbsenceForm.controls['absenceSubtype'].setValue(event.AbsenceSubtype);
+    this.employeeSickAbsenceForm.controls['sickLeaveType'].setValue(event.SickLeaveType);
+    this.employeeSickAbsenceForm.controls['sickLeaveCode'].setValue(event.SickLeaveCode);
+    this.employeeSickAbsenceForm.controls['employeeAbsence'].setValue(event.EmployeeAbsence);
+    this.employeeSickAbsenceForm.controls['employeeId'].setValue(event.EmployeeId);
+    this.employeeSickAbsenceForm.controls['employeeAbsenceDetail'].disable();
+    
+  }
+
+  cancelAbsence = () => {
+    this.employeeSickAbsenceForm.reset();
+    this.employeeSickAbsenceForm.enable();
   }
 
 }
