@@ -2,7 +2,7 @@ export const environment = {
   production: true,
   db: {
     //ROOT: 'http://10.10.1.56:22900/',// OBS
-    ROOT: 'http://10.111.10.41:22900/',    
+    ROOT: 'http://10.111.10.41:22900/',
     SUBSTITUTE: 'work-leave',
     ABSCENCE: 'absences',
     ABSENCE_TYPE: '/absence-types',
@@ -27,7 +27,9 @@ export const environment = {
     LOCK_WORKSHEETS: '/lock-worksheets',
     UNLOCK_WORKSHEETS: '/unlock-worksheets',
     GENERATE_DOCUMENT: '/generate-document',
-    GET_EMPLOYEE: '/get-employee'
+    GET_EMPLOYEE: '/get-employee',
+    WORKSHEETS_BILLING: '/worksheets-billing',
+    EXPORT_TO_EXCEL: '/export-to-excel'
   }
 
 };

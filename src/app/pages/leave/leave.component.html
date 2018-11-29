@@ -1,8 +1,8 @@
-<mat-tab-group #tabGroup > 
+<mat-tab-group #tabGroup >
     <mat-tab label="Godišnji odmori">
         <hr-leave-form (abscenceSaved)="doARefresh('leave')"></hr-leave-form>
         <h4>Lista odsustva</h4>
-        <hr-abscences-list #leaveFormTable [absenceType]="absenceTypes.Absence" [absProcessStatus]="absenceProcessStatus.Created"></hr-abscences-list>              
+        <hr-abscences-list #leaveFormTable [absenceType]="absenceTypes.Absence" [absProcessStatus]="absenceProcessStatus.Created"></hr-abscences-list>
     </mat-tab>
     <mat-tab label="Plaćeno odsustvo">
         <hr-paid-absence-form #editPaidAbsence (abscenceSaved)="doARefresh('paid')" ></hr-paid-absence-form>
@@ -13,9 +13,12 @@
         <hr-sick-absence-form #editSickAbsence (abscenceSaved)="doARefresh('sick')"></hr-sick-absence-form>
         <h4>Lista odsustva</h4>
         <hr-abscences-list #sickFormTable (editAbsence)='editEmployeeAbsence($event)'  [absenceType]="absenceTypes.SickAbsence" [absProcessStatus]="absenceProcessStatus.Created"></hr-abscences-list>
-    </mat-tab>    
+    </mat-tab>
     <mat-tab label ="Radne liste">
         <hr-worksheets-form></hr-worksheets-form>
     </mat-tab>
-    
+    <mat-tab label ="Radna lista za obračun">
+      <hr-worksheets-billing-form></hr-worksheets-billing-form>
+  </mat-tab>
+
 </mat-tab-group>

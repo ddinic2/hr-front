@@ -30,8 +30,9 @@ export const environment = {
     LOCK_WORKSHEETS: '/lock-worksheets',
     UNLOCK_WORKSHEETS: '/unlock-worksheets',
     GENERATE_DOCUMENT: '/generate-document',
-    GET_EMPLOYEE: '/get-employee'
-    
+    GET_EMPLOYEE: '/get-employee',
+    WORKSHEETS_BILLING: '/worksheets-billing',
+    EXPORT_TO_EXCEL: '/export-to-excel'
   }
 };
 

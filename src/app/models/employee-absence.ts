@@ -2,7 +2,7 @@ import { Employee } from './employee';
 import { LoggedUser } from './logged-user';
 
 export interface EmployeeAbsence {
-    employeeId: number,
+    employeeId: number;
     employeeName: string;
     fromDate: Date;
     toDate: Date;

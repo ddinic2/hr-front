@@ -16,6 +16,7 @@ import { TimsystemsLibModule, TimsGridModule } from 'timsystems-lib';
 import { HotTableModule } from 'ng2-handsontable';
 import { DialogOverviewWorksheets } from 'src/app/pages/leave/worksheets-form/worksheets-form.component';
 import { DialogDenyMessage } from 'src/app/pages/absence-overview/abscences-list/abscences-list.component';
+import { WorksheetsBillingFormComponent } from './worksheets-billing-form/worksheets-billing-form.component';
 
 
 const buttons = [
@@ -42,7 +43,8 @@ const buttons = [
     ReactiveFormsModule,
     SharedModule
   ],
-  declarations: [LeaveComponent, LeaveFormComponent, AbscencesListComponent, SickAbsenceFormComponent, PaidAbsenceFormComponent, WorksheetsFormComponent, DialogOverviewWorksheets, DialogDenyMessage],
+  declarations: [LeaveComponent, LeaveFormComponent, AbscencesListComponent, SickAbsenceFormComponent,
+     PaidAbsenceFormComponent, WorksheetsFormComponent, DialogOverviewWorksheets, DialogDenyMessage,  WorksheetsBillingFormComponent],
   exports: [LeaveComponent, LeaveFormComponent, AbscencesListComponent],
   entryComponents: [DialogOverviewWorksheets, DialogDenyMessage]
 })

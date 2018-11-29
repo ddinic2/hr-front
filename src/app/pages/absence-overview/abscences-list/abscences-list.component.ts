@@ -25,9 +25,8 @@ export class AbscencesListComponent implements OnInit {
   @Input() absenceType: number;
   @Input() absProcessStatus: number;
   @Output() editAbsence = new EventEmitter;
-  
   @ViewChild(TimsGridComponent) grid: TimsGridComponent;
-  
+
 
   columnNameArray = [
     'Ime i Prezime',
@@ -64,7 +63,7 @@ export class AbscencesListComponent implements OnInit {
     absenceType: number = this.absenceType
   ) => this.service.getAbscences(order, direction, page, count, status, absenceType);
 
-  
+
   edit = item => {
     this.editAbsence.next(item);
     console.log("test edit");
@@ -78,7 +77,7 @@ export class AbscencesListComponent implements OnInit {
     //)
   };
 
-    
+
   remove = item => {
     const absenceId = item.EmployeeAbsence;
     this.service.removeAbsence(absenceId).subscribe(res => {
@@ -91,7 +90,7 @@ export class AbscencesListComponent implements OnInit {
       }
     )}
 
- 
+
 
   //Odobravanje odsustva NAPOMENA: LoggedUser da se zameni sa objektom
   approve = item => {
@@ -115,9 +114,9 @@ export class AbscencesListComponent implements OnInit {
 
 
 
-  
 
-   
+
+
 
   //Ponistavanje odsustva
   deny = item => {
@@ -163,7 +162,7 @@ export class AbscencesListComponent implements OnInit {
       });
   };
 
-  
+
   // save = (item) =>
   // console.log('save');
   // view = (item) =>
@@ -182,7 +181,7 @@ export class DialogDenyMessage {
       deny: [''],
     });
   }
-  
+
   onClick = data => {
     this.dialogFormGroup.controls['deny'].setValue(data);
     this.dialogRef.close(this.dialogFormGroup);

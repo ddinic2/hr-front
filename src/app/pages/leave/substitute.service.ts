@@ -156,6 +156,26 @@ export class SubstituteService {
     const url = environment.db.ROOT + environment.db.WORKSHEETS;
     return this.http.get<any[]>(url, obj);
   }
+  getPreviewEmployeePresenceData = (formResult) => {
+    const obj = {
+      params: new HttpParams()
+      .set('Month', formResult.month.toString())
+      .set('Year', formResult.year.toString())
+    };
+    const url = environment.db.ROOT + environment.db.WORKSHEETS_BILLING;
+    return this.http.get<any[]>(url, obj);
+
+  }
+  exportToexcel = (formResult) => {
+    const obj = {
+      params: new HttpParams()
+      .set('Month', formResult.month.toString())
+      .set('Year', formResult.year.toString())
+    };
+    const url = environment.db.ROOT + environment.db.EXPORT_TO_EXCEL;
+    return this.http.get<any[]>(url, obj);
+
+  }
 
   checkedPresenceStatus = (empPresenceList: any) => {
     let result = empPresenceList.map(m => m.DayStatus);

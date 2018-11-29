@@ -1,0 +1,33 @@
+<form [formGroup]="worksheetsBillingForm">
+  <div class="dates-row">
+    <mat-form-field>
+      <mat-select placeholder="Mesec" formControlName="month">
+        <mat-option *ngFor="let item of worksheetsMonthsOptions" [value]="item.Id">
+          {{ item.Name }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-select placeholder="Godina" formControlName="year">
+        <mat-option *ngFor="let item of worksheetsYearsOptions" [value]="item">
+          {{ item }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    </div>
+    <br/>
+    <br/>
+    <div class="dates-row">
+        <button type="submit" mat-raised-button (click)="detailsPresence()">Prikaži</button>
+        <button type="submit" mat-raised-button (click)="exportToExcel()">Excel</button>
+    </div>
+    <br/>
+    <br/>
+    <div style="width: 85%; height: 85%;" *ngIf="showTable">
+      <tims-tims-grid [displayDetails]="true" [columnPipes]="pipesToApply" [columnNames]="columnNameArray" [columnIds]="displayedColumns"
+          [dataProvider]="detailsPresence" [sortable]="true">
+        </tims-tims-grid>
+    </div>
+</form>
+
