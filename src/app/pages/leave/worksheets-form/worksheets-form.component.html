@@ -55,9 +55,9 @@
           <div class="dates-row">
             <div>
               <form>
-              <mat-form-field> 
+              <mat-form-field>
                 <mat-select (selectionChange)="selectedItem(item,i,$event)" [(value)]="item.DayStatus[i]">
-                  
+
                   <mat-option  *ngFor="let selectOption of absenceTypeOptions" [value]="selectOption.HRAbsenceTypeID">
                     {{ selectOption.Code }}
                   </mat-option>
@@ -76,34 +76,84 @@
     <button type="submit" mat-raised-button (click)="saveWorksheets()"> Sačuvaj</button>
   </div>
 
+
   <br/>
   <br/>
-  <div>
+  <!-- <div>
     <table class="mat-elevation-z8">
       <th>Lista prisutnosti</th>
       <th *ngFor="let dates of dateList">{{dates}}</th>
       <tr *ngFor="let item of employeePresenceList">
         <td>{{ item.EmployeeFullName }} </td>
         <td *ngFor="let dayStatus of item.PresenceTypeCode; let i=index;">
-        <div class="dates-row">            
+        <div class="dates-row">
             <form>
-              <mat-form-field> 
-                  <input matInput [value]="item.PresenceTypeCode[i]"    (keyup)="onKey(item,i,$event)"    maxlength="1" [disabled]="dayStatus == 'NN'">                   
+              <mat-form-field>
+                  <input matInput [value]="item.PresenceTypeCode[i]" #fieldName1   (keyup)="onKey(item,i,$event)"    maxlength="1" [disabled]="dayStatus == 'NN'">
               </mat-form-field>
-            </form>  
-            
+            </form>
+
           </div>
         </td>
-        
-      </tr>     
+
+      </tr>
+    </table>
+  </div> -->
+</form>
+  <div class="legend">
+    <h4>Legenda za evidentičara</h4>
+    <p>B - bolovanje, PO - plaćeno odsustvo, NPO - porodiljsko odsustvo, GO - godišnji odmor</p>
+    <p>RR - prisutnost (redovan rad), ! - neradni dan(praznik), VP - verski praznik (slava), x -odsutnost (za novozaposlene ili slučaju prestanog radnog odnos), DP - državni praznik</p>
+  </div>
+<div>
+  <table class="mat-elevation-z8">
+    <thead>
+        <th>Zaposleni</th>
+       <th *ngFor="let dates of dateList">{{dates}}</th>
+    </thead>
+    <tbody>
+        <tr *ngFor="let item of employeePresenceList;  let rowIdx = index;">
+
+          <td>{{ item.EmployeeFullName }} </td>
+          <!-- <td *ngFor="let dayStatus of item.PresenceTypeCode; let i = index;"> -->
+              <td *ngFor="let dayStatus of item.DayStatus; let i = index;">
+
+            <div class="dates-row">
+              <!--[value]="dayStatus"-->
+              <!-- [(ngModel)]="dayStatus.name"   -->
+              <input #inputs [(ngModel)]="dayStatus.name"  (keyup)="onKey(dayStatus,i,$event, rowIdx)"  maxlength="1" [disabled]="dayStatus.name === 'NN'">
+            </div>
+          </td>
+        </tr>
+    </tbody>
     </table>
   </div>
 
+
+
   <br/>
   <br/>
 
-  
- 
+
+ <div class="legend">
+   <h4>Legenda za HR:</h4>
+   <p>BO3P -bolovanje zbog održavanja trudnoće do 30 dana počelo u prethodnom mesecu, BPV -	bolovanje povreda na radu 100% počelo u tekućem mesecu,
+      BPVP - bolovanje povreda na radu 100% počelo u prethodnom mesecu,
+      PO - Plaćeno odsustvo,
+      POP -	Plaćeno odsustvo počelo u prethodnom mesecu,
+      BPO	- porodiljsko odsustvo,
+      GO - godišnji odmor,
+      GOP	- godišnji odmor počeo u prethodnom mesecu,
+      RR - prisutnost- redovan rad,
+      ! -	neradni dan (praznik),
+      VP - verski praznik(slava),
+      VPP	- verski praznik(slava) počelo u prethodnom mesecu,
+      x	- odsutnost (za novozaposlene ili u slučaju prestanka radnog odnosa),
+      DP - državni praznik,
+      DPP	- državni praznik počeo u prehodnom mesecu,
+      PRUD - privremeno udaljenje sa rada
+      </p>
+ </div>
   <div>
     <table class="mat-elevation-z8">
       <th>Zaposleni</th>
@@ -120,7 +170,7 @@
     </table>
   </div>
 
-</form>
+
 
 
 <br />

@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, ViewChildren } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { SubstituteService } from '../substitute.service';
 import { AbsenceType } from 'src/app/models/absence-type';
@@ -9,7 +9,13 @@ import { MatDialog, MatDialogRef, MAT_DIALOG_DATA , MatSnackBar} from '@angular/
 import { WorksheetsPresenceStatus } from 'src/app/models/enums/worksheets-prsence-status';
 import { SlicePipe } from '@angular/common';
 import { AbsenceTypes } from 'src/app/models/enums/absence-type';
+import { DayStatus } from 'src/app/models/day-status';
+import { isNgTemplate } from '@angular/compiler';
+import { forEach } from '@angular/router/src/utils/collection';
+import * as _moment from 'moment';
+import * as lodash from 'lodash';
 
+const _ = lodash;
 
 
 @Component({
@@ -34,34 +40,39 @@ export class WorksheetsFormComponent implements OnInit {
   checkedRes: boolean;
   registratorOptions: any;
   message: string;
-  
-  @ViewChild('newInput') firstNameElement: ElementRef;
 
-  constructor(private _fromBuilder: FormBuilder, public subService: SubstituteService, public loginService: LoginService, public dialog: MatDialog, public snackBar: MatSnackBar) {
+@ViewChildren('inputs') inputs;
+
+  constructor(private _fromBuilder: FormBuilder,
+     public subService: SubstituteService,
+      public loginService: LoginService,
+       public dialog: MatDialog,
+        public snackBar: MatSnackBar) {
     this.worksheetsForm = this._fromBuilder.group({
       orgUnit: [''],
       year: [''],
       month: [''],
       absenceTypeControl: [''],
-      registrator: ['']
+      registrator: [''],
+      i : ['']
     });
 
   }
 
   ngOnInit() {
     this.loggedUser = this.loginService.getLoggedInUser();
-    this.subService.getOrgUnit().subscribe(res => { this.orgUnitOptions = res });
-    this.subService.getWorksheetsYears().subscribe(res => { this.worksheetsYearsOptions = res });
-    this.subService.getWorksheetsMonths().subscribe(res => { this.worksheetsMonthsOptions = res });
+    this.subService.getOrgUnit().subscribe(res => { this.orgUnitOptions = res; });
+    this.subService.getWorksheetsYears().subscribe(res => { this.worksheetsYearsOptions = res; });
+    this.subService.getWorksheetsMonths().subscribe(res => { this.worksheetsMonthsOptions = res; });
     this.subService.getAbsenceTypeWorksheets().subscribe(res => {
     this.absenceTypeOptions = res;
       //this.absenceTypeOptions.push({ hrAbsenceTypeID: 0, name: '' })
     });
-    this.subService.getPresenceDetailType().subscribe(res => { this.presenceDetailTypeOptions = res });
+    this.subService.getPresenceDetailType().subscribe(res => { this.presenceDetailTypeOptions = res; });
 
 
-    //this.worksheetsForm.get('month').setValue(1);
-    //this.worksheetsForm.get('year').setValue(2018);
+    // this.worksheetsForm.get('month').setValue(1);
+    // this.worksheetsForm.get('year').setValue(2018);
 
     this.worksheetsForm.controls['year'].valueChanges.subscribe(value => {
       if (value && this.worksheetsForm.controls['month'].value) {
@@ -77,27 +88,41 @@ export class WorksheetsFormComponent implements OnInit {
     const formResult = this.worksheetsForm.value;
     this.subService.getEmployeePresenceList(formResult, this.loggedUser.value.data.employeeId)
       .subscribe(res => {
-      this.employeePresenceList = res;
-        let result = this.employeePresenceList.map(m => m.DayStatus);
-        this.dateList = this.dateArrayListDetails(result[0].length);
-      });
+      res.map(item => item.DayStatus = item.DayStatus.map(element => {
+        return DayStatus.fromCode(element);
+      }));
+       this.employeePresenceList = res;
+      //   const result = this.employeePresenceList.map(m => {
+      //       // m.DayStatus
+      //       return DayStatus.fromCode(m.DayStatus);
+      //   });
 
+      const month = (this.worksheetsForm.controls['month'].value).toString();
+      const year = (this.worksheetsForm.controls['year'].value).toString();
+      const daysInMonth = _moment(year + month, 'YYYY-MM').daysInMonth();
+      this.dateList = this.dateArrayListDetails(daysInMonth);
+
+      });
+  }
+
+  getDaysInMonth(anyDateInMonth) {
+    return new Date(anyDateInMonth.getFullYear(), anyDateInMonth.getMonth() + 1, 0).getDate();
   }
 
   dateArrayListDetails = function (dates) {
     this.dateList.length = 0;
-    for (var i = 1; i <= dates; i++) {
+    for (let i = 1; i <= dates; i++) {
       this.dateList.push(i);
-    };
+    }
     return this.dateList;
-  }
+  };
 
   compareWorksheets() {
     const formResult = this.worksheetsForm.value;
     this.subService.compareWorksheetsByRegistrator(formResult, this.loggedUser.value.data.employeeId)
       .subscribe(res => {
-      this.comparePresenceList = res
-        let result = this.comparePresenceList.map(m => m.PresenceTypeCode);
+      this.comparePresenceList = res;
+        const result = this.comparePresenceList.map(m => m.PresenceTypeCode);
         this.dateList = this.dateArrayListDetails(result[0].length);
       });
   }
@@ -114,8 +139,9 @@ export class WorksheetsFormComponent implements OnInit {
       if (result) {
           empPresenceList.presenceListStatus = WorksheetsPresenceStatus.Lock;
           this.subService.lockWorksheets(empPresenceList);
+
         }
-      });      
+      });
   }
 
   unlockWorksheets() {
@@ -127,76 +153,51 @@ export class WorksheetsFormComponent implements OnInit {
         verticalPosition: 'top'
       });
     });
-      
+
   }
 
 
 
   selectedItem = (item, index, event) => {
-      item.DayStatus[index] = event.value;         
+      item.DayStatus[index] = event.value;
   }
 
- 
-
-  onKey = (item, index, event) =>{
-    const test = event.target.value;
-    
-    // if(event.target.value === "b" || event.target.value ==='g' || event.target.value === 'p' || event.target.value === 'o'  || event.target.value === 'p' )
-    if(event.which == 66 || event.which == 80 || event.which == 71 || event.which == 78 || event.which == 82 || event.which == 9)
-    {
-      switch (event.which) {
-        case 71:
-          item.DayStatus[index] = (AbsenceTypes.Absence);
-          item.PresenceTypeCode[index] = 'GO';  
-          break;
-        case 80:
-          item.DayStatus[index] = AbsenceTypes.PaidAbsence;
-          item.PresenceTypeCode[index] = 'PO';
-          break;
-        case 66:
-          item.DayStatus[index] = AbsenceTypes.SickAbsence;
-          item.PresenceTypeCode[index] = 'B';
-          break;
-        case 78:
-          item.DayStatus[index] = AbsenceTypes.Maternally;
-          item.PresenceTypeCode[index] = 'NPO';
-          break;
-        case 82:
-          item.DayStatus[index] = AbsenceTypes.Worksheet;
-          item.PresenceTypeCode[index] = 'R';
-          break;
-        case 9:
-          // item.DayStatus[index] = AbsenceTypes.Worksheet;
-          // item.PresenceTypeCode[index] = 'R';
-            break;
-    }
-      // //item.DayStatus[index] = event.value;
-
-      // let nextControl: any = event.target.nextElementSibling;
-      // console.log('Next sibiling' + event.target.nextElementSibling)
-      // let element = event.target.nextElementSibling; // get the sibling element
-      
-      // console.log('Next control' + nextControl.nextElementSibling)
-
-      // if(nextControl == null)  // check if its null
-      //     return;
-      // else
-      //   nextControl.focus();   // focus if not null
-
-        
-    }
-   else
-   {
-     console.log(event.code)
-     event.target.value = '';
-   }
+  focusInput( colIdx: number, item: any) {
+    // convert ViewChildren querylist to an array to access by index
+    const inputEls = this.inputs.toArray();
+    // get the flat index from row/cols
+    const flatIdx = (colIdx + 1);
+    // get that reference from the input array and use the native element focus() method
+    inputEls[flatIdx].nativeElement.focus();
   }
- 
-  
+
+  shiftFocusRight(colIdx: number, item: any) {
+       this.focusInput(colIdx, item);
+  }
+
+  onKey = (item,  index, event, rowIdx) => {
+
+    item.set(event.key);
+    //this.shiftFocusRight(index, item);
+     // shiftFocusRight(colIdx:number, item:any) {
+  //      this.focusInput(colIdx, item);
+
+  }
+
+
   saveWorksheets = () => {
+   const presenceListCopy = _.cloneDeep(this.employeePresenceList);
+  for (let i = 0; i < presenceListCopy.length; i++) {
+    const item = presenceListCopy[i];
+          for (let ii = 0; ii < item.DayStatus.length; ii++) {
+            const dayStatus = presenceListCopy[i].DayStatus[ii].value;
+            presenceListCopy[i].DayStatus[ii] = dayStatus;
+      }
+   }
     this.loginUserId = this.loggedUser.value.data.employeeId;
-    this.employeePresenceList.loginUserId = this.loggedUser.value.data.employeeId;
-    const empPresenceList: EmployeePresenceList = this.employeePresenceList;
+    presenceListCopy.loginUserId = this.loggedUser.value.data.employeeId;
+
+    const empPresenceList: EmployeePresenceList = presenceListCopy;
     empPresenceList.presenceListStatus = WorksheetsPresenceStatus.Created;
     this.subService.putWorksheets(empPresenceList);
     //this.subService.checkedPresenceStatus(empPresenceList);

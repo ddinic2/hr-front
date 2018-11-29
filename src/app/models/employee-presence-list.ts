@@ -1,4 +1,4 @@
-export interface EmployeePresenceList{
+export interface EmployeePresenceList {
     employeeID: number;
     employeeHRNumber: string;
     employeeFullName: string;
@@ -9,7 +9,8 @@ export interface EmployeePresenceList{
     month: number;
     year: number;
     employeePresenceRegion: number;
-    presenceListStatus: number,
+    presenceListStatus: number;
     lockPresenceList: boolean;
     disabled: boolean;
-}
+
+  }

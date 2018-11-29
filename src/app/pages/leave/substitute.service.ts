@@ -36,8 +36,8 @@ export class SubstituteService {
   canSave = false;
   checkedRes = [];
   employeeFamilyDay: any;
-    
- 
+
+
   extractData(res: Response) {
     const body = res.json();
     return body || {};
@@ -56,7 +56,7 @@ export class SubstituteService {
       this.canSave = true;
     });
 
-    
+
   }
 
   // getSubstitutes(val: string): Observable<any[]> {
@@ -120,7 +120,7 @@ export class SubstituteService {
     const url = environment.db.ROOT + environment.db.ABSENCE_TYPE + environment.db.ABSENCE_TYPE_WORKSHEETS;
     return this.http.get<AbsenceType[]>(url);
   }
-  
+
   getEmployee = () => {
     const url = environment.db.ROOT + environment.db.EMPLOYEE;
     return this.http.get<Employee[]>(url);
@@ -134,12 +134,12 @@ export class SubstituteService {
     const url = environment.db.ROOT + environment.db.WORKSHEETS + environment.db.WORKSHEETS_YEAR;
     return this.http.get<number[]>(url);
   }
-  
+
   getPresenceDetailType = () => {
     const url = environment.db.ROOT + environment.db.WORKSHEETS + environment.db.PRESENCE_DETAIL_TYPE;
     return this.http.get<number[]>(url);
   }
-  
+
   getOrgUnit = () => {
     const url = environment.db.ROOT + environment.db.ORG_UNIT;
     return this.http.get<any[]>(url);
@@ -170,13 +170,13 @@ export class SubstituteService {
         }
       }
     }
-    
+
   if(this.checkedRes.length == 0)// postavi da je jednako 0 to znači da su sve liste popunjene
     {
       empPresenceList.lockPresenceList = true;
     }
   }
-    
+
   getRegistratorByDate = (month: number, year: number) => {
     const obj = {
       params: new HttpParams()
@@ -194,15 +194,15 @@ export class SubstituteService {
       .set('Month', data.month.toString())
       .set('Year', data.year.toString())
       .set('LoginUser', loginUserId.toString())
-     
+
     };
       const url = environment.db.ROOT + environment.db.WORKSHEETS + environment.db.COMPARE_WORKSHEETS;
       return this.http.get(url, obj);
   }
 
   lockWorksheets = (empPresenceList: EmployeePresenceList) => {
-    const obj = { 
-      params: new HttpParams() 
+    const obj = {
+      params: new HttpParams()
       .set('LoginUserId', empPresenceList.loginUserId.toString())
       .set('PresenceListStausId', empPresenceList.presenceListStatus.toString())
     };
@@ -246,12 +246,12 @@ export class SubstituteService {
   }
 
   //Save absence
-  public postAbsence(employeeAbsence: EmployeeAbsence): Observable<EmployeeAbsence> {  
+  public postAbsence(employeeAbsence: EmployeeAbsence): Observable<EmployeeAbsence> {
     const url = environment.db.ROOT + environment.db.ABSCENCE;
     const startDate = moment(employeeAbsence.fromDate);
     const endDate = moment(employeeAbsence.toDate);
     const dateNow =  new  Date().toDateString().substring(0,15);
-    
+
     const dateException = this.getExceptionDate(startDate);
     dateException.forEach(function (item) {
       const index = dateNow.indexOf(item);
@@ -263,7 +263,7 @@ export class SubstituteService {
 
   const dateArray = this.getDateArray(startDate, endDate, employeeAbsence.absenceType, employeeAbsence.familyHolidayDay, employeeAbsence.familyHolidayMonth);
 
-    
+
 
     this.holidayDateslist.forEach(function (item) {
       const index = dateArray.indexOf(item.Date);
@@ -285,23 +285,23 @@ export class SubstituteService {
   getDateArray = function (start, end, absenceType, familyHolidayDay, familyHolidayMonth) {
     const dateArray = new Array();
     const startDate = new Date(start);
-            
+
     while (startDate <= end) {
-      if(absenceType == AbsenceTypes.Absence)  
+      if(absenceType == AbsenceTypes.Absence)
       {
         if (startDate.getDay() !== 0 && startDate.getDay() !== 6 && (familyHolidayDay && startDate.getDate() != familyHolidayDay) && (familyHolidayMonth && startDate.getDate() != familyHolidayMonth)) {
           dateArray.push(new Date(startDate).toDateString().substring(0, 15));
         }
         startDate.setDate(startDate.getDate() + 1);
-      }  
+      }
       else
       {
         if (startDate.getDay() !== 0 && startDate.getDay() !== 6 && startDate.getDate()) {
           dateArray.push(new Date(startDate).toDateString().substring(0, 15));
         }
         startDate.setDate(startDate.getDate() + 1);
-      }   
-      
+      }
+
     }
     return dateArray;
   };
@@ -309,25 +309,25 @@ export class SubstituteService {
   getExceptionDate = function(start) {
     var i = 0;
     const dateExArray = new Array();
-    const startDate = new Date(start)
-    
+    const startDate = new Date(start);
+
       dateExArray.push(new Date(startDate).toDateString().substring(0, 15));
       startDate.setDate(startDate.getDate() + 1);
-      while(dateExArray.length <= 2){
-        if(startDate.getDay() !== 0 && startDate.getDay() !== 6){
+      while (dateExArray.length <= 2) {
+        if (startDate.getDay() !== 0 && startDate.getDay() !== 6) {
           dateExArray.push(new Date(startDate).toDateString().substring(0, 15));
         }
         startDate.setDate(startDate.getDate() + 1);
       }
-      
+
     return dateExArray;
-    
+
   };
 
   putWorksheets(employeePresenceList: EmployeePresenceList) {
       const url = environment.db.ROOT + environment.db.WORKSHEETS;
-      const obj = { 
-        params: new HttpParams() 
+      const obj = {
+        params: new HttpParams()
         .set('LoginUserId', employeePresenceList.loginUserId.toString())
         .set('PresenceListStausId', employeePresenceList.presenceListStatus.toString())
       };
@@ -341,6 +341,6 @@ export class SubstituteService {
       });
   }
 
-  
+
 
 }
