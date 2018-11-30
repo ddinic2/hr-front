@@ -1,36 +1,30 @@
-.form-container {
-    margin: 16px;
-    padding: 16px;
-  
-    .dates-row {
-      width: 100%;
-      display: flex;
-      align-content: space-between;
-    }
-  
-    .date {
-      margin-right: 8px;
-    }
-    .date-from {
-      @extend .date;
-    }
-  
-    .date-to {
-      @extend .date;
-    }
-    .substitute-auto{
-      width: 300px;
-    }
-  
-    .color{
-      background: #42A948; /* green */
-    }
-  }
-  table {
-    width: 100%;
-  }
-  .mat-form-field{
-    padding: 10px;
-    padding-top: 10px;
-  }
-  
+.dates-row {
+  padding: 10px;
+
+}
+
+.date {
+  margin-right: 8px;
+}
+.date-from {
+  @extend .date;
+}
+
+.date-to {
+  @extend .date;
+}
+
+
+.color{
+  background: #42A948; /* green */
+}
+
+table {
+width: 100%;
+}
+
+.substitute-auto{
+width: 500px;
+padding: 10px;
+}
+
