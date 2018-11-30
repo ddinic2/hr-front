@@ -46,7 +46,7 @@ export class LeaveFormComponent implements OnInit {
     this.holidayDays.filter(function(days){
       if( days.Month == month && days.Year == year)
       {
-        holidayDays.push(days.DateOfHoliday);       
+        holidayDays.push(days.DateOfHoliday);
       }
     });
     if(this.employeeFamilyDay.FamilyHolidayMonth && this.employeeFamilyDay.FamilyHolidayMonth == month)
@@ -57,12 +57,12 @@ export class LeaveFormComponent implements OnInit {
     {
       return day !== 0 && day !== 6 && !holidayDays.includes(date);
     }
-    
+
   }
 
 
   constructor(private _formBuilder: FormBuilder, public subsService: SubstituteService,
-    public loginService: LoginService, public snackBar: MatSnackBar, public absenceService : AbscenceService) {
+    public loginService: LoginService, public snackBar: MatSnackBar, public absenceService: AbscenceService) {
   }
 
   ngOnInit() {
@@ -76,14 +76,15 @@ export class LeaveFormComponent implements OnInit {
 
     this.loggedUser =  this.loginService.getLoggedInUser();
     this.subsService.getHolidayDaysForCalendar().subscribe(res => {
-        this.holidayDays = res;        
+        this.holidayDays = res;
     });
 
+
     this.subsService.getEmployeeFamilyHoliday(this.loggedUser.value.data.employeeId).subscribe(res => {
-      this.employeeFamilyHoliday = res;  
-      this.employeeFamilyDay = res;       
+      this.employeeFamilyHoliday = res;
+      this.employeeFamilyDay = res;
   });
-    
+
 
 
     // this.employeeAbsenceForm.controls['fromDate'].valueChanges.subscribe(value => {
@@ -126,7 +127,7 @@ export class LeaveFormComponent implements OnInit {
 
   // onKey = (event) => {
   //   this._filter(event.target.value);
-  // } 
+  // }
 
   private _filter(name: string): any[] {
     if (this.options !== undefined) {
@@ -140,9 +141,9 @@ export class LeaveFormComponent implements OnInit {
       // );
     }
   }
- 
-  
-  
+
+
+
 
   displayFn(employee: any): string | undefined {
     if(employee != null)
@@ -174,7 +175,7 @@ export class LeaveFormComponent implements OnInit {
       this.abscenceSaved.next(true);
      // this.grid.refresh();
      //this.abscenceSaved.emit(null);
-      
+
     });
 
     console.log(JSON.stringify(formResult, null, 2));

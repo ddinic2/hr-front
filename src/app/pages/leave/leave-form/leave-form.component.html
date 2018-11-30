@@ -1,20 +1,20 @@
 <form [formGroup]="employeeAbsenceForm">
-  <div class="dates-row">
-    <mat-form-field>
+  <!-- <div class="dates-row"> -->
+    <mat-form-field class="dates-row">
         <input matInput  [matDatepickerFilter]="disableWeekdays" [matDatepicker]="from" placeholder="Početak" formControlName="fromDate">
         <mat-datepicker-toggle matSuffix [for]="from"></mat-datepicker-toggle>
         <mat-datepicker #from></mat-datepicker>
       </mat-form-field>
-    
-      <mat-form-field>
+
+      <mat-form-field class="dates-row">
         <input matInput [min]="employeeAbsenceForm.controls.fromDate.value"   [matDatepickerFilter]="disableWeekdays" [matDatepicker]="to" placeholder="Kraj" formControlName="toDate">
         <mat-datepicker-toggle matSuffix [for]="to"></mat-datepicker-toggle>
         <mat-datepicker #to></mat-datepicker>
-      </mat-form-field>    
+      </mat-form-field>
 
-  
+
     <mat-form-field class="substitute-auto">
-      <input type="text" placeholder="Zamena" aria-label="Zamena" matInput formControlName="replaceEmployee" 
+      <input type="text" placeholder="Zamena" aria-label="Zamena" matInput formControlName="replaceEmployee"
         [matAutocomplete]="auto">
       <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
         <mat-option *ngFor="let employee of options" [value]="employee">
@@ -23,7 +23,7 @@
         </mat-option>
       </mat-autocomplete>
     </mat-form-field>
-  </div>
+  <!-- </div> -->
 
 
   <div>
@@ -33,4 +33,3 @@
   </div>
 </form>
 
-  

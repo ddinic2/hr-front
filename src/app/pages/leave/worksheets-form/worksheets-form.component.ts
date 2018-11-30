@@ -14,6 +14,7 @@ import { isNgTemplate } from '@angular/compiler';
 import { forEach } from '@angular/router/src/utils/collection';
 import * as _moment from 'moment';
 import * as lodash from 'lodash';
+import { Roles } from 'src/app/models/enums/role';
 
 const _ = lodash;
 
@@ -40,6 +41,11 @@ export class WorksheetsFormComponent implements OnInit {
   checkedRes: boolean;
   registratorOptions: any;
   message: string;
+  roleId: string;
+  rolaHRManager = Roles.HRManager.toString();
+  rolaRecord = Roles.Record.toString();
+
+
 
 @ViewChildren('inputs') inputs;
 
@@ -70,6 +76,7 @@ export class WorksheetsFormComponent implements OnInit {
     });
     this.subService.getPresenceDetailType().subscribe(res => { this.presenceDetailTypeOptions = res; });
 
+    this.roleId = this.loggedUser.value.data.roleId;
 
     // this.worksheetsForm.get('month').setValue(1);
     // this.worksheetsForm.get('year').setValue(2018);

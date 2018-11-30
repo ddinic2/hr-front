@@ -10,11 +10,10 @@ import { Observable, of, BehaviorSubject } from 'rxjs';
 })
 export class LoginService {
   loggedInUser;
-  loggedUser = new  BehaviorSubject<any>(this.loggedInUser); 
+  loggedUser = new  BehaviorSubject<any>(this.loggedInUser);
 
 
   constructor(private http: HttpClient, private router: Router) {
-    
   }
 
   loggedIn = (): Promise<boolean> | Observable<boolean> => {

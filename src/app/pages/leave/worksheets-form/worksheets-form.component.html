@@ -24,7 +24,7 @@
       </mat-select>
     </mat-form-field>
 
-    <mat-form-field class="substitute-auto">
+    <mat-form-field class="substitute-auto" *ngIf='roleId === rolaHRManager ? true : false'>
       <mat-select placeholder="Evidentičari" formControlName="registrator">
         <mat-option *ngFor="let reg of registratorOptions" [value]="reg.EmployeeID">
           {{reg.EmployeeFullName}}
@@ -36,10 +36,10 @@
   <br/>
   <p>Uneti podaci utiču na zaradu</p>
   <div class="dates-row">
-    <button type="submit" mat-raised-button (click)="detailsPresence()">Prikaži</button>
-    <button type="submit" mat-raised-button (click)="compareWorksheets()"> Uporedi radne liste</button>
-    <button type="submit" mat-raised-button (click)="lockWorksheets()"> Zaključaj radnu listu</button>
-    <button type="submit" mat-raised-button (click)="unlockWorksheets()"> Otključaj radnu listu</button>
+    <button type="submit" mat-raised-button (click)="detailsPresence()" *ngIf='(roleId === rolaHRManager || roleId === rolaRecord) ? true : false'>Prikaži</button>
+    <button type="submit" mat-raised-button (click)="compareWorksheets()" *ngIf='roleId === rolaHRManager ? true : false'> Uporedi radne liste</button>
+    <button type="submit" mat-raised-button (click)="lockWorksheets()" *ngIf='roleId === rolaRecord ? true : false'> Zaključaj radnu listu</button>
+    <button type="submit" mat-raised-button (click)="unlockWorksheets()" *ngIf='roleId === rolaHRManager ? true : false'> Otključaj radnu listu</button>
   </div>
 
   <br />
@@ -73,7 +73,7 @@
   </div> -->
   <br />
   <div>
-    <button type="submit" mat-raised-button (click)="saveWorksheets()"> Sačuvaj</button>
+    <button type="submit" mat-raised-button (click)="saveWorksheets()" *ngIf='roleId === rolaRecord ? true : false'> Sačuvaj</button>
   </div>
 
 
@@ -118,10 +118,10 @@
           <!-- <td *ngFor="let dayStatus of item.PresenceTypeCode; let i = index;"> -->
               <td *ngFor="let dayStatus of item.DayStatus; let i = index;">
 
-            <div class="dates-row">
+            <div class="dates-row" >
               <!--[value]="dayStatus"-->
               <!-- [(ngModel)]="dayStatus.name"   -->
-              <input #inputs [(ngModel)]="dayStatus.name"  (keyup)="onKey(dayStatus,i,$event, rowIdx)"  maxlength="1" [disabled]="dayStatus.name === 'NN'">
+              <input #inputs [(ngModel)]="dayStatus.name"  (keyup)="onKey(dayStatus,i,$event, rowIdx)"  maxlength="1" [disabled]="dayStatus.name === 'NN' || (roleId === rolaHRManager ? true : false )">
             </div>
           </td>
         </tr>
@@ -135,7 +135,7 @@
   <br/>
 
 
- <div class="legend">
+ <div class="legend"  *ngIf='roleId === rolaHRManager ? true : false'>
    <h4>Legenda za HR:</h4>
    <p>BO3P -bolovanje zbog održavanja trudnoće do 30 dana počelo u prethodnom mesecu, BPV -	bolovanje povreda na radu 100% počelo u tekućem mesecu,
       BPVP - bolovanje povreda na radu 100% počelo u prethodnom mesecu,
@@ -155,7 +155,7 @@
       </p>
  </div>
   <div>
-    <table class="mat-elevation-z8">
+    <table class="mat-elevation-z8"  *ngIf='roleId === rolaHRManager ? true : false'>
       <th>Zaposleni</th>
       <th>Organizaciona jedinica</th>
       <th *ngFor="let item of dateList">{{item}}</th>

@@ -1,11 +1,12 @@
-.form-container {
-  margin: 16px;
-  padding: 16px;
+// .form-container {
+//   margin: 16px;
+//   padding: 16px;
 
   .dates-row {
-    width: 100%;
-    display: flex;
-    align-content: space-between;
+    // display: flex;
+    // align-content: space-between;
+    padding: 10px;
+
   }
 
   .date {
@@ -18,18 +19,18 @@
   .date-to {
     @extend .date;
   }
-  .substitute-auto{
-    width: 300px;
-  }
+
 
   .color{
     background: #42A948; /* green */
   }
-}
+//}
 table {
   width: 100%;
 }
-.mat-form-field{
+
+.substitute-auto{
+  width: 500px;
   padding: 10px;
-  padding-top: 10px;
 }
+

@@ -70,6 +70,8 @@ export class SubstituteService {
   //   return this.getSubstitutesByDate(undefined, undefined).subscribe(res => subList.next(res));
   // }
 
+
+
   getRelevantSubstitutes = () => {
     return this.substitutesList;
   }

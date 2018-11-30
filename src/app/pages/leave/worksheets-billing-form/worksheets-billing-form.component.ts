@@ -85,7 +85,7 @@ export class WorksheetsBillingFormComponent implements OnInit {
    return this.subService.getPreviewEmployeePresenceData(formResult);
   }
 
-  exportToExcel = (items) => {
+  exportToExcel = () => {
     const formResult = this.worksheetsBillingForm.value;
     return this.subService.exportToexcel(formResult);
   }

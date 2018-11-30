@@ -1,9 +1,11 @@
 import { Component, ViewChild, OnInit } from "@angular/core";
 import { AbsenceTypes } from "src/app/models/enums/absence-type";
+import { Roles } from "src/app/models/enums/role";
 import { AbsenceProcessStatus } from "src/app/models/enums/absence-process-satatus";
 import { AbscencesListComponent } from "../absence-overview/abscences-list/abscences-list.component";
 import { PaidAbsenceFormComponent } from "./paid-absence-form/paid-absence-form.component";
 import { SickAbsenceFormComponent } from "./sick-absence-form/sick-absence-form.component";
+import { LoginService } from "src/app/shared/shared/login.service";
 
 @Component({
     selector: 'hr-leave',
@@ -23,16 +25,24 @@ export class LeaveComponent implements OnInit {
     @ViewChild('editSickAbsence')
     editSickAbsence: SickAbsenceFormComponent;
 
-
+    showTab: boolean;
+    showLeaveTab: boolean;
+    showWorksheetsTab: boolean;
     grid: AbscencesListComponent;
+    loggedUser: any;
+    roleId: string;
+    rolaHRManager = Roles.HRManager.toString();
+    rolaRecord = Roles.Record.toString();
 
     absenceTypes = AbsenceTypes;
     absenceProcessStatus = AbsenceProcessStatus;
 
-    constructor() { }
+    constructor(public loginService: LoginService) { }
 
     ngOnInit(): void {
-        console.log(this.grid);
+
+        this.loggedUser =  this.loginService.getLoggedInUser();
+        this.roleId = this.loggedUser.value.data.roleId;
     }
 
     doARefresh = grid => {
@@ -58,7 +68,7 @@ export class LeaveComponent implements OnInit {
         {
             this.editSickAbsence.editSickAbsence(event);
         }
-        
+
     }
 
 }
