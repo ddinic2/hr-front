@@ -36,6 +36,7 @@ export interface EmployeeAbsence {
     familyHolidayDay: number;
     familyHolidayMonth: number;
 
+
 }
 
 

@@ -7,6 +7,7 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { LoggedUser } from 'src/app/models/logged-user';
 import { TimsGridComponent } from 'timsystems-lib';
 import {MatSnackBar } from '@angular/material';
+import { Roles } from 'src/app/models/enums/role';
 
 
 @Component({
@@ -21,6 +22,10 @@ export class AbscencesListComponent implements OnInit {
   loggedUser: any;
   data: any;
   ok: boolean;
+  loggedId: string;
+  roleId: string;
+  rolaHRManager = Roles.HRManager;
+  rolaRecord = Roles.Record;
 
   @Input() absenceType: number;
   @Input() absProcessStatus: number;
@@ -34,7 +39,8 @@ export class AbscencesListComponent implements OnInit {
     'Datum do',
     'Broj radnih dana',
     'Status odsustva',
-    'Tip odsustva'
+    'Tip odsustva',
+    'Izuzetak'
 
   ];
 
@@ -44,14 +50,18 @@ export class AbscencesListComponent implements OnInit {
     'ToDate',
     'NumOfdays',
     'AbsenceProcessStatusName',
-    'AbsenceTypeName'
+    'AbsenceTypeName',
+    'ExceptionAbsenceName'
 
   ];
 
-  constructor(private service: AbscenceService, private loginService: LoginService, public dialog: MatDialog, public snackBar: MatSnackBar) { }
+  constructor(private service: AbscenceService, private loginService: LoginService,
+     public dialog: MatDialog, public snackBar: MatSnackBar) { }
 
   ngOnInit() {
     this.loggedUser = this.loginService.getLoggedInUser();
+    this.loggedId = this.loggedUser.value.data.employeeId;
+    this.roleId = this.loggedUser.value.data.roleId;
   }
 
   getRepoIssues = (
@@ -60,13 +70,14 @@ export class AbscencesListComponent implements OnInit {
     page = 1,
     count = 20,
     status: number = this.absProcessStatus,
-    absenceType: number = this.absenceType
-  ) => this.service.getAbscences(order, direction, page, count, status, absenceType);
+    absenceType: number = this.absenceType,
+    loggedId: string = this.loggedId,
+    roleId: string = this.roleId
+    ) => this.service.getAbscences(order, direction, page, count, status, absenceType, loggedId, roleId)
 
 
   edit = item => {
     this.editAbsence.next(item);
-    console.log("test edit");
     // this.service.editAbsence(item).subscribe(res => {
     //   this.retPostData = res;
     //    this.snackBar.open(this.retPostData, 'OK', {
@@ -74,27 +85,29 @@ export class AbscencesListComponent implements OnInit {
     //    verticalPosition: 'top'
     //    })
     //   }
-    //)
-  };
+    // )
+  }
 
 
   remove = item => {
     const absenceId = item.EmployeeAbsence;
     this.service.removeAbsence(absenceId).subscribe(res => {
+
       this.retPostData = res;
        this.snackBar.open(this.retPostData, 'OK', {
        duration: 10000,
        verticalPosition: 'top'
-       })
+       });
        this.performRefresh();
       }
-    )}
+    );
+  }
 
 
 
   //Odobravanje odsustva NAPOMENA: LoggedUser da se zameni sa objektom
   approve = item => {
-    item.AbsenceProcessStatus = this.absenceProcessStatus.Approved;
+    item.AbsenceProcessStatusNew = this.absenceProcessStatus.Approved;
     item.LoggedUserId = this.loggedUser.value.data.employeeId;
     item.LoggedUserEmail = this.loggedUser.value.data.employeeEmail;
     item.LoggedUserRoleId = this.loggedUser.value.data.roleId;
@@ -105,18 +118,12 @@ export class AbscencesListComponent implements OnInit {
         item.AbsenceProcessStatusName = res;
         this.performRefresh();
       });
-  };
+  }
 
 
   performRefresh = () => {
     this.grid.refresh();
   }
-
-
-
-
-
-
 
   //Ponistavanje odsustva
   deny = item => {
@@ -126,7 +133,7 @@ export class AbscencesListComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result.value.deny) {
-        item.AbsenceProcessStatus = this.absenceProcessStatus.Deny;
+        item.AbsenceProcessStatusNew = this.absenceProcessStatus.Deny;
         item.description = result.value.description;
         item.LoggedUserId = this.loggedUser.value.data.employeeId;
         item.LoggedUserEmail = this.loggedUser.value.data.employeeEmail;
@@ -140,17 +147,17 @@ export class AbscencesListComponent implements OnInit {
           });
       }
     });
-  };
+  }
 
   generate = item => {
     this.service.generateDocument(item.EmployeeAbsence, item.EmployeeId, item.AbsenceType)
       .subscribe(data => {
         let thefile = {};
         thefile = data;
-        // thefile = new File(data, 'data.xlsx');
+        //thefile = new File(data, 'data.xlsx');
         const url = URL.createObjectURL(data.body);
         const disposition = data.headers.getAll('content-disposition');
-        let filename = '';
+        const filename = '';
 
         const a = document.createElement('a');
         document.body.appendChild(a);
@@ -160,7 +167,7 @@ export class AbscencesListComponent implements OnInit {
         a.click();
         a.remove();
       });
-  };
+  }
 
 
   // save = (item) =>
@@ -185,5 +192,5 @@ export class DialogDenyMessage {
   onClick = data => {
     this.dialogFormGroup.controls['deny'].setValue(data);
     this.dialogRef.close(this.dialogFormGroup);
-  };
+  }
 }

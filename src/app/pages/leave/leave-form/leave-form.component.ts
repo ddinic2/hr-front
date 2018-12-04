@@ -11,6 +11,7 @@ import { AbsenceProcessStatus } from 'src/app/models/enums/absence-process-satat
 import {MatSnackBar } from '@angular/material';
 import { TimsGridComponent } from 'timsystems-lib';
 import { AbscenceService } from 'src/app/pages/absence-overview/abscence.service';
+import { Roles } from 'src/app/models/enums/role';
 
 
 @Component({
@@ -35,6 +36,35 @@ export class LeaveFormComponent implements OnInit {
   filteredOptions: Observable<any[]>;
   employeeFamilyDay: any;
   employeeFamilyHoliday: any;
+  showTable: boolean;
+  loggedId: string;
+  roleId: string;
+  pipesToApply = [];
+  rolaHRManager = Roles.HRManager.toString();
+  rolaManager = Roles.Manager.toString();
+  yearVacation: any;
+  minDate = new Date();
+  exceptionAbsence: boolean;
+
+
+
+  columnNameArray = [
+    'Ime i Prezime',
+    'Datum od',
+    'Datum do',
+    'Broj radnih dana',
+    'Izuzetak',
+    'Status odsustva'
+  ];
+
+  displayedColumns = [
+    'EmployeeName',
+    'FromDate',
+    'ToDate',
+    'NumOfdays',
+    'ExceptionAbsenceName',
+    'AbsenceProcessStatusName'
+  ];
 
 
   disableWeekdays = (d: Date): boolean => {
@@ -43,18 +73,14 @@ export class LeaveFormComponent implements OnInit {
     const year = d.getFullYear();
     const date = d.getDate();
     const holidayDays = new Array();
-    this.holidayDays.filter(function(days){
-      if( days.Month == month && days.Year == year)
-      {
+    this.holidayDays.filter(function(days) {
+      if ( days.Month == month && days.Year == year) {
         holidayDays.push(days.DateOfHoliday);
       }
     });
-    if(this.employeeFamilyDay.FamilyHolidayMonth && this.employeeFamilyDay.FamilyHolidayMonth == month)
-    {
+    if (this.employeeFamilyDay.FamilyHolidayMonth && this.employeeFamilyDay.FamilyHolidayMonth == month) {
       return day !== 0 && day !== 6 && !holidayDays.includes(date) && date !== this.employeeFamilyDay.FamilyHolidayDay;
-    }
-    else
-    {
+    } else {
       return day !== 0 && day !== 6 && !holidayDays.includes(date);
     }
 
@@ -66,17 +92,31 @@ export class LeaveFormComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.showTable = true;
+
     this.employeeAbsenceForm = this._formBuilder.group({
       fromDate: [''],
       toDate: [''],
-      replaceEmployee: ['']
+      replaceEmployee: [''],
+      remainingDays: [''], disabled: true,
+      remainingDaysPreviousYear: ['']
 
     });
 
 
     this.loggedUser =  this.loginService.getLoggedInUser();
+    this.loggedId = this.loggedUser.value.data.employeeId;
+    this.roleId = this.loggedUser.value.data.roleId;
     this.subsService.getHolidayDaysForCalendar().subscribe(res => {
         this.holidayDays = res;
+    });
+    this.absenceService.getYearVacation(this.loggedId).subscribe(res => {
+      this.yearVacation = res;
+      this.employeeAbsenceForm.controls['remainingDays'].setValue(this.yearVacation.RemainingDays);
+      this.employeeAbsenceForm.controls['remainingDays'].disable();
+      this.employeeAbsenceForm.controls['remainingDaysPreviousYear'].setValue(this.yearVacation.RemainingDaysPreviousYear);
+      this.employeeAbsenceForm.controls['remainingDaysPreviousYear'].disable();
+
     });
 
 
@@ -84,8 +124,6 @@ export class LeaveFormComponent implements OnInit {
       this.employeeFamilyHoliday = res;
       this.employeeFamilyDay = res;
   });
-
-
 
     // this.employeeAbsenceForm.controls['fromDate'].valueChanges.subscribe(value => {
     //   if (value && this.employeeAbsenceForm.controls['toDate'].value) {
@@ -98,10 +136,11 @@ export class LeaveFormComponent implements OnInit {
 
     this.employeeAbsenceForm.controls['toDate'].valueChanges.subscribe(value => {
       if (value && this.employeeAbsenceForm.controls['fromDate'].value) {
-        this.subsService.getSubstitutesByDate(this.employeeAbsenceForm.controls['fromDate'].value, value, this.loggedUser.value.data.employeeId, this.absenceType).subscribe((result) => {
+        this.subsService.getSubstitutesByDate(this.employeeAbsenceForm.controls['fromDate'].value, value,
+         this.loggedUser.value.data.employeeId, this.absenceType)
+        .subscribe((result) => {
           //this.employeeAbsenceForm.controls['replaceEmployee'].setValue(undefined);
-          if(result == null)
-          {
+          if (result == null) {
             this.snackBar.open('Postoji odsustvo za ovaj vremenski period', 'OK', {
               duration: 10000,
               verticalPosition: 'top'
@@ -119,11 +158,25 @@ export class LeaveFormComponent implements OnInit {
   .pipe(startWith<string | Employee>(''),
         map((name: string) => {
           console.log(name);
-          return name && name.length >= 0 ? this._filter(name) : this.options.slice()
+          return name && name.length >= 0 ? this._filter(name) : this.options.slice();
         }),
 
       );
-  }
+
+
+
+    }
+
+    detailsEmployeeAbsence = (
+      order: string,
+      direction: string,
+      page = 1,
+      count = 20,
+      status: number,
+      absenceType: number = this.absenceType
+    ) => this.absenceService.getAbscences(order, direction, page, count, status, absenceType, this.loggedId, this.roleId)
+
+
 
   // onKey = (event) => {
   //   this._filter(event.target.value);
@@ -146,8 +199,7 @@ export class LeaveFormComponent implements OnInit {
 
 
   displayFn(employee: any): string | undefined {
-    if(employee != null)
-    {
+    if (employee != null) {
         //return typeof (option) === 'string' ? option : `${option.FirstName ? option.FirstName : 'nema ime'} ${option.Surname ? option.Surname : 'nema prezime'}`;
         return typeof (employee) === 'string' ? employee : `${employee.FirstName} ${employee.Surname} ${employee.JobTypeName}`;
     }
@@ -165,16 +217,26 @@ export class LeaveFormComponent implements OnInit {
     formResult.familyHolidayMonth = this.employeeFamilyHoliday.FamilyHolidayMonth;
     //formResult.absenceTypeName = this.absence
     //console.log(JSON.stringify(formResult, null, 2));
+
+    this.exceptionAbsence  = this.subsService.checkAbsenceException(this.employeeAbsenceForm.controls['toDate'].value);
+    if (this.exceptionAbsence) {
+
+    }
+
+
     this.subsService.postAbsence(formResult).subscribe(res => {
        this.retPostData = res;
         this.snackBar.open(this.retPostData, 'OK', {
         duration: 10000,
         verticalPosition: 'top'
       });
-      this.employeeAbsenceForm.reset();
+     // this.employeeAbsenceForm.reset();
+      this.employeeAbsenceForm.controls['fromDate'].reset();
+      this.employeeAbsenceForm.controls['toDate'].reset();
+      this.employeeAbsenceForm.controls['replaceEmployee'].reset();
+      //this.grid.refresh();
       this.abscenceSaved.next(true);
-     // this.grid.refresh();
-     //this.abscenceSaved.emit(null);
+
 
     });
 
@@ -182,11 +244,28 @@ export class LeaveFormComponent implements OnInit {
   }
 
   cancelAbsence = () => {
-    this.employeeAbsenceForm.reset();
+    this.employeeAbsenceForm.controls['fromDate'].reset();
+      this.employeeAbsenceForm.controls['toDate'].reset();
+      this.employeeAbsenceForm.controls['replaceEmployee'].reset();
     this.employeeAbsenceForm.enable();
   }
 
 }
+
+// @Component({
+//   selector: 'dialog-overview-worksheets',
+//   templateUrl: 'dialog-overview-worksheets.html',
+// })
+// export class DialogOverviewWorksheets {
+
+//   constructor(
+//     public dialogRef: MatDialogRef<DialogOverviewWorksheets>) { }
+
+//   onClick = (data) => {
+//     this.dialogRef.close(data);
+//   }
+
+// }
 
 
 

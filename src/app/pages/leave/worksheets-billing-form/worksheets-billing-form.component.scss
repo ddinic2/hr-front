@@ -1,0 +1,30 @@
+.dates-row {
+  padding: 10px;
+
+}
+
+.date {
+  margin-right: 8px;
+}
+.date-from {
+  @extend .date;
+}
+
+.date-to {
+  @extend .date;
+}
+
+
+.color{
+  background: #42A948; /* green */
+}
+
+table {
+width: 100%;
+}
+
+.substitute-auto{
+width: 500px;
+padding: 10px;
+}
+

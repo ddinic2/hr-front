@@ -1,11 +1,11 @@
-import { Component, ViewChild, OnInit } from "@angular/core";
-import { AbsenceTypes } from "src/app/models/enums/absence-type";
-import { Roles } from "src/app/models/enums/role";
-import { AbsenceProcessStatus } from "src/app/models/enums/absence-process-satatus";
-import { AbscencesListComponent } from "../absence-overview/abscences-list/abscences-list.component";
-import { PaidAbsenceFormComponent } from "./paid-absence-form/paid-absence-form.component";
-import { SickAbsenceFormComponent } from "./sick-absence-form/sick-absence-form.component";
-import { LoginService } from "src/app/shared/shared/login.service";
+import { Component, ViewChild, OnInit } from '@angular/core';
+import { AbsenceTypes } from 'src/app/models/enums/absence-type';
+import { Roles } from 'src/app/models/enums/role';
+import { AbsenceProcessStatus } from 'src/app/models/enums/absence-process-satatus';
+import { AbscencesListComponent } from '../absence-overview/abscences-list/abscences-list.component';
+import { PaidAbsenceFormComponent } from './paid-absence-form/paid-absence-form.component';
+import { SickAbsenceFormComponent } from './sick-absence-form/sick-absence-form.component';
+import { LoginService } from 'src/app/shared/shared/login.service';
 
 @Component({
     selector: 'hr-leave',
@@ -18,12 +18,12 @@ export class LeaveComponent implements OnInit {
     leaveAbsGrid: AbscencesListComponent;
     @ViewChild('paidFormTable')
     paidAbsGrid: AbscencesListComponent;
-    @ViewChild('sickFormTable')
-    sickAbsGrid: AbscencesListComponent;
+    // @ViewChild('sickFormTable')
+    // sickAbsGrid: AbscencesListComponent;
     @ViewChild('editPaidAbsence')
     editPaidAbsence: PaidAbsenceFormComponent;
-    @ViewChild('editSickAbsence')
-    editSickAbsence: SickAbsenceFormComponent;
+    // @ViewChild('editSickAbsence')
+    // editSickAbsence: SickAbsenceFormComponent;
 
     showTab: boolean;
     showLeaveTab: boolean;
@@ -33,6 +33,7 @@ export class LeaveComponent implements OnInit {
     roleId: string;
     rolaHRManager = Roles.HRManager.toString();
     rolaRecord = Roles.Record.toString();
+    rolaManager = Roles.Manager.toString();
 
     absenceTypes = AbsenceTypes;
     absenceProcessStatus = AbsenceProcessStatus;
@@ -40,7 +41,6 @@ export class LeaveComponent implements OnInit {
     constructor(public loginService: LoginService) { }
 
     ngOnInit(): void {
-
         this.loggedUser =  this.loginService.getLoggedInUser();
         this.roleId = this.loggedUser.value.data.roleId;
     }
@@ -53,20 +53,17 @@ export class LeaveComponent implements OnInit {
             case 'paid':
                 this.paidAbsGrid.performRefresh();
                 break;
-            case 'sick':
-                this.sickAbsGrid.performRefresh();
-                break;
+            // case 'sick':
+            //     this.sickAbsGrid.performRefresh();
+            //     break;
         }
     }
 
     editEmployeeAbsence = (event) => {
-        if(event.AbsenceType == AbsenceTypes.PaidAbsence)
-        {
+        if (event.AbsenceType === AbsenceTypes.PaidAbsence) {
             this.editPaidAbsence.editPaidAbsence(event);
-        }
-        else if(event.AbsenceType == AbsenceTypes.SickAbsence)
-        {
-            this.editSickAbsence.editSickAbsence(event);
+        } else if (event.AbsenceType === AbsenceTypes.SickAbsence) {
+            //this.editSickAbsence.editSickAbsence(event);
         }
 
     }

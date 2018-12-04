@@ -1,17 +1,20 @@
 <mat-tab-group #tabGroup >
     <mat-tab label="Godišnji odmori">
-        <hr-leave-form (abscenceSaved)="doARefresh('leave')"></hr-leave-form>
-        <hr-abscences-list *ngIf='roleId === rolaHRManager ? true : false' #leaveFormTable [absenceType]="absenceTypes.Absence" [absProcessStatus]="absenceProcessStatus.Created"></hr-abscences-list>
-    </mat-tab>
-    <mat-tab label="Plaćeno odsustvo" *ngIf='roleId === rolaHRManager ? true : false'>
-        <hr-paid-absence-form #editPaidAbsence (abscenceSaved)="doARefresh('paid')" ></hr-paid-absence-form>
-        <h4>Lista odsustva</h4>
-        <hr-abscences-list #paidFormTable (editAbsence)='editEmployeeAbsence($event)'   [absenceType]="absenceTypes.PaidAbsence" [absProcessStatus]="absenceProcessStatus.Created"></hr-abscences-list>
+        <hr-leave-form *ngIf='(roleId === rolaHRManager || roleId === rolaManager) ? true : false' (abscenceSaved)="doARefresh('leave')"></hr-leave-form>
+        <hr-leave-form *ngIf='(roleId !== rolaHRManager && roleId !== rolaManager) ? true : false'></hr-leave-form>
+        <hr-abscences-list *ngIf='roleId === rolaHRManager || roleId === rolaManager ? true : false' #leaveFormTable [absenceType]="absenceTypes.Absence" [absProcessStatus]="absenceProcessStatus.Created"></hr-abscences-list>
+
+
+      </mat-tab>
+    <mat-tab label="Plaćeno odsustvo">
+        <hr-paid-absence-form *ngIf='roleId === rolaHRManager || roleId === rolaManager ? true : false' #editPaidAbsence (abscenceSaved)="doARefresh('paid')" ></hr-paid-absence-form>
+        <hr-paid-absence-form *ngIf='(roleId !== rolaHRManager && roleId !== rolaManager) ? true : false'></hr-paid-absence-form>
+        <hr-abscences-list *ngIf='roleId === rolaHRManager || roleId === rolaManager ? true : false' #paidFormTable (editAbsence)='editEmployeeAbsence($event)'   [absenceType]="absenceTypes.PaidAbsence" [absProcessStatus]="absenceProcessStatus.Created"></hr-abscences-list>
     </mat-tab>
     <mat-tab label="Bolovanja" *ngIf='roleId === rolaHRManager ? true : false'>
-        <hr-sick-absence-form #editSickAbsence (abscenceSaved)="doARefresh('sick')"></hr-sick-absence-form>
-        <h4>Lista odsustva</h4>
-        <hr-abscences-list #sickFormTable (editAbsence)='editEmployeeAbsence($event)'  [absenceType]="absenceTypes.SickAbsence" [absProcessStatus]="absenceProcessStatus.Created"></hr-abscences-list>
+        <hr-sick-absence-form></hr-sick-absence-form>
+        <!-- <hr-sick-absence-form #editSickAbsence (abscenceSaved)="doARefresh('sick')"></hr-sick-absence-form> -->
+        <!-- <hr-abscences-list #sickFormTable (editAbsence)='editEmployeeAbsence($event)'  [absenceType]="absenceTypes.SickAbsence" [absProcessStatus]="absenceProcessStatus.Created"></hr-abscences-list> -->
     </mat-tab>
     <mat-tab label ="Radne liste" *ngIf='(roleId === rolaHRManager || roleId === rolaRecord) ? true : false'>
         <hr-worksheets-form></hr-worksheets-form>

@@ -1,19 +1,19 @@
 <form [formGroup]="employeePaidAbsenceForm">
   <div class="dates-row">
 
-        <mat-form-field class="substitute-auto">
+        <!-- <mat-form-field class="substitute-auto">
             <input type="text" placeholder="Zaposleni" aria-label="Zaposleni" matInput formControlName="employeeAbsenceDetail"
               [matAutocomplete]="auto">
             <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
               <mat-option *ngFor="let employee of employeeOptions" [value]="employee">
                 {{employee.FirstName}} {{employee.Surname}} {{employee.JobTypeName}}
-                <!-- {{option.FirstName}} {{option.Surname}} : {{option.OrgUnitName}} -->
+
               </mat-option>
             </mat-autocomplete>
-          </mat-form-field>
+          </mat-form-field> -->
 
         <mat-form-field class="dates-row">
-          <input matInput [matDatepickerFilter]="disableWeekdays" [matDatepicker]="from" placeholder="Početak" formControlName="fromDate">
+          <input matInput [min]="minDate"  [matDatepickerFilter]="disableWeekdays" [matDatepicker]="from" placeholder="Početak" formControlName="fromDate">
           <mat-datepicker-toggle matSuffix [for]="from"></mat-datepicker-toggle>
           <mat-datepicker #from></mat-datepicker>
         </mat-form-field>
@@ -37,5 +37,11 @@
   <div>
     <button type="submit" mat-raised-button (click)="saveAbsence()">Sačuvaj</button>
     <button type="submit" mat-raised-button (click)="cancelAbsence()">Odustani</button>
+  </div>
+
+  <div style="width: 99%; height: 85%;" >
+    <tims-tims-grid *ngIf="roleId !== rolaManager && roleId !== rolaHRManager ? true : false" [displayDetails]="true" [columnPipes]="pipesToApply" [columnNames]="columnNameArray" [columnIds]="displayedColumns"
+        [dataProvider]="detailsEmployeeAbsence" [sortable]="true">
+      </tims-tims-grid>
   </div>
 </form>

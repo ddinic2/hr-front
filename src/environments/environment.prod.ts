@@ -1,12 +1,13 @@
 export const environment = {
   production: true,
   db: {
-    //ROOT: 'http://10.10.1.56:22900/',// OBS
-    ROOT: 'http://10.111.10.41:22900/',
+    ROOT: 'http://10.10.1.56:22900/',// OBS
+    //ROOT: 'http://10.111.10.41:22900/',
     SUBSTITUTE: 'work-leave',
     ABSCENCE: 'absences',
     ABSENCE_TYPE: '/absence-types',
-    ABSENCE_TYPE_WORKSHEETS:'/absence-types-worksheets',
+    ABSENCE_TYPE_WORKSHEETS: '/absence-types-worksheets',
+    YEAR_VACATION: '/year-vacation',
     EMPLOYEE_SUBSITUTE: '/employee-substitute',
     HOLIDAY_DAYS: '/holiday-days',
     HOLIDAY_DAYS_CALENDAR: '/holiday-days-calendar',

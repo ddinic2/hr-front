@@ -34,28 +34,29 @@ export class WorksheetsBillingFormComponent implements OnInit {
     'Porodiljsko',
     'TO dani',
     'Ukupno',
-    'Regres bruto',
-    'Nova kolona'
+    'Regres bruto'
+
   ];
 
   displayedColumns = [
-    'ChildBirthAbsenceHoursNumber',
-    'EmployeeFirstName',
     'EmployeeHRNumber',
-    'EmployeeID',
+    'EmployeeFirstName',
     'EmployeeSurname',
-    'HolidaysHoursNumber',
+    'WorkingDaysNumber',
     'NightShiftHoursNumber',
     'OverworkHoursNumber',
-    'PaidAbsenceHoursNumber',
-    'RegressAmount',
-    'SickAbsenceLongHoursNumber',
-    'SickAbsenceMediumHoursNumber',
-    'SickAbsenceShortHoursNumber',
-    'TotalHoursNumber',
     'VacationHoursNumber',
-    'WorkingDaysNumber',
-    'WorkingHoursNumber'
+    'HolidaysHoursNumber',
+    'PaidAbsenceHoursNumber',
+
+    'SickAbsenceShortHoursNumber',
+    'SickAbsenceMediumHoursNumber',
+    'SickAbsenceLongHoursNumber',
+    'ChildBirthAbsenceHoursNumber',
+    'WorkingHoursNumber',
+    'TotalHoursNumber',
+    'RegressAmount',
+
   ];
 
   constructor(
@@ -86,7 +87,34 @@ export class WorksheetsBillingFormComponent implements OnInit {
   }
 
   exportToExcel = () => {
-    const formResult = this.worksheetsBillingForm.value;
-    return this.subService.exportToexcel(formResult);
+    const year = this.worksheetsBillingForm.controls['year'].value;
+    const month = this.worksheetsBillingForm.controls['month'].value;
+
+    return this.subService.exportToExcel(year, month)
+    .subscribe(data => {
+      let thefile = {};
+      thefile = data;
+      //thefile = new File(data.,'data.xlsx');
+      const url = URL.createObjectURL(data.body);
+      const disposition = data.headers.getAll('content-disposition');
+      let filename = '';
+
+      disposition.forEach(element => {
+        const filenameRegex = new RegExp('filename=(.*?);', 'g');
+        const test = filenameRegex.exec(element);
+        if (test && test.length > 0) {
+          filename = test[1];
+        }
+      });
+
+      const a = document.createElement('a');
+      document.body.appendChild(a);
+      a.setAttribute('style', 'display: none');
+      a.href = url;
+      a.download = filename;
+      a.click();
+      a.remove();
+    });
+
   }
 }

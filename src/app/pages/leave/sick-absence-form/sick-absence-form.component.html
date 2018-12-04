@@ -57,4 +57,10 @@
     <button type="submit" mat-raised-button (click)="saveAbsence()">Sačuvaj</button>
     <button type="submit" mat-raised-button (click)="cancelAbsence()">Odustani</button>
   </div>
+
+  <div style="width: 85%; height: 85%;">
+    <tims-tims-grid [displayDetails]="true" [columnPipes]="pipesToApply" [columnNames]="columnNameArray" [columnIds]="displayedColumns"
+        [dataProvider]="detailsEmployeeAbsence" [sortable]="true" [buttons]="['edit','remove']" [buttonActions]="[edit,remove]">
+      </tims-tims-grid>
+  </div>
 </form>

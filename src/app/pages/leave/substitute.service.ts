@@ -8,7 +8,7 @@ import * as _moment1 from 'moment-weekday-calc';
 import { EmployeeAbsence } from 'src/app/models/employee-absence';
 import { Employee } from 'src/app/models/employee';
 import { AbsenceSickLeaveType } from 'src/app/models/absence-sick-leave-type';
-import { zip } from 'rxjs/operators';
+import { zip, tap } from 'rxjs/operators';
 import { AbsenceSubtype } from 'src/app/models/absence-subtype';
 import { SickLeaveCode } from 'src/app/models/sick-leave-code';
 import { AbsenceType } from 'src/app/models/absence-type';
@@ -142,10 +142,17 @@ export class SubstituteService {
     return this.http.get<number[]>(url);
   }
 
-  getOrgUnit = () => {
+  getOrgUnit = (roleId: string, loggedId: string) => {
     const url = environment.db.ROOT + environment.db.ORG_UNIT;
-    return this.http.get<any[]>(url);
+    const obj = {
+      params: new HttpParams()
+      .set('roleId', roleId)
+      .set('loggedId', loggedId)
+    };
+    return this.http.get<any[]>(url, obj);
   }
+
+
 
   getEmployeePresenceList = (formResult, employeeId: number ) => {
     const obj = {
@@ -168,51 +175,48 @@ export class SubstituteService {
     return this.http.get<any[]>(url, obj);
 
   }
-  exportToexcel = (formResult) => {
-    const obj = {
-      params: new HttpParams()
-      .set('Month', formResult.month.toString())
-      .set('Year', formResult.year.toString())
-    };
-    const url = environment.db.ROOT + environment.db.EXPORT_TO_EXCEL;
-    return this.http.get<any[]>(url, obj);
+  exportToExcel = (year: number, month: number) => {
+
+    const url = environment.db.ROOT + environment.db.WORKSHEETS_BILLING + environment.db.EXPORT_TO_EXCEL;
+    const obj = {year, month};
+    return this.http.post(url, obj, {
+      responseType: 'blob',
+      observe: 'response',
+    });
+    //.pipe(tap(response => console.log(response)));
 
   }
 
+
   checkedPresenceStatus = (empPresenceList: any) => {
-    let result = empPresenceList.map(m => m.DayStatus);
-    for(var i = 0; i < result.length; i++)
-    {
-      for(var ii = 0; ii < result[i].length; ii++)
-      {
-        let res = result[i];
-        if(res[ii] == null)
-        {
+    const result = empPresenceList.map(m => m.DayStatus);
+    for (let i = 0; i < result.length; i++) {
+      for (let ii = 0; ii < result[i].length; ii++) {
+        const res = result[i];
+        if (res[ii] == null) {
             this.checkedRes.push(1);
         }
       }
     }
-
-  if(this.checkedRes.length == 0)// postavi da je jednako 0 to znači da su sve liste popunjene
-    {
+// postavi da je jednako 0 to znači da su sve liste popunjene
+  if (this.checkedRes.length === 0) {
       empPresenceList.lockPresenceList = true;
     }
   }
 
-  getRegistratorByDate = (month: number, year: number) => {
-    const obj = {
-      params: new HttpParams()
-      .set('Month', month.toString())
-      .set('Year', year.toString())
-    }
-      const url = environment.db.ROOT + environment.db.WORKSHEETS + environment.db.PRESENCE_REGISTRATOR;
-      return this.http.get(url, obj);
-  }
+  // getRegistratorByDate = (month: number, year: number) => {
+  //   const obj = {
+  //     params: new HttpParams()
+  //     .set('Month', month.toString())
+  //     .set('Year', year.toString())
+  //   }
+  //     const url = environment.db.ROOT + environment.db.WORKSHEETS + environment.db.PRESENCE_REGISTRATOR;
+  //     return this.http.get(url, obj);
+  // }
 
   compareWorksheetsByRegistrator = (data: any, loginUserId: number) => {
     const obj = {
       params: new HttpParams()
-      .set('RegistratorId', data.registrator.toString())
       .set('Month', data.month.toString())
       .set('Year', data.year.toString())
       .set('LoginUser', loginUserId.toString())
@@ -222,14 +226,15 @@ export class SubstituteService {
       return this.http.get(url, obj);
   }
 
-  lockWorksheets = (empPresenceList: EmployeePresenceList) => {
+  lockWorksheets = (empPresenceList: EmployeePresenceList, employeePresenceListID: number) => {
     const obj = {
       params: new HttpParams()
       .set('LoginUserId', empPresenceList.loginUserId.toString())
-      .set('PresenceListStausId', empPresenceList.presenceListStatus.toString())
+      .set('employeePresenceListID', employeePresenceListID.toString())
     };
+    const presenceListStatusId = empPresenceList.presenceListStatus;
     const url = environment.db.ROOT + environment.db.WORKSHEETS + environment.db.LOCK_WORKSHEETS;
-    this.http.put(url, empPresenceList, obj).subscribe(data => {
+    this.http.put(url, presenceListStatusId, obj).subscribe(data => {
       this.retPostData = data;
       this.snackBar.open(this.retPostData, 'OK', {
         duration: 10000,
@@ -272,52 +277,68 @@ export class SubstituteService {
     const url = environment.db.ROOT + environment.db.ABSCENCE;
     const startDate = moment(employeeAbsence.fromDate);
     const endDate = moment(employeeAbsence.toDate);
-    const dateNow =  new  Date().toDateString().substring(0,15);
+    const dateNow =  new  Date().toDateString().substring(0, 15);
+    const startDateForExcep = employeeAbsence.fromDate.toDateString().substring(0, 15);
+    const dateHoliday = this.holidayDateslist.map(m => m.Date);
 
-    const dateException = this.getExceptionDate(startDate);
+    const dateException = this.getExceptionDate(dateNow, dateHoliday);
     dateException.forEach(function (item) {
-      const index = dateNow.indexOf(item);
-      if(index !== -1) {
+      const index = startDateForExcep.indexOf(item);
+      if (index !== -1) {
         employeeAbsence.exceptionAbsence = true;
       }
 
     });
 
-  const dateArray = this.getDateArray(startDate, endDate, employeeAbsence.absenceType, employeeAbsence.familyHolidayDay, employeeAbsence.familyHolidayMonth);
+
+  const dateArrayFamilyHoliday = this.dateArrayFamilyHoliday(startDate, endDate, employeeAbsence.absenceType,
+     employeeAbsence.familyHolidayDay, employeeAbsence.familyHolidayMonth);
 
 
 
     this.holidayDateslist.forEach(function (item) {
-      const index = dateArray.indexOf(item.Date);
+      const index = dateArrayFamilyHoliday.indexOf(item.Date);
       if (index !== -1) {
-        dateArray.splice(index, 1);
+        dateArrayFamilyHoliday.splice(index, 1);
       }
-      employeeAbsence.numOfdays = dateArray.length;
+      employeeAbsence.numOfdays = dateArrayFamilyHoliday.length;
     });
 
+
+
      return this.http.post<EmployeeAbsence>(url, employeeAbsence);
-    //  .subscribe(data => {
-    //   this.retPostData = data;
-    //   this.snackBar.open(this.retPostData, 'OK', {
-    //     duration: 5000,
-    //   });
-    // });
+
   }
 
-  getDateArray = function (start, end, absenceType, familyHolidayDay, familyHolidayMonth) {
+ public checkAbsenceException = (fromDate) => {
+    let exceptionAbsence: boolean;
+    const dateNow =  new  Date().toDateString().substring(0, 15);
+    const startDateForExcep = fromDate.toDateString().substring(0, 15);
+    const dateHoliday = this.holidayDateslist.map(m => m.Date);
+
+  const dateException = this.getExceptionDate(dateNow, dateHoliday);
+    dateException.forEach(function (item) {
+      const index = startDateForExcep.indexOf(item);
+      if (index !== -1) {
+         exceptionAbsence = true;
+      }
+    });
+    return exceptionAbsence;
+
+  }
+
+  dateArrayFamilyHoliday = function (start, end, absenceType, familyHolidayDay, familyHolidayMonth) {
     const dateArray = new Array();
     const startDate = new Date(start);
 
     while (startDate <= end) {
-      if(absenceType == AbsenceTypes.Absence)
-      {
-        if (startDate.getDay() !== 0 && startDate.getDay() !== 6 && (familyHolidayDay && startDate.getDate() != familyHolidayDay) && (familyHolidayMonth && startDate.getDate() != familyHolidayMonth)) {
+      if (absenceType === AbsenceTypes.Absence) {
+        if (startDate.getDay() !== 0 && startDate.getDay() !== 6 && (familyHolidayDay && startDate.getDate() !== familyHolidayDay)
+         && (familyHolidayMonth && startDate.getDate() !== familyHolidayMonth)) {
           dateArray.push(new Date(startDate).toDateString().substring(0, 15));
         }
         startDate.setDate(startDate.getDate() + 1);
-      }
-      else
-      {
+      } else {
         if (startDate.getDay() !== 0 && startDate.getDay() !== 6 && startDate.getDate()) {
           dateArray.push(new Date(startDate).toDateString().substring(0, 15));
         }
@@ -328,15 +349,14 @@ export class SubstituteService {
     return dateArray;
   };
 
-  getExceptionDate = function(start) {
-    var i = 0;
+  getExceptionDate = function(start, dateHoliday) {
+    const i = 0;
     const dateExArray = new Array();
     const startDate = new Date(start);
-
-      dateExArray.push(new Date(startDate).toDateString().substring(0, 15));
-      startDate.setDate(startDate.getDate() + 1);
+    let startDateString =  startDate.toLocaleDateString();
       while (dateExArray.length <= 2) {
-        if (startDate.getDay() !== 0 && startDate.getDay() !== 6) {
+         startDateString =  startDate.toLocaleDateString();
+        if (startDate.getDay() !== 0 && startDate.getDay() !== 6 && !dateHoliday.includes(startDateString)) {
           dateExArray.push(new Date(startDate).toDateString().substring(0, 15));
         }
         startDate.setDate(startDate.getDate() + 1);

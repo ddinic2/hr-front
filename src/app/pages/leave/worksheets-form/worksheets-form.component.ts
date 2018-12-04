@@ -42,8 +42,10 @@ export class WorksheetsFormComponent implements OnInit {
   registratorOptions: any;
   message: string;
   roleId: string;
+  loggedId: string;
   rolaHRManager = Roles.HRManager.toString();
   rolaRecord = Roles.Record.toString();
+  lockWorksheet: boolean;
 
 
 
@@ -67,7 +69,9 @@ export class WorksheetsFormComponent implements OnInit {
 
   ngOnInit() {
     this.loggedUser = this.loginService.getLoggedInUser();
-    this.subService.getOrgUnit().subscribe(res => { this.orgUnitOptions = res; });
+    this.roleId = this.loggedUser.value.data.roleId;
+    this.loggedId = this.loggedUser.value.data.employeeId;
+    this.subService.getOrgUnit(this.roleId, this.loggedId).subscribe(res => { this.orgUnitOptions = res; });
     this.subService.getWorksheetsYears().subscribe(res => { this.worksheetsYearsOptions = res; });
     this.subService.getWorksheetsMonths().subscribe(res => { this.worksheetsMonthsOptions = res; });
     this.subService.getAbsenceTypeWorksheets().subscribe(res => {
@@ -76,18 +80,19 @@ export class WorksheetsFormComponent implements OnInit {
     });
     this.subService.getPresenceDetailType().subscribe(res => { this.presenceDetailTypeOptions = res; });
 
-    this.roleId = this.loggedUser.value.data.roleId;
+
 
     // this.worksheetsForm.get('month').setValue(1);
     // this.worksheetsForm.get('year').setValue(2018);
 
-    this.worksheetsForm.controls['year'].valueChanges.subscribe(value => {
-      if (value && this.worksheetsForm.controls['month'].value) {
-        this.subService.getRegistratorByDate(this.worksheetsForm.controls['month'].value, value).subscribe((result) => {
-          this.registratorOptions = result;
-        });
-      }
-    });
+    //Kada izabere godinu da napuni evidentičare
+    // this.worksheetsForm.controls['year'].valueChanges.subscribe(value => {
+    //   if (value && this.worksheetsForm.controls['month'].value) {
+    //     this.subService.getRegistratorByDate(this.worksheetsForm.controls['month'].value, value).subscribe((result) => {
+    //       this.registratorOptions = result;
+    //     });
+    //   }
+    // });
 
   }
 
@@ -108,7 +113,10 @@ export class WorksheetsFormComponent implements OnInit {
       const year = (this.worksheetsForm.controls['year'].value).toString();
       const daysInMonth = _moment(year + month, 'YYYY-MM').daysInMonth();
       this.dateList = this.dateArrayListDetails(daysInMonth);
-
+        if (this.employeePresenceList[0].PresenceListStatus === WorksheetsPresenceStatus.Lock
+          || this.employeePresenceList[0].PresenceListStatus === WorksheetsPresenceStatus.Verefacition) {
+          this.lockWorksheet = true;
+        }
       });
   }
 
@@ -135,9 +143,17 @@ export class WorksheetsFormComponent implements OnInit {
   }
 
   lockWorksheets() {
+    if (this.employeePresenceList[0].PresenceListStatus === WorksheetsPresenceStatus.Lock
+       || this.employeePresenceList[0].PresenceListStatus === WorksheetsPresenceStatus.Verefacition) {
+      this.snackBar.open('Lista je već zaključana', 'OK', {
+        duration: 10000,
+        verticalPosition: 'top'
+      });
+    } else {
     this.employeePresenceList.loginUserId = this.loggedUser.value.data.employeeId;
     this.employeePresenceList.presenceListStatus = WorksheetsPresenceStatus.Lock;
     const empPresenceList: EmployeePresenceList = this.employeePresenceList;
+    const employeePresenceListID = this.employeePresenceList[0].EmployeePresenceListID;
 
     const dialogRef = this.dialog.open(DialogOverviewWorksheets, {
         width: '250px'
@@ -145,10 +161,14 @@ export class WorksheetsFormComponent implements OnInit {
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
           empPresenceList.presenceListStatus = WorksheetsPresenceStatus.Lock;
-          this.subService.lockWorksheets(empPresenceList);
-
+          this.subService.lockWorksheets(empPresenceList, employeePresenceListID);
         }
+        this.lockWorksheet = true;
       });
+
+    }
+
+
   }
 
   unlockWorksheets() {
@@ -159,6 +179,7 @@ export class WorksheetsFormComponent implements OnInit {
         duration: 10000,
         verticalPosition: 'top'
       });
+
     });
 
   }

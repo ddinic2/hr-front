@@ -1,7 +1,17 @@
 <form [formGroup]="employeeAbsenceForm">
+  <h3>Zahtevi za godišnji odmor</h3>
+  <div class="dates-row">
+    <mat-form-field >
+        <input matInput   placeholder="Stari odmor"  formControlName="remainingDaysPreviousYear">
+         </mat-form-field>
+
+      <mat-form-field class="dates-row">
+          <input matInput  placeholder="Novi odmor" formControlName="remainingDays">
+     </mat-form-field>
+  </div>
   <!-- <div class="dates-row"> -->
     <mat-form-field class="dates-row">
-        <input matInput  [matDatepickerFilter]="disableWeekdays" [matDatepicker]="from" placeholder="Početak" formControlName="fromDate">
+        <input matInput [min]="minDate"  [matDatepickerFilter]="disableWeekdays" [matDatepicker]="from" placeholder="Početak" formControlName="fromDate">
         <mat-datepicker-toggle matSuffix [for]="from"></mat-datepicker-toggle>
         <mat-datepicker #from></mat-datepicker>
       </mat-form-field>
@@ -26,10 +36,17 @@
   <!-- </div> -->
 
 
-  <div>
+  <div class="dates-row">
     <!--<button type="submit" [disabled]="!employeeAbsenceForm.valid" mat-raised-button (click)="saveAbsence()">Sačuvaj</button>-->
     <button type="submit" [disabled]="!subsService.canSave" mat-raised-button (click)="saveAbsence()"> Sačuvaj</button>
     <button type="submit" mat-raised-button (click)="cancelAbsence()">Odustani</button>
   </div>
-</form>
+
+
+  <div style="width: 99%; height: 85%;" >
+    <tims-tims-grid *ngIf="roleId !== rolaManager && roleId !== rolaHRManager ? true : false" [displayDetails]="true" [columnPipes]="pipesToApply" [columnNames]="columnNameArray" [columnIds]="displayedColumns"
+        [dataProvider]="detailsEmployeeAbsence" [sortable]="true">
+      </tims-tims-grid>
+  </div>
+ </form>
 
