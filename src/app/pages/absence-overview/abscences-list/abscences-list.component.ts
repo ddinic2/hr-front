@@ -107,6 +107,7 @@ export class AbscencesListComponent implements OnInit {
 
   //Odobravanje odsustva NAPOMENA: LoggedUser da se zameni sa objektom
   approve = item => {
+    if (item.AbsenceProcessStatus === AbsenceProcessStatus.Created ) {
     item.AbsenceProcessStatusNew = this.absenceProcessStatus.Approved;
     item.LoggedUserId = this.loggedUser.value.data.employeeId;
     item.LoggedUserEmail = this.loggedUser.value.data.employeeEmail;
@@ -118,6 +119,12 @@ export class AbscencesListComponent implements OnInit {
         item.AbsenceProcessStatusName = res;
         this.performRefresh();
       });
+    } else {
+      this.snackBar.open('Status odsustva ne može da se promeni!', 'OK', {
+        duration: 10000,
+        verticalPosition: 'top'
+        });
+    }
   }
 
 
@@ -127,31 +134,43 @@ export class AbscencesListComponent implements OnInit {
 
   //Ponistavanje odsustva
   deny = item => {
-    const dialogRef = this.dialog.open(DialogDenyMessage, {
-      width: '250px',
-    });
+      if (item.AbsenceProcessStatus !== AbsenceProcessStatus.Approved ) {
+      const dialogRef = this.dialog.open(DialogDenyMessage, {
+        width: '250px',
+      });
 
-    dialogRef.afterClosed().subscribe(result => {
-      if (result.value.deny) {
-        item.AbsenceProcessStatusNew = this.absenceProcessStatus.Deny;
-        item.description = result.value.description;
-        item.LoggedUserId = this.loggedUser.value.data.employeeId;
-        item.LoggedUserEmail = this.loggedUser.value.data.employeeEmail;
-        item.LoggedUserRoleId = this.loggedUser.value.data.roleId;
-        item.LoggedUsername = this.loggedUser.value.data.username;
-        console.log('Item je :' + item);
-        this.service.changeAbsenceStatus(item)
-          .subscribe(res => {
-            item.AbsenceProcessStatusName = res;
-            this.performRefresh();
-          });
-      }
-    });
+      dialogRef.afterClosed().subscribe(result => {
+        if (result.value.deny) {
+          item.AbsenceProcessStatusNew = this.absenceProcessStatus.Deny;
+          item.description = result.value.description;
+          item.LoggedUserId = this.loggedUser.value.data.employeeId;
+          item.LoggedUserEmail = this.loggedUser.value.data.employeeEmail;
+          item.LoggedUserRoleId = this.loggedUser.value.data.roleId;
+          item.LoggedUsername = this.loggedUser.value.data.username;
+          console.log('Item je :' + item);
+          this.service.changeAbsenceStatus(item)
+            .subscribe(res => {
+              item.AbsenceProcessStatusName = res;
+              this.performRefresh();
+            });
+        }
+      });
+    } else {
+      this.snackBar.open('Odsustvo je odobreno, ne može da se poništi!', 'OK', {
+        duration: 10000,
+        verticalPosition: 'top'
+        });
+    }
   }
 
   generate = item => {
-    this.service.generateDocument(item.EmployeeAbsence, item.EmployeeId, item.AbsenceType)
-      .subscribe(data => {
+    if (item.AbsenceProcessStatus === AbsenceProcessStatus.Approved ) {
+      item.LoggedUserId = this.loggedUser.value.data.employeeId;
+    item.LoggedUserEmail = this.loggedUser.value.data.employeeEmail;
+    item.LoggedUserRoleId = this.loggedUser.value.data.roleId;
+    this.service.generateDocument(item.EmployeeAbsence, item.EmployeeId, item.AbsenceType,
+    item.LoggedUserId, item.LoggedUserEmail, item.LoggedUserRoleId )
+    .subscribe(data => {
         let thefile = {};
         thefile = data;
         //thefile = new File(data, 'data.xlsx');
@@ -167,6 +186,15 @@ export class AbscencesListComponent implements OnInit {
         a.click();
         a.remove();
       });
+
+    } else {
+      this.snackBar.open('Odsustvo nije odobreno, dokument ne može da se generiše!', 'OK', {
+        duration: 10000,
+        verticalPosition: 'top'
+        });
+
+    }
+
   }
 
 

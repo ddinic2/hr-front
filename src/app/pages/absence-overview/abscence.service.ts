@@ -73,9 +73,21 @@ export class AbscenceService {
       return this.http.post(url, item);
   }
 
-  generateDocument = (employeeAbsence: number, employeeId: number, absenceType: number ) => {
+  // generateDocument = (employeeAbsence: number, employeeId: number, absenceType: number ) => {
+  //   const url = environment.db.ROOT + environment.db.ABSCENCE + environment.db.GENERATE_DOCUMENT;
+  //   const obj = {employeeAbsence, employeeId, absenceType };
+  //     return this.http.post(url, obj, {
+  //       responseType: 'blob',
+  //       observe: 'response',
+  //     }).pipe(tap(response => console.log(response)));
+
+  //   }
+
+
+  generateDocument = (employeeAbsence: number, employeeId: number, absenceType: number,
+    loggedUserId: number, loggedUserEmail: string, loggedUserRoleId: number) => {
     const url = environment.db.ROOT + environment.db.ABSCENCE + environment.db.GENERATE_DOCUMENT;
-    const obj = {employeeAbsence, employeeId, absenceType };
+    const obj = {employeeAbsence, employeeId, absenceType, loggedUserId, loggedUserEmail, loggedUserRoleId };
       return this.http.post(url, obj, {
         responseType: 'blob',
         observe: 'response',

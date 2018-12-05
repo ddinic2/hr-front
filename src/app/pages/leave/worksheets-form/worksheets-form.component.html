@@ -121,8 +121,9 @@
             <div class="dates-row" >
               <!--[value]="dayStatus"-->
               <!-- [(ngModel)]="dayStatus.name"   -->
-              <input #inputs [(ngModel)]="dayStatus.name"  (keyup)="onKey(dayStatus,i,$event, rowIdx)"  maxlength="1"
-              [disabled]="dayStatus.name === 'NN' || (roleId === rolaHRManager ? true : false ) || (lockWorksheet)">
+              <input #inputs [(ngModel)]="dayStatus.name"  (keyup)="onKey(dayStatus,i,$event, rowIdx)"  maxlength="2"
+                [disabled]="dayStatus.name === 'NN' || (roleId === rolaHRManager ? true : false ) || (lockWorksheet)">
+                <!-- [style.background-color]=""> -->
             </div>
           </td>
         </tr>

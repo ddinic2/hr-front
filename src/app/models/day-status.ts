@@ -41,6 +41,23 @@ export class DayStatus {
     }
   }
 
+  static fromSubtypeCode(code: number): DayStatus {
+    switch (code) {
+      case 12:
+        return new DayStatus('RR', 12);
+      case 13:
+        return new DayStatus('!!', 13);
+      case 14:
+        return new DayStatus('VP', 14);
+      case 15:
+        return new DayStatus('XX', 15);
+      case 16:
+        return new DayStatus('DP', 16);
+      case 17:
+        return new DayStatus('VK', 17);
+    }
+  }
+
   set = (someName: string | number) => {
     if (typeof(someName) === 'string') {
       switch ((<string>someName).trim().toUpperCase()) {

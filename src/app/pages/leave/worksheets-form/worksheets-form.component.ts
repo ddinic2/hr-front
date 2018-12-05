@@ -102,12 +102,10 @@ export class WorksheetsFormComponent implements OnInit {
       .subscribe(res => {
       res.map(item => item.DayStatus = item.DayStatus.map(element => {
         return DayStatus.fromCode(element);
-      }));
-       this.employeePresenceList = res;
-      //   const result = this.employeePresenceList.map(m => {
-      //       // m.DayStatus
-      //       return DayStatus.fromCode(m.DayStatus);
-      //   });
+      //   res.map(item => item.AbsenceSubtype = item.AbsenceSubtype.map(element => {
+      //  return  DayStatus.fromSubtypeCode(element);
+      }),
+       this.employeePresenceList = res);
 
       const month = (this.worksheetsForm.controls['month'].value).toString();
       const year = (this.worksheetsForm.controls['year'].value).toString();
@@ -222,6 +220,13 @@ export class WorksheetsFormComponent implements OnInit {
             presenceListCopy[i].DayStatus[ii] = dayStatus;
       }
    }
+  //  for (let i = 0; i < presenceListCopy.length; i++) {
+  //   const item = presenceListCopy[i];
+  //         for (let ii = 0; ii < item.AbsenceSubtype.length; ii++) {
+  //           const dayStatus = presenceListCopy[i].AbsenceSubtype[ii].value;
+  //           presenceListCopy[i].AbsenceSubtype[ii] = dayStatus;
+  //     }
+  //  }
     this.loginUserId = this.loggedUser.value.data.employeeId;
     presenceListCopy.loginUserId = this.loggedUser.value.data.employeeId;
 
