@@ -17,6 +17,7 @@ import { HotTableModule } from 'ng2-handsontable';
 import { DialogOverviewWorksheets } from 'src/app/pages/leave/worksheets-form/worksheets-form.component';
 import { DialogDenyMessage } from 'src/app/pages/absence-overview/abscences-list/abscences-list.component';
 import { WorksheetsBillingFormComponent } from './worksheets-billing-form/worksheets-billing-form.component';
+import { DialogLeaveForm } from 'src/app/pages/leave/leave-form/leave-form.component';
 
 
 
@@ -45,8 +46,9 @@ const buttons = [
     SharedModule
   ],
   declarations: [LeaveComponent, LeaveFormComponent, AbscencesListComponent, SickAbsenceFormComponent,
-     PaidAbsenceFormComponent, WorksheetsFormComponent, DialogOverviewWorksheets, DialogDenyMessage,  WorksheetsBillingFormComponent],
+     PaidAbsenceFormComponent, WorksheetsFormComponent, DialogOverviewWorksheets, DialogDenyMessage,
+       WorksheetsBillingFormComponent, DialogLeaveForm],
   exports: [LeaveComponent, LeaveFormComponent, AbscencesListComponent],
-  entryComponents: [DialogOverviewWorksheets, DialogDenyMessage]
+  entryComponents: [DialogOverviewWorksheets, DialogDenyMessage, DialogLeaveForm]
 })
 export class LeaveModule { }

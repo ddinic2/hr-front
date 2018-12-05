@@ -6,9 +6,9 @@ import { SubstituteService } from '../substitute.service';
 import { EmployeeAbsence } from 'src/app/models/employee-absence';
 import { Employee } from 'src/app/models/employee';
 import { LoginService } from 'src/app/shared/shared/login.service';
-import { AbsenceTypes } from "src/app/models/enums/absence-type";
+import { AbsenceTypes } from 'src/app/models/enums/absence-type';
 import { AbsenceProcessStatus } from 'src/app/models/enums/absence-process-satatus';
-import {MatSnackBar } from '@angular/material';
+import {MatSnackBar, MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { TimsGridComponent } from 'timsystems-lib';
 import { AbscenceService } from 'src/app/pages/absence-overview/abscence.service';
 import { Roles } from 'src/app/models/enums/role';
@@ -88,7 +88,7 @@ export class LeaveFormComponent implements OnInit {
 
 
   constructor(private _formBuilder: FormBuilder, public subsService: SubstituteService,
-    public loginService: LoginService, public snackBar: MatSnackBar, public absenceService: AbscenceService) {
+    public loginService: LoginService, public snackBar: MatSnackBar, public absenceService: AbscenceService, public dialog: MatDialog) {
   }
 
   ngOnInit() {
@@ -215,30 +215,46 @@ export class LeaveFormComponent implements OnInit {
     formResult.absenceProcessStatus = this.absenceProcessStatus;
     formResult.familyHolidayDay = this.employeeFamilyHoliday.FamilyHolidayDay;
     formResult.familyHolidayMonth = this.employeeFamilyHoliday.FamilyHolidayMonth;
-    //formResult.absenceTypeName = this.absence
-    //console.log(JSON.stringify(formResult, null, 2));
 
     this.exceptionAbsence  = this.subsService.checkAbsenceException(this.employeeAbsenceForm.controls['toDate'].value);
     if (this.exceptionAbsence) {
+      const dialogRef = this.dialog.open(DialogLeaveForm, {
+        width: '350px',
+        height: '400px'
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+          formResult.description = result.value.description;
+          this.subsService.postAbsence(formResult).subscribe(res => {
+            this.retPostData = res;
+             this.snackBar.open(this.retPostData, 'OK', {
+             duration: 10000,
+             verticalPosition: 'top'
+           });
+           this.employeeAbsenceForm.controls['fromDate'].reset();
+           this.employeeAbsenceForm.controls['toDate'].reset();
+           this.employeeAbsenceForm.controls['replaceEmployee'].reset();
+           this.grid.refresh();
+           this.abscenceSaved.next(true);
+         });
+        }
+      });
+    } else {
+      this.subsService.postAbsence(formResult).subscribe(res => {
+        this.retPostData = res;
+         this.snackBar.open(this.retPostData, 'OK', {
+         duration: 10000,
+         verticalPosition: 'top'
+       });
+      // this.employeeAbsenceForm.reset();
+       this.employeeAbsenceForm.controls['fromDate'].reset();
+       this.employeeAbsenceForm.controls['toDate'].reset();
+       this.employeeAbsenceForm.controls['replaceEmployee'].reset();
+       this.grid.refresh();
+       this.abscenceSaved.next(true);
+     });
 
     }
-
-
-    this.subsService.postAbsence(formResult).subscribe(res => {
-       this.retPostData = res;
-        this.snackBar.open(this.retPostData, 'OK', {
-        duration: 10000,
-        verticalPosition: 'top'
-      });
-     // this.employeeAbsenceForm.reset();
-      this.employeeAbsenceForm.controls['fromDate'].reset();
-      this.employeeAbsenceForm.controls['toDate'].reset();
-      this.employeeAbsenceForm.controls['replaceEmployee'].reset();
-      //this.grid.refresh();
-      this.abscenceSaved.next(true);
-
-
-    });
 
     console.log(JSON.stringify(formResult, null, 2));
   }
@@ -252,20 +268,31 @@ export class LeaveFormComponent implements OnInit {
 
 }
 
-// @Component({
-//   selector: 'dialog-overview-worksheets',
-//   templateUrl: 'dialog-overview-worksheets.html',
-// })
-// export class DialogOverviewWorksheets {
+@Component({
+  selector: 'hr-dialog-leave-form',
+  templateUrl: 'dialog-leave-form.html',
+})
+export class DialogLeaveForm {
+  dialogFormGroup: FormGroup;
 
-//   constructor(
-//     public dialogRef: MatDialogRef<DialogOverviewWorksheets>) { }
+  constructor(private _formBuilder: FormBuilder,
+    public dialogRef: MatDialogRef<DialogLeaveForm>) {
+      this.dialogFormGroup = this._formBuilder.group({
+        description: [''],
+        deny: ['']
+      });
+     }
 
-//   onClick = (data) => {
-//     this.dialogRef.close(data);
-//   }
+  onClick = (data) => {
+    this.dialogFormGroup.controls['deny'].setValue(data);
+    this.dialogRef.close(this.dialogFormGroup);
+  }
 
-// }
+}
+
+
+
+
 
 
 

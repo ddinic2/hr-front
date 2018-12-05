@@ -107,8 +107,13 @@ export class AbscencesListComponent implements OnInit {
 
   //Odobravanje odsustva NAPOMENA: LoggedUser da se zameni sa objektom
   approve = item => {
-    if (item.AbsenceProcessStatus === AbsenceProcessStatus.Created ) {
-    item.AbsenceProcessStatusNew = this.absenceProcessStatus.Approved;
+    if (item.AbsenceProcessStatus === AbsenceProcessStatus.Created && (this.roleId === Roles.Manager.toString())  ||
+       (item.AbsenceProcessStatus === AbsenceProcessStatus.Waiting && this.roleId === Roles.HRManager.toString() )) {
+      if (item.ExceptionAbsence && item.AbsenceProcessStatus === AbsenceProcessStatus.Created) {
+        item.AbsenceProcessStatusNew = this.absenceProcessStatus.Waiting;
+      } else {
+        item.AbsenceProcessStatusNew = this.absenceProcessStatus.Approved;
+      }
     item.LoggedUserId = this.loggedUser.value.data.employeeId;
     item.LoggedUserEmail = this.loggedUser.value.data.employeeEmail;
     item.LoggedUserRoleId = this.loggedUser.value.data.roleId;

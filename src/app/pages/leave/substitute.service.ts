@@ -255,7 +255,7 @@ export class SubstituteService {
       return this.http.get(url, obj);
   }
 
-  getSubstitutesByDate = (dateFrom: Date, dateTo: Date, employeeId: number, absenceType: any) => {
+  getSubstitutesByDate = (dateFrom: Date, dateTo: Date, loggedUserId: number, absenceType: any) => {
     const startDate = moment(dateFrom);
     const endDate = moment(dateTo);
 
@@ -263,7 +263,7 @@ export class SubstituteService {
       params: new HttpParams()
         .set('DateFrom', startDate.format(this.dateFormat))
         .set('DateTo', endDate.format(this.dateFormat))
-        .set('EmployeeId', employeeId.toString())
+        .set('loggedUserId', loggedUserId.toString())
         .set('AbsenceType', absenceType.toString())
     };
     const url = environment.db.ROOT + environment.db.ABSCENCE + environment.db.EMPLOYEE_SUBSITUTE;
@@ -297,7 +297,7 @@ export class SubstituteService {
 
 
     this.holidayDateslist.forEach(function (item) {
-      const index = dateArrayFamilyHoliday.indexOf(item.Date);
+      const index = dateArrayFamilyHoliday.indexOf(item.DateToString);
       if (index !== -1) {
         dateArrayFamilyHoliday.splice(index, 1);
       }
@@ -329,13 +329,15 @@ export class SubstituteService {
 
   dateArrayFamilyHoliday = function (start, end, absenceType, familyHolidayDay, familyHolidayMonth) {
     const dateArray = new Array();
+    const dateArrayTest = new Array();
     const startDate = new Date(start);
 
     while (startDate <= end) {
-      if (absenceType === AbsenceTypes.Absence) {
-        if (startDate.getDay() !== 0 && startDate.getDay() !== 6 && (familyHolidayDay && startDate.getDate() !== familyHolidayDay)
-         && (familyHolidayMonth && startDate.getDate() !== familyHolidayMonth)) {
+      if (absenceType === AbsenceTypes.Absence  || absenceType === AbsenceTypes.PaidAbsence) {
+        if (startDate.getDay() !== 0 && startDate.getDay() !== 6 && (startDate.getDate() !== familyHolidayDay)
+         && ( startDate.getDate() !== familyHolidayMonth)) {
           dateArray.push(new Date(startDate).toDateString().substring(0, 15));
+
         }
         startDate.setDate(startDate.getDate() + 1);
       } else {

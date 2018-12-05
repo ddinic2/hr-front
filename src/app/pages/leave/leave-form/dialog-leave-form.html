@@ -1,0 +1,11 @@
+<form [formGroup]="dialogFormGroup">
+  <h1 mat-dialog-title>Zahtev za odsustvo</h1>
+  <div mat-dialog-content>
+    <p>Molim Vas da upišete razlog vašeg odsustva.</p>
+    <textarea matInput placeholder="Komentar (maksimalno 160 karaktera)" formControlName="description" maxlength="160"></textarea>
+  </div>
+  <div mat-dialog-actions>
+    <button mat-button (click)="onClick(false)">Odustani</button>
+    <button mat-button (click)="onClick(true)" >Potvrdi</button>
+  </div>
+</form>
