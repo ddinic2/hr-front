@@ -95,9 +95,9 @@ export class LeaveFormComponent implements OnInit {
     this.showTable = true;
 
     this.employeeAbsenceForm = this._formBuilder.group({
-      fromDate: [''],
-      toDate: [''],
-      replaceEmployee: [''],
+      fromDate: ['', Validators.required],
+      toDate: ['', Validators.required],
+      replaceEmployee: ['', Validators.required],
       remainingDays: [''], disabled: true,
       remainingDaysPreviousYear: ['']
 
@@ -234,8 +234,12 @@ export class LeaveFormComponent implements OnInit {
            this.employeeAbsenceForm.controls['fromDate'].reset();
            this.employeeAbsenceForm.controls['toDate'].reset();
            this.employeeAbsenceForm.controls['replaceEmployee'].reset();
-           this.grid.refresh();
-           this.abscenceSaved.next(true);
+           if (this.roleId === Roles.HRManager.toString() || this.roleId === Roles.Manager.toString()) {
+            this.abscenceSaved.next(true);
+           } else {
+            this.grid.refresh();
+           }
+
          });
         }
       });
@@ -250,8 +254,11 @@ export class LeaveFormComponent implements OnInit {
        this.employeeAbsenceForm.controls['fromDate'].reset();
        this.employeeAbsenceForm.controls['toDate'].reset();
        this.employeeAbsenceForm.controls['replaceEmployee'].reset();
-       this.grid.refresh();
-       this.abscenceSaved.next(true);
+       if (this.roleId === Roles.HRManager.toString() || this.roleId === Roles.Manager.toString()) {
+        this.abscenceSaved.next(true);
+       } else {
+        this.grid.refresh();
+       }
      });
 
     }

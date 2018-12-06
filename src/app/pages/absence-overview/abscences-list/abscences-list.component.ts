@@ -91,24 +91,35 @@ export class AbscencesListComponent implements OnInit {
 
   remove = item => {
     const absenceId = item.EmployeeAbsence;
-    this.service.removeAbsence(absenceId).subscribe(res => {
+    if (item.AbsenceProcessStatus !== AbsenceProcessStatus.Approved && this.loggedId !== item.EmployeeId.toString()
+    && this.roleId === Roles.HRManager.toString()) {
+      this.service.removeAbsence(absenceId).subscribe(res => {
+        this.retPostData = res;
+         this.snackBar.open(this.retPostData, 'OK', {
+         duration: 10000,
+         verticalPosition: 'top'
+         });
+         this.performRefresh();
+        }
+      );
+    } else {
+      this.snackBar.open('Nema te pravo za brisanje odsustva!', 'OK', {
+        duration: 10000,
+        verticalPosition: 'top'
+        });
+    }
 
-      this.retPostData = res;
-       this.snackBar.open(this.retPostData, 'OK', {
-       duration: 10000,
-       verticalPosition: 'top'
-       });
-       this.performRefresh();
-      }
-    );
   }
 
 
 
   //Odobravanje odsustva NAPOMENA: LoggedUser da se zameni sa objektom
   approve = item => {
-    if (item.AbsenceProcessStatus === AbsenceProcessStatus.Created && (this.roleId === Roles.Manager.toString())  ||
-       (item.AbsenceProcessStatus === AbsenceProcessStatus.Waiting && this.roleId === Roles.HRManager.toString() )) {
+    if (item.AbsenceProcessStatus === AbsenceProcessStatus.Created &&
+      (this.roleId === Roles.Manager.toString() || this.roleId === Roles.HRManager.toString() )
+     && this.loggedId !== item.EmployeeId.toString()  ||
+       (item.AbsenceProcessStatus === AbsenceProcessStatus.Waiting && this.roleId === Roles.HRManager.toString()
+        && this.loggedId !== item.EmployeeId.toString() )) {
       if (item.ExceptionAbsence && item.AbsenceProcessStatus === AbsenceProcessStatus.Created) {
         item.AbsenceProcessStatusNew = this.absenceProcessStatus.Waiting;
       } else {
@@ -139,7 +150,9 @@ export class AbscencesListComponent implements OnInit {
 
   //Ponistavanje odsustva
   deny = item => {
-      if (item.AbsenceProcessStatus !== AbsenceProcessStatus.Approved ) {
+      if ((item.AbsenceProcessStatus === AbsenceProcessStatus.Created || item.AbsenceProcessStatus === AbsenceProcessStatus.Waiting)
+       && this.loggedId !== item.EmployeeId.toString()
+      && (this.roleId === Roles.Manager.toString() || this.roleId === Roles.HRManager.toString())) {
       const dialogRef = this.dialog.open(DialogDenyMessage, {
         width: '250px',
       });
@@ -161,7 +174,7 @@ export class AbscencesListComponent implements OnInit {
         }
       });
     } else {
-      this.snackBar.open('Odsustvo je odobreno, ne može da se poništi!', 'OK', {
+      this.snackBar.open('Odsustvo ne može da se poništi!', 'OK', {
         duration: 10000,
         verticalPosition: 'top'
         });
@@ -169,7 +182,8 @@ export class AbscencesListComponent implements OnInit {
   }
 
   generate = item => {
-    if (item.AbsenceProcessStatus === AbsenceProcessStatus.Approved ) {
+    if (item.AbsenceProcessStatus === AbsenceProcessStatus.Approved && this.roleId === Roles.HRManager.toString()
+    && this.loggedId !== item.EmployeeId.toString()) {
       item.LoggedUserId = this.loggedUser.value.data.employeeId;
     item.LoggedUserEmail = this.loggedUser.value.data.employeeEmail;
     item.LoggedUserRoleId = this.loggedUser.value.data.roleId;
@@ -193,7 +207,7 @@ export class AbscencesListComponent implements OnInit {
       });
 
     } else {
-      this.snackBar.open('Odsustvo nije odobreno, dokument ne može da se generiše!', 'OK', {
+      this.snackBar.open('Dokument ne može da se generiše!', 'OK', {
         duration: 10000,
         verticalPosition: 'top'
         });
@@ -201,6 +215,11 @@ export class AbscencesListComponent implements OnInit {
     }
 
   }
+
+  // getDocument = item => {
+  //   this.service(item)
+
+  // }
 
 
   // save = (item) =>

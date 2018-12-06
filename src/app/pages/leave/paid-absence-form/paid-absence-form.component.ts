@@ -1,5 +1,5 @@
 import { Component, OnInit, EventEmitter, Output, Input, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { SubstituteService } from '../substitute.service';
 import { AbsenceSubtype } from 'src/app/models/absence-subtype';
 import { AbsenceTypes } from "src/app/models/enums/absence-type";
@@ -45,6 +45,7 @@ export class PaidAbsenceFormComponent implements OnInit {
     'Datum od',
     'Datum do',
     'Broj radnih dana',
+    'Tip pododsustva',
     'Izuzetak',
     'Status odsustva'
   ];
@@ -54,6 +55,7 @@ export class PaidAbsenceFormComponent implements OnInit {
     'FromDate',
     'ToDate',
     'NumOfdays',
+    'AbsenceSubtype',
     'ExceptionAbsenceName',
     'AbsenceProcessStatusName'
   ];
@@ -78,9 +80,9 @@ export class PaidAbsenceFormComponent implements OnInit {
   constructor(private _fromBuilder: FormBuilder, public subsService: SubstituteService, public absenceService: AbscenceService,
     public loginService: LoginService, public snackBar: MatSnackBar) {
     this.employeePaidAbsenceForm = this._fromBuilder.group ({
-      fromDate: [''],
-      toDate: [''],
-      absenceSubtype: [''],
+      fromDate: ['', Validators.required],
+      toDate: ['', Validators.required],
+      absenceSubtype: ['', Validators.required],
       employeeAbsenceDetail:[''],
       employeeAbsence:[''],
       employeeId:['']
@@ -143,7 +145,7 @@ export class PaidAbsenceFormComponent implements OnInit {
         page = 1,
         count = 20,
         status: number,
-        absenceType: number,
+        absenceType: number = this.absenceType,
       ) => this.absenceService.getAbscences(order, direction, page, count, status, absenceType, this.loggedId, this.roleId)
 
 
@@ -185,8 +187,12 @@ export class PaidAbsenceFormComponent implements OnInit {
     });
     this.employeePaidAbsenceForm.reset();
     this.employeePaidAbsenceForm.enable();
-    this.abscenceSaved.next(true);
-    this.grid.refresh();
+    if (this.roleId === Roles.HRManager.toString() || this.roleId === Roles.Manager.toString()) {
+      this.abscenceSaved.next(true);
+     } else {
+      this.grid.refresh();
+     }
+
   });
   console.log(JSON.stringify(formResult, null, 2));
   }

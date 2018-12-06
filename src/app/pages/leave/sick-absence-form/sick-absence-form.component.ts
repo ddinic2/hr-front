@@ -1,5 +1,5 @@
 import { Component, OnInit, EventEmitter, ViewChild, Output } from '@angular/core';
-import { FormGroup, FormBuilder } from '@angular/forms';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { SubstituteService } from '../substitute.service';
 import { AbsenceSickLeaveType } from 'src/app/models/absence-sick-leave-type';
 import { AbsenceSubtype } from 'src/app/models/absence-subtype';
@@ -12,6 +12,7 @@ import {MatSnackBar} from '@angular/material';
 import { Employee } from 'src/app/models/employee';
 import { TimsGridComponent } from 'timsystems-lib';
 import { AbscenceService } from '../../absence-overview/abscence.service';
+import { Roles } from 'src/app/models/enums/role';
 
 
 @Component({
@@ -75,10 +76,10 @@ export class SickAbsenceFormComponent implements OnInit {
   constructor(private _formBuilder: FormBuilder, public loginService: LoginService, public snackBar: MatSnackBar,
     public absenceService: AbscenceService, public subsService: SubstituteService) {
     this.employeeSickAbsenceForm = this._formBuilder.group({
-      fromDate: [''],
-      toDate: [''],
-      sickLeaveType: [''],
-      absenceSubtype: [''],
+      fromDate: ['', Validators.required],
+      toDate: ['', Validators.required],
+      sickLeaveType: ['', Validators.required],
+      absenceSubtype: ['', Validators.required],
       sickLeaveCode: [''],
       employeeAbsenceDetail: [''],
       employeeAbsence: [''],
@@ -203,7 +204,8 @@ export class SickAbsenceFormComponent implements OnInit {
   }
 
   edit = event => {
-    this.employeeSickAbsenceForm.controls['employeeAbsenceDetail'].setValue(event.EmployeeName);
+    if (this.roleId === Roles.HRManager.toString()) {
+      this.employeeSickAbsenceForm.controls['employeeAbsenceDetail'].setValue(event.EmployeeName);
     this.employeeSickAbsenceForm.controls['fromDate'].setValue(event.FromDate);
     this.employeeSickAbsenceForm.controls['toDate'].setValue(event.ToDate);
     this.employeeSickAbsenceForm.controls['absenceSubtype'].setValue(event.AbsenceSubtype);
@@ -212,11 +214,20 @@ export class SickAbsenceFormComponent implements OnInit {
     this.employeeSickAbsenceForm.controls['employeeAbsence'].setValue(event.EmployeeAbsence);
     this.employeeSickAbsenceForm.controls['employeeId'].setValue(event.EmployeeId);
     this.employeeSickAbsenceForm.controls['employeeAbsenceDetail'].disable();
+
+    } else {
+      this.snackBar.open('Bolovanje ne možete da editujete!', 'OK', {
+        duration: 10000,
+        verticalPosition: 'top'
+        });
+    }
+
   }
 
 
   remove = item => {
-    const absenceId = item.EmployeeAbsence;
+    if (this.roleId === Roles.HRManager.toString()) {
+      const absenceId = item.EmployeeAbsence;
     this.absenceService.removeAbsence(absenceId).subscribe(res => {
       this.retPostData = res;
        this.snackBar.open(this.retPostData, 'OK', {
@@ -226,6 +237,14 @@ export class SickAbsenceFormComponent implements OnInit {
        this.grid.refresh();
       }
     );
+
+    } else {
+      this.snackBar.open('Bolovanje ne možete da obrišete!', 'OK', {
+        duration: 10000,
+        verticalPosition: 'top'
+        });
+    }
+
   }
 
 }
