@@ -1,0 +1,77 @@
+<button *ngIf="!ifNewForumTrue" mat-raised-button class="mgTB" (click)="openNewForm()" color="primary">Dodaj novi</button>
+
+<div class="row" *ngIf="ifNewForumTrue">
+
+  <form [formGroup]="targetWhat">
+    <mat-form-field>
+      <mat-select [(value)]="category" formControlName="TargetCategory" placeholder="Kategorija">
+        <mat-option value={{category.Motiv8TargetCategory1}} *ngFor="let category of categories">{{category.CategoryName}}</mat-option>
+      </mat-select>
+
+    </mat-form-field>
+
+    <mat-form-field>
+      <input required matInput formControlName="TargetName" placeholder="Naziv">
+    </mat-form-field>
+
+    <mat-form-field>
+      <input required matInput formControlName="MeasurableResult" placeholder="Merljiv rezultat">
+    </mat-form-field>
+
+    <mat-form-field>
+      <input disabled required matInput [min]="minDate" [matDatepicker]="picker" formControlName="TargetDueDate"
+        placeholder="Rok">
+      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-datepicker disabled="false" #picker></mat-datepicker>
+    </mat-form-field>
+
+    <mat-form-field>
+      <input type="number" required matInput formControlName="TargetWeight" min="5" max="20" placeholder="Tezina (5 do 20%)">
+    </mat-form-field><br>
+
+    <mat-form-field class="full-width">
+      <textarea matInput required formControlName="TargetDescription" placeholder="Opis"></textarea>
+    </mat-form-field>
+
+  </form>
+  <button mat-raised-button class="mgB" color="myColor" (click)="addTask()">Sacuvaj</button>
+</div>
+<ng-container *ngIf="tasks">
+
+  <div class="infoCard" *ngFor="let task of tasks; let i = index">
+    <ul class="inline">
+      <li>
+        <small>Kategorija:</small><br>
+        {{task.TargetCategoryName}}
+      </li>
+      <li>
+        <small>Naziv:</small><br>
+        {{task.TargetName}}
+      </li>
+      <li>
+        <small>Merljiv rezultat:</small><br>
+        {{task.MeasurableResult}}
+      </li>
+      <li>
+        <small>Rok:</small><br>
+        {{task.TargetDueDate | date:'dd-MM-yyyy'}}
+      </li>
+      <li>
+        <small>Tezina:</small><br>
+        {{task.TargetWeight}}
+      </li>
+      <li>
+        <small>Opis:</small><br>
+        {{task.TargetDescription}}
+      </li><br>
+      <li>
+        <button mat-raised-button *ngIf="(task.TargetStatusCode != '01')" (click)="saveAndSendTarget(task)" class="mgtbOne">Sacuvaj i posalji</button>
+        <button mat-raised-button *ngIf="(task.TargetStatusCode == '04' || !task.Motiv8TargetID)" class="mgtbOne" (click)="deleteUnsaved(i, task.Motiv8TargetID)" color="warn">Obrisi</button>
+        <button mat-raised-button *ngIf="(task.TargetStatusCode == '04')" class="mgtbOne" (click)="edit(task)" color="accent">Izmeni</button>
+        <button mat-raised-button *ngIf="(task.TargetStatusCode == '01')" (click)="reject(task.Motiv8TargetID)" class="mgtbOne myColorGray">Ponisti</button>
+        <button mat-raised-button *ngIf="(task.TargetStatusCode == '01')" (click)="approve(task.Motiv8TargetID)" class="mgtbOne myColorGreen">Odobri</button>
+      </li>
+    </ul>
+  </div>
+
+</ng-container>

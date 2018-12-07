@@ -1,0 +1,16 @@
+<hr-info-card [loggedUser]="currentUser"></hr-info-card>
+<mat-tab-group>
+  <mat-tab label="Godisnji WHAT obrazac">
+    <hr-what-request [loggedUser]="currentUser"></hr-what-request>
+   </mat-tab>
+  <mat-tab label="Polugodisnja WHAT ocena">
+     <hr-what-half [loggedUser]="currentUser"></hr-what-half>
+  </mat-tab>
+  <mat-tab label="Godisnja WHAT ocena">
+  <hr-what-yearly [loggedUser]="currentUser"></hr-what-yearly>
+  </mat-tab>
+  <mat-tab label="Godisnji HOW">
+    <hr-how></hr-how>
+  </mat-tab>
+  <mat-tab label="Ukupna godisnja ocena"> Ukupna godisnja ocena </mat-tab>
+</mat-tab-group>

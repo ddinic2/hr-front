@@ -1,0 +1,37 @@
+
+<div class="infoCard">
+  <ul class="inline" *ngIf='loggedUserInfo'>
+    <li>
+      <small>Ime i prezime:</small><br>
+      {{loggedUserInfo.EmployeeFullName}}
+    </li>
+    <li>
+      <small>Pozicija:</small><br>
+      {{loggedUserInfo.EmployeePositionName}}
+    </li>
+    <li>
+      <small>Org. jedinica:</small><br>
+      {{loggedUserInfo.EmployeeOrgUnitName}}
+    </li>
+    <li *ngIf="loggedUserInfo.EmployeeManagerID != 0">
+      <small>Pretpostavljeni:</small><br>
+      {{loggedUserInfo.EmployeeManagerName}}
+    </li>
+    <li>
+      <small>HR broj:</small><br>
+      {{loggedUserInfo.EmployeeHRNumber}}
+    </li>
+    <li>
+      <small>Pocetak ocenjivanja:</small><br>
+      {{loggedUserInfo.SurveyStartDate | date: 'dd:MM:yyyy'}}
+    </li>
+    <li>
+      <small>Kraj:</small><br>
+      {{loggedUserInfo.SurveyEndDate | date: 'dd:MM:yyyy'}}
+    </li>
+    <li *ngIf="loggedUserInfo.EmployeeGrade">
+      <small>Grade:</small><br>
+      {{loggedUserInfo.EmployeeGrade}}
+    </li>
+  </ul>
+</div>

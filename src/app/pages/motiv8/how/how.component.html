@@ -1,0 +1,37 @@
+<div class="row">
+    <div class="halfFirst">
+      <ul>
+        <li *ngFor="let task of tasks;">
+            <strong>{{ task.BehaviorDescriptions }}</strong>
+            <p>{{ task.BehaviorListOfTask }}</p>
+        </li><br>
+      </ul>
+
+    </div>
+    <div class="half">
+      <form [formGroup]="gradeHow">
+        <ul class=inlineList>
+          <li>
+              <mat-form-field><input type="number" required matInput formControlName="EmployeeGradeFor1" min="1" max="5" placeholder="Ocena zaposlenog (1 do 5)"/> </mat-form-field>
+          </li>
+          <li>
+              <mat-form-field> <input type="number" required matInput formControlName="ManagerGradeFor1" min="1" max="5" placeholder="Ocena nadredjenog (1 do 5)"/> </mat-form-field>
+          </li><br><br>
+          <li>
+              <mat-form-field><input type="number" required matInput formControlName="EmployeeGradeFor2" min="1" max="5" placeholder="Ocena zaposlenog (1 do 5)"/> </mat-form-field>
+          </li>
+          <li>
+              <mat-form-field> <input type="number" required matInput formControlName="ManagerGradeFor2" min="1" max="5" placeholder="Ocena nadredjenog (1 do 5)"/> </mat-form-field>
+          </li><br><br>
+          <li>
+              <mat-form-field><input type="number" required matInput formControlName="EmployeeGradeFor3" min="1" max="5" placeholder="Ocena zaposlenog (1 do 5)"/> </mat-form-field>
+          </li>
+          <li>
+              <mat-form-field> <input type="number" required matInput formControlName="ManagerGradeFor3" min="1" max="5" placeholder="Ocena nadredjenog (1 do 5)"/> </mat-form-field>
+          </li><br><br>
+        </ul>
+      </form>
+    </div>
+</div>
+
+<button mat-raised-button color="myColor" (click)="save()">Sacuvaj</button>
