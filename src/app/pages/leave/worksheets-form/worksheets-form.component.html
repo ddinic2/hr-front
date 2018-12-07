@@ -106,8 +106,7 @@
     <p>RR - prisutnost (redovan rad), ! - neradni dan(praznik), VP - verski praznik (slava), x -odsutnost (za novozaposlene ili slučaju prestanog radnog odnos), DP - državni praznik</p>
   </div>
 <div>
-
-  <table class="mat-elevation-z8">
+<table class="mat-elevation-z8">
     <thead>
         <th>Zaposleni</th>
        <th *ngFor="let dates of dateList">{{dates}}</th>
@@ -123,7 +122,7 @@
               <!--[value]="dayStatus"-->
               <!-- [(ngModel)]="dayStatus.name"   -->
               <input #inputs [(ngModel)]="dayStatus.name"  (keyup)="onKey(dayStatus,i,$event, rowIdx)"  maxlength="2"
-                [disabled]="dayStatus.name === 'NN' || (roleId === rolaHRManager ? true : false ) || (lockWorksheet)">
+                [disabled]="dayStatus.name === 'NN' || roleId === rolaHRManager  || lockWorksheet">
                 <!-- [style.background-color]=""> -->
             </div>
           </td>

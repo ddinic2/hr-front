@@ -92,6 +92,7 @@ export class WorksheetsBillingFormComponent implements OnInit {
 
     return this.subService.exportToExcel(year, month)
     .subscribe(data => {
+      console.log('Subscribe u exportToexcel');
       let thefile = {};
       thefile = data;
       //thefile = new File(data.,'data.xlsx');

@@ -65,6 +65,7 @@ export class WorksheetsFormComponent implements OnInit {
       i : ['']
     });
 
+
   }
 
   ngOnInit() {
@@ -97,6 +98,9 @@ export class WorksheetsFormComponent implements OnInit {
   }
 
   detailsPresence() {
+
+    console.log('Zakljucana lista: ' + this.lockWorksheet);
+    this.lockWorksheet = false;
     const formResult = this.worksheetsForm.value;
     this.subService.getEmployeePresenceList(formResult, this.loggedUser.value.data.employeeId)
       .subscribe(res => {
@@ -111,11 +115,14 @@ export class WorksheetsFormComponent implements OnInit {
       const year = (this.worksheetsForm.controls['year'].value).toString();
       const daysInMonth = _moment(year + month, 'YYYY-MM').daysInMonth();
       this.dateList = this.dateArrayListDetails(daysInMonth);
-        if (this.employeePresenceList[0].PresenceListStatus === WorksheetsPresenceStatus.Lock
-          || this.employeePresenceList[0].PresenceListStatus === WorksheetsPresenceStatus.Verefacition) {
-          this.lockWorksheet = true;
-        }
+      if (this.employeePresenceList[0].PresenceListStatus === WorksheetsPresenceStatus.Lock
+        || this.employeePresenceList[0].PresenceListStatus === WorksheetsPresenceStatus.Verefacition) {
+        this.lockWorksheet = true;
+      }
+
       });
+
+
   }
 
   getDaysInMonth(anyDateInMonth) {

@@ -183,10 +183,8 @@ export class SubstituteService {
       responseType: 'blob',
       observe: 'response',
     });
-    //.pipe(tap(response => console.log(response)));
 
   }
-
 
   checkedPresenceStatus = (empPresenceList: any) => {
     const result = empPresenceList.map(m => m.DayStatus);
