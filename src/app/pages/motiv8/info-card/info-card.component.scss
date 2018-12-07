@@ -1,0 +1,19 @@
+.primaryColor{
+    color: #6D3BB5;
+}
+.inline>li {
+    display: inline-block;
+    margin-right: 50px;
+    width: auto;
+}
+.inline{
+    list-style-type: none;
+}
+.infoCard{
+    background-color: #6D3BB5;
+    color: whitesmoke;
+    border-radius: 5px;
+    padding-top: 1px;
+    margin-top: 3px;
+    padding-bottom: 1px;
+}

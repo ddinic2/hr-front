@@ -1,0 +1,19 @@
+
+  .half{
+    width: 40%;
+    float: left;
+  }
+  .halfFirst{
+    width: 40%;
+    float: left;
+  }
+  .inlineList> li{
+    display: inline-block;
+    list-style-type: none;
+  }
+  mat-form-field{
+    width: 220px;
+  }
+  .inlineList>li{
+    margin-right: 10px;
+  }
