@@ -90,7 +90,7 @@ export class SickAbsenceFormComponent implements OnInit {
 
   ngOnInit() {
     this.subsService.getAbsenceSickLeaveType().subscribe(res => { this.sickLeaveTypeOptions = res; });
-    this.subsService.getAbsenceSubtype().subscribe(res => {this.absenceSubtypeOptions = res; });
+    this.subsService.getAbsenceSubtype(this.absenceType).subscribe(res => {this.absenceSubtypeOptions = res; });
     this.subsService.getSickLeaveCode().subscribe(res => {this.sickLeaveCodeOptions = res; });
     this.loggedUser =  this.loginService.getLoggedInUser();
     this.loggedId = this.loggedUser.value.data.employeeId;

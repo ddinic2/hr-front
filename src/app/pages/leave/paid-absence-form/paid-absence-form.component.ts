@@ -91,7 +91,7 @@ export class PaidAbsenceFormComponent implements OnInit {
    }
 
   ngOnInit() {
-    this.subsService.getAbsenceSubtype().subscribe (res => {this.absenceSubtypeOptions = res; });
+    this.subsService.getAbsenceSubtype(this.absenceType).subscribe (res => {this.absenceSubtypeOptions = res; });
     this.loggedUser =  this.loginService.getLoggedInUser();
     this.loggedId = this.loggedUser.value.data.employeeId;
     this.roleId = this.loggedUser.value.data.roleId;
@@ -136,6 +136,25 @@ export class PaidAbsenceFormComponent implements OnInit {
         });
       }
     });
+
+      this.employeePaidAbsenceForm.controls['absenceSubtype'].valueChanges.subscribe(value => {
+        if (value && this.employeePaidAbsenceForm.controls['toDate'].value && this.employeePaidAbsenceForm.controls['fromDate'].value ) {
+          const formResult: EmployeeAbsence = this.employeePaidAbsenceForm.value;
+          this.subsService.getNumberPaidDays(value, this.absenceType, this.employeePaidAbsenceForm.controls['fromDate'].value,
+           this.employeePaidAbsenceForm.controls['toDate'].value).subscribe(result => {
+             if (result) {
+               this.retPostData = result;
+              this.snackBar.open(this.retPostData, 'OK', {
+                duration: 10000,
+                verticalPosition: 'top'
+              });
+              this.employeePaidAbsenceForm.controls['fromDate'].reset();
+              this.employeePaidAbsenceForm.controls['toDate'].reset();
+             }
+
+           });
+        }
+      });
 
       }
 

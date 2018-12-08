@@ -36,7 +36,7 @@ export class SubstituteService {
   canSave = false;
   checkedRes = [];
   employeeFamilyDay: any;
-
+  numberDays: number;
 
   extractData(res: Response) {
     const body = res.json();
@@ -105,9 +105,13 @@ export class SubstituteService {
     return this.http.get<AbsenceSickLeaveType[]>(url);
   }
 
-  getAbsenceSubtype = () => {
+  getAbsenceSubtype = (absenceType: number) => {
     const url = environment.db.ROOT + environment.db.ABSENCE_SUBTYPE;
-    return this.http.get<AbsenceSubtype[]>(url);
+    const obj = {
+      params: new HttpParams()
+      .set('absenceType', absenceType.toString())
+    };
+    return this.http.get<AbsenceSubtype[]>(url, obj);
   }
 
   getSickLeaveCode = () => {
@@ -289,11 +293,8 @@ export class SubstituteService {
 
     });
 
-
   const dateArrayFamilyHoliday = this.dateArrayFamilyHoliday(startDate, endDate, employeeAbsence.absenceType,
      employeeAbsence.familyHolidayDay, employeeAbsence.familyHolidayMonth);
-
-
 
     this.holidayDateslist.forEach(function (item) {
       const index = dateArrayFamilyHoliday.indexOf(item.DateToString);
@@ -303,10 +304,30 @@ export class SubstituteService {
       employeeAbsence.numOfdays = dateArrayFamilyHoliday.length;
     });
 
-
-
      return this.http.post<EmployeeAbsence>(url, employeeAbsence);
 
+  }
+
+  getNumberPaidDays = (absenceSubtype: number, absenceType: number, fromDate: Date, toDate: Date) => {
+    const url = environment.db.ROOT + environment.db.ABSENCE_SUBTYPE + environment.db.CHECK_ABSENCE_SUBTYPE;
+    const startDate = moment(fromDate);
+    const endDate = moment(toDate);
+    const dateArrayFamilyHoliday = this.dateArrayFamilyHoliday(startDate, endDate, absenceType, null, null);
+
+    this.holidayDateslist.forEach(function (item) {
+      const index = dateArrayFamilyHoliday.indexOf(item.DateToString);
+      if (index !== -1) {
+        dateArrayFamilyHoliday.splice(index, 1);
+      }
+    });
+    this.numberDays = dateArrayFamilyHoliday.length;
+    const obj = {
+      params: new HttpParams()
+      .set('numberDays', this.numberDays.toString())
+      .set('absenceSubtype', absenceSubtype.toString())
+    };
+
+    return this.http.get(url, obj);
   }
 
  public checkAbsenceException = (fromDate) => {

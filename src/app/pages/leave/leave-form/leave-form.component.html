@@ -41,7 +41,7 @@
     <button type="submit" [disabled]="!employeeAbsenceForm.valid" mat-raised-button (click)="saveAbsence()"> Sačuvaj</button>
     <button type="submit" mat-raised-button (click)="cancelAbsence()">Odustani</button>
   </div>
-
+,.
 
   <div style="width: 99%; height: 85%;" >
     <tims-tims-grid *ngIf="roleId !== rolaManager && roleId !== rolaHRManager ? true : false" [displayDetails]="true" [columnPipes]="pipesToApply" [columnNames]="columnNameArray" [columnIds]="displayedColumns"
