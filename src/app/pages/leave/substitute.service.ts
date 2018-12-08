@@ -154,13 +154,14 @@ export class SubstituteService {
 
 
 
-  getEmployeePresenceList = (formResult, employeeId: number ) => {
+  getEmployeePresenceList = (formResult, employeeId: number , roleId: string) => {
     const obj = {
       params: new HttpParams()
       .set('Month', formResult.month.toString())
       .set('Year', formResult.year.toString())
       .set('OrgUnitId', formResult.orgUnit.OrgUnitId.toString())
       .set('EmployeeId', employeeId.toString())
+      .set('RoleId', roleId.toString())
     };
     const url = environment.db.ROOT + environment.db.WORKSHEETS;
     return this.http.get<any[]>(url, obj);

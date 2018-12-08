@@ -40,7 +40,8 @@ export class AbscencesListComponent implements OnInit {
     'Broj radnih dana',
     'Status odsustva',
     'Tip odsustva',
-    'Izuzetak'
+    'Izuzetak',
+    'Komentar'
 
   ];
 
@@ -51,7 +52,8 @@ export class AbscencesListComponent implements OnInit {
     'NumOfdays',
     'AbsenceProcessStatusName',
     'AbsenceTypeName',
-    'ExceptionAbsenceName'
+    'ExceptionAbsenceName',
+    'Description'
 
   ];
 
@@ -150,9 +152,13 @@ export class AbscencesListComponent implements OnInit {
 
   //Ponistavanje odsustva
   deny = item => {
-      if ((item.AbsenceProcessStatus === AbsenceProcessStatus.Created || item.AbsenceProcessStatus === AbsenceProcessStatus.Waiting)
-       && this.loggedId !== item.EmployeeId.toString()
-      && (this.roleId === Roles.Manager.toString() || this.roleId === Roles.HRManager.toString())) {
+      if ((item.AbsenceProcessStatus === AbsenceProcessStatus.Created
+             || item.AbsenceProcessStatus === AbsenceProcessStatus.Waiting)
+             && this.loggedId !== item.EmployeeId.toString()
+             && (this.roleId === Roles.Manager.toString()) ||
+       (item.AbsenceProcessStatus !== AbsenceProcessStatus.Deny
+                && this.roleId === Roles.HRManager.toString()
+                 && this.loggedId !== item.EmployeeId.toString())) {
       const dialogRef = this.dialog.open(DialogDenyMessage, {
         width: '250px',
       });

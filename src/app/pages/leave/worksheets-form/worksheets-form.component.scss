@@ -7,13 +7,15 @@ td{
     .dates-row{
         overflow: hidden;
         font-size: 10px;
+
+
     }
     .mat-form-field{
         width: 40px;
         overflow: hidden;
         padding:0px;
     }
-  
+
 }
 
 th{
@@ -21,7 +23,7 @@ th{
     font-size: 15px;
     font-weight: 500;
     background-color: rgb(210, 221, 221);
-    
+
 }
 table {
     width: 100%;
@@ -30,27 +32,28 @@ table {
   .form-container {
     margin: 16px;
     padding: 16px;
-  
+
     .dates-row {
       width: 100%;
       display: flex;
       align-content: space-between;
+      padding: 10px;
     }
-  
+
     .date {
       margin-right: 8px;
     }
     .date-from {
       @extend .date;
     }
-  
+
     .date-to {
       @extend .date;
     }
     .substitute-auto{
       width: 300px;
     }
-  
+
     .color{
       background: #42A948; /* green */
     }
@@ -66,4 +69,4 @@ table {
   .legend{
     font-size: 12px;
   }
-  
+
