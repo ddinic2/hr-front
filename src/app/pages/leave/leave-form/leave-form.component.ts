@@ -27,13 +27,13 @@ export class LeaveFormComponent implements OnInit {
   employeeAbsenceForm: FormGroup;
   filteredSubEmployeeOptions: Observable<Employee[]>;
   options: Employee[] = [];
+  filteredOptions: Employee[] = [];
   holidayDays: any;
   isDisabled = false;
   loggedUser: any;
   absenceType = AbsenceTypes.Absence;
   absenceTypeName = 'Godišnji odmor';
   absenceProcessStatus = AbsenceProcessStatus.Created;
-  filteredOptions: Observable<any[]>;
   employeeFamilyDay: any;
   employeeFamilyHoliday: any;
   showTable: boolean;
@@ -139,7 +139,6 @@ export class LeaveFormComponent implements OnInit {
         this.subsService.getSubstitutesByDate(this.employeeAbsenceForm.controls['fromDate'].value, value,
          this.loggedUser.value.data.employeeId, this.absenceType)
         .subscribe((result) => {
-          //this.employeeAbsenceForm.controls['replaceEmployee'].setValue(undefined);
           if (result == null) {
             this.snackBar.open('Postoji odsustvo za ovaj vremenski period', 'OK', {
               duration: 10000,
@@ -150,18 +149,18 @@ export class LeaveFormComponent implements OnInit {
           }
 
           this.options = result;
+          this.filteredOptions = result;
         });
       }
     });
 
-   this.employeeAbsenceForm.controls['replaceEmployee'].valueChanges
-  .pipe(startWith<string | Employee>(''),
-        map((name: string) => {
-          console.log(name);
-          return name && name.length >= 0 ? this._filter(name) : this.options.slice();
-        }),
-
-      );
+    this.employeeAbsenceForm.controls['replaceEmployee'].valueChanges.subscribe(value => {
+      if (value !== null && typeof value === 'string') {
+        this.filteredOptions = this._filter(value.trim());
+      } else {
+      this.filteredOptions = this.options;
+      }
+    });
 
 
 
@@ -176,12 +175,6 @@ export class LeaveFormComponent implements OnInit {
       absenceType: number = this.absenceType
     ) => this.absenceService.getAbscences(order, direction, page, count, status, absenceType, this.loggedId, this.roleId)
 
-
-
-  // onKey = (event) => {
-  //   this._filter(event.target.value);
-  // }
-
   private _filter(name: string): any[] {
     if (this.options !== undefined) {
       this.options = this.options;
@@ -189,18 +182,11 @@ export class LeaveFormComponent implements OnInit {
         (option: any) =>
           option.FirstName.toLowerCase().indexOf(name.toLowerCase()) === 0
       );
-      // return this.options.filter(
-      //   (option: any) =>  option.FirstName.includes(name.toLocaleLowerCase())
-      // );
     }
   }
 
-
-
-
   displayFn(employee: any): string | undefined {
     if (employee != null) {
-        //return typeof (option) === 'string' ? option : `${option.FirstName ? option.FirstName : 'nema ime'} ${option.Surname ? option.Surname : 'nema prezime'}`;
         return typeof (employee) === 'string' ? employee : `${employee.FirstName} ${employee.Surname} ${employee.JobTypeName}`;
     }
 
@@ -269,8 +255,9 @@ export class LeaveFormComponent implements OnInit {
   cancelAbsence = () => {
     this.employeeAbsenceForm.controls['fromDate'].reset();
       this.employeeAbsenceForm.controls['toDate'].reset();
-      this.employeeAbsenceForm.controls['replaceEmployee'].reset();
-    this.employeeAbsenceForm.enable();
+      this.employeeAbsenceForm.controls['replaceEmployee'].reset('');
+      this.filteredOptions = [];
+      this.employeeAbsenceForm.enable();
   }
 
 }

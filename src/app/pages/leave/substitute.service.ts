@@ -59,19 +59,6 @@ export class SubstituteService {
 
   }
 
-  // getSubstitutes(val: string): Observable<any[]> {
-  //   const options = {params: new HttpParams().set('', val)};
-  //   return this.http.get<any[]>(
-  //     environment.db.ROOT  + environment.db.EMPLOYEESUBSITUTE,
-  //     options
-  //   );
-
-  // getSubList = (subList) => {
-  //   return this.getSubstitutesByDate(undefined, undefined).subscribe(res => subList.next(res));
-  // }
-
-
-
   getRelevantSubstitutes = () => {
     return this.substitutesList;
   }

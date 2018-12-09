@@ -13,6 +13,7 @@ import { Employee } from 'src/app/models/employee';
 import { TimsGridComponent } from 'timsystems-lib';
 import { AbscenceService } from '../../absence-overview/abscence.service';
 import { Roles } from 'src/app/models/enums/role';
+import { startWith, map } from 'rxjs/operators';
 
 
 @Component({
@@ -32,6 +33,7 @@ export class SickAbsenceFormComponent implements OnInit {
   absenceSubtypeOptions: AbsenceSubtype[] = [];
   sickLeaveCodeOptions: SickLeaveCode[] = [];
   employeeOptions: Employee[] = [];
+  filterOptions: Employee[] = [];
   loggedUser: any;
   absenceType = AbsenceTypes.SickAbsence;
   absenceTypeName = 'Bolovanje';
@@ -64,9 +66,8 @@ export class SickAbsenceFormComponent implements OnInit {
     const year = d.getFullYear();
     const date = d.getDate();
     const holidayDays = new Array();
-    this.holidayDays.filter(function(days){
-      if( days.Month == month && days.Year == year)
-      {
+    this.holidayDays.filter(function(days) {
+      if ( days.Month === month && days.Year === year) {
         holidayDays.push(days.DateOfHoliday);
       }
     });
@@ -80,7 +81,7 @@ export class SickAbsenceFormComponent implements OnInit {
       toDate: ['', Validators.required],
       sickLeaveType: ['', Validators.required],
       absenceSubtype: ['', Validators.required],
-      sickLeaveCode: [''],
+      sickLeaveCode: ['', Validators.required],
       employeeAbsenceDetail: [''],
       employeeAbsence: [''],
       employeeId: ['']
@@ -95,7 +96,10 @@ export class SickAbsenceFormComponent implements OnInit {
     this.loggedUser =  this.loginService.getLoggedInUser();
     this.loggedId = this.loggedUser.value.data.employeeId;
     this.roleId = this.loggedUser.value.data.roleId;
-    this.subsService.getEmployee().subscribe(res => {this.employeeOptions = res; });
+    this.subsService.getEmployee().subscribe(res => {
+      this.employeeOptions = res;
+      this.filterOptions = res;
+     });
     this.subsService.getHolidayDaysForCalendar().subscribe(res => {
       this.holidayDays = res;
   });
@@ -113,6 +117,7 @@ export class SickAbsenceFormComponent implements OnInit {
           });
           this.employeeSickAbsenceForm.controls['fromDate'].reset();
           this.employeeSickAbsenceForm.controls['toDate'].reset();
+
         }
 
       });
@@ -138,9 +143,17 @@ export class SickAbsenceFormComponent implements OnInit {
       }
     });
 
+      this.employeeSickAbsenceForm.controls['employeeAbsenceDetail'].valueChanges.subscribe(value => {
+        if (value !== null && typeof value === 'string') {
+          this.filterOptions = this._filter(value.trim());
+        } else {
+        this.filterOptions = this.employeeOptions;
+        }
+      });
 
-  }
 
+
+ }
 
   detailsEmployeeAbsence = (
     order: string,
@@ -150,7 +163,7 @@ export class SickAbsenceFormComponent implements OnInit {
     status: number,
     absenceType: number = this.absenceType
   ) => {
-    return this.absenceService.getAbscences(order, direction, page, count, status, absenceType, this.loggedId, this.roleId)
+    return this.absenceService.getAbscences(order, direction, page, count, status, absenceType, this.loggedId, this.roleId);
   }
 
   private _filter(name: string): any[] {
@@ -158,13 +171,11 @@ export class SickAbsenceFormComponent implements OnInit {
       this.employeeOptions = this.employeeOptions;
       return this.employeeOptions.filter(
         (option: any) =>
-          option.FirstName!.toLowerCase().indexOf(name.toLowerCase()) === 0
+          option.FirstName.toLowerCase().indexOf(name.toLowerCase()) === 0
       );
-      // return this.options.filter(
-      //   (option: any) =>  option.FullName.includes(name.toLocaleLowerCase())
-      // );
     }
   }
+
 
   displayFn(employee: any): string | undefined {
     if (employee != null) {
@@ -189,6 +200,7 @@ export class SickAbsenceFormComponent implements OnInit {
     });
     this.employeeSickAbsenceForm.reset();
     this.employeeSickAbsenceForm.enable();
+    this.filterOptions = this.employeeOptions;
     //this.abscenceSaved.emit(null);
     //this.abscenceSaved.next(true);
     this.grid.refresh();
@@ -201,6 +213,7 @@ export class SickAbsenceFormComponent implements OnInit {
   cancelAbsence = () => {
     this.employeeSickAbsenceForm.reset();
     this.employeeSickAbsenceForm.enable();
+    this.filterOptions = this.employeeOptions;
   }
 
   edit = event => {
