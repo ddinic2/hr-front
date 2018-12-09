@@ -222,16 +222,43 @@ export class AbscencesListComponent implements OnInit {
 
   }
 
-  // getDocument = item => {
-  //   this.service(item)
+  link = item => {
+    if (this.roleId === Roles.HRManager.toString() && item.AbsenceProcessStatus === AbsenceProcessStatus.Approved
+    && this.loggedId !== item.EmployeeId.toString()) {
+      this.service.getDocument(item.EmployeeAbsence, item.EmployeeId)
+      .subscribe(data => {
+        if (data.body != null) {
+          let thefile = {};
+          thefile = data;
+          const url = URL.createObjectURL(data.body);
+          const disposition = data.headers.getAll('content-disposition');
+          const filename = '';
 
-  // }
+          const a = document.createElement('a');
+          document.body.appendChild(a);
+          a.setAttribute('style', 'display: none');
+          a.href = url;
+          a.download = filename;
+          a.click();
+          a.remove();
+        } else {
+          this.snackBar.open('Dokument nije generisan!', 'OK', {
+            duration: 10000,
+            verticalPosition: 'top'
+            });
+        }
+
+      });
+    } else {
+      this.snackBar.open('Dokument nije u statusu "odobren" ili nemate pravana da otvorite dokument!', 'OK', {
+        duration: 10000,
+        verticalPosition: 'top'
+        });
+    }
 
 
-  // save = (item) =>
-  // console.log('save');
-  // view = (item) =>
-  // console.log('view');
+  }
+
 }
 @Component({
   selector: 'dialog-deny-message',

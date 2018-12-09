@@ -7,6 +7,7 @@ import { TimsGridComponent } from 'timsystems-lib';
 import { tap } from 'rxjs/operators';
 import { EmployeeAbsence } from 'src/app/models/employee-absence';
 import { LoggedUser } from 'src/app/models/logged-user';
+import { PARAMETERS } from '@angular/core/src/util/decorators';
 
 
 
@@ -94,6 +95,16 @@ export class AbscenceService {
       }).pipe(tap(response => console.log(response)));
 
     }
+
+    getDocument = (employeeAbsence: number, employeeId: number) => {
+      const url = environment.db.ROOT + environment.db.ABSCENCE + environment.db.GET_GENERATE_DOCUMENT;
+      const obj = {employeeAbsence, employeeId};
+      return this.http.post(url, obj, {
+        responseType: 'blob',
+        observe: 'response',
+      }).pipe(tap(response => console.log(response)));
+    }
+
     getYearVacation = (loggedId: string) => {
       let URL = environment.db.ROOT + environment.db.ABSCENCE + environment.db.YEAR_VACATION + '?';
       if (loggedId) {

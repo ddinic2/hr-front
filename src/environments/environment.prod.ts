@@ -31,8 +31,9 @@ export const environment = {
    GENERATE_DOCUMENT: '/generate-document',
    GET_EMPLOYEE: '/get-employee',
    WORKSHEETS_BILLING: '/worksheets-billing',
-   EXPORT_TO_EXCEL: '/export-to-excel'
-    ROOT2: 'http://10.111.10.41:22950/',
+   EXPORT_TO_EXCEL: '/export-to-excel',
+   GET_GENERATE_DOCUMENT: '/get-generate-document',
+    ROOT2: 'http://10.111.10.41:22950/'
   }
 
 };
