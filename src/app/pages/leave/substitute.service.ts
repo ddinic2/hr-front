@@ -280,6 +280,7 @@ export class SubstituteService {
 
     });
 
+
   const dateArrayFamilyHoliday = this.dateArrayFamilyHoliday(startDate, endDate, employeeAbsence.absenceType,
      employeeAbsence.familyHolidayDay, employeeAbsence.familyHolidayMonth);
 

@@ -61,7 +61,7 @@ export class AbscenceService {
 
   removeAbsence = (absenceId: number) => {
 
-    const obj = { params: new HttpParams().set('absenceId', '' + absenceId)}
+    const obj = { params: new HttpParams().set('absenceId', '' + absenceId)};
     const url = environment.db.ROOT + environment.db.ABSCENCE;
 
     return this.http.delete(url, obj);
@@ -73,6 +73,15 @@ export class AbscenceService {
    const url = environment.db.ROOT + environment.db.ABSCENCE + environment.db.CHANGE_ABSENCE_STATUS;
       return this.http.post(url, item);
   }
+
+  changeAbsenceStatusFromMail = (employeeId: string, employeeAbsence: string, exceptionAbsence: string, numOfDays: string,
+    absenceProcessStatusNew: string, loggedUserEmail: string, loggedUserRoleId: string, loggedUserId: string) => {
+    const url = environment.db.ROOT + environment.db.ABSCENCE + environment.db.CHANGE_ABSENCE_STATUS;
+   const  obj = {employeeId, employeeAbsence, exceptionAbsence,
+    absenceProcessStatusNew, loggedUserEmail, loggedUserRoleId, loggedUserId };
+       return this.http.post(url, obj);
+   }
+
 
   // generateDocument = (employeeAbsence: number, employeeId: number, absenceType: number ) => {
   //   const url = environment.db.ROOT + environment.db.ABSCENCE + environment.db.GENERATE_DOCUMENT;

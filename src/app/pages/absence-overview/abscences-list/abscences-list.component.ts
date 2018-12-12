@@ -1,5 +1,5 @@
 import { AbscenceService } from './../abscence.service';
-import { Component, OnInit, Input, ViewChild, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, ViewChild, Output, EventEmitter, ViewContainerRef } from '@angular/core';
 import { AbsenceProcessStatus } from 'src/app/models/enums/absence-process-satatus';
 import { LoginService } from 'src/app/shared/shared/login.service';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
@@ -8,6 +8,8 @@ import { LoggedUser } from 'src/app/models/logged-user';
 import { TimsGridComponent } from 'timsystems-lib';
 import {MatSnackBar } from '@angular/material';
 import { Roles } from 'src/app/models/enums/role';
+import { ActivatedRoute } from '@angular/router';
+import { EmployeeAbsence } from 'src/app/models/employee-absence';
 
 
 @Component({
@@ -26,6 +28,10 @@ export class AbscencesListComponent implements OnInit {
   roleId: string;
   rolaHRManager = Roles.HRManager;
   rolaRecord = Roles.Record;
+  root: string;
+  checkAbsence: EmployeeAbsence[] = [];
+  absenceProcessStatusNew: string;
+
 
   @Input() absenceType: number;
   @Input() absProcessStatus: number;
@@ -58,13 +64,30 @@ export class AbscencesListComponent implements OnInit {
   ];
 
   constructor(private service: AbscenceService, private loginService: LoginService,
-     public dialog: MatDialog, public snackBar: MatSnackBar) { }
+     public dialog: MatDialog, public snackBar: MatSnackBar, public viewContainerRef: ViewContainerRef,
+     private route: ActivatedRoute ) { }
 
   ngOnInit() {
     this.loggedUser = this.loginService.getLoggedInUser();
     this.loggedId = this.loggedUser.value.data.employeeId;
     this.roleId = this.loggedUser.value.data.roleId;
+    this.checkRoot();
   }
+
+  checkRoot() {
+    const root = window.location.href;
+    if (root.includes('status')) {
+      const queryParams = this.route.snapshot.queryParams;
+      if (queryParams.statusApprove) {
+
+        this.approveFromMail(queryParams);
+      } else {
+        this.denyFromMail(queryParams);
+      }
+
+
+    }
+   }
 
   getRepoIssues = (
     order: string,
@@ -113,13 +136,10 @@ export class AbscencesListComponent implements OnInit {
 
   }
 
-
-
   //Odobravanje odsustva NAPOMENA: LoggedUser da se zameni sa objektom
   approve = item => {
     if (item.AbsenceProcessStatus === AbsenceProcessStatus.Created &&
-      (this.roleId === Roles.Manager.toString() || this.roleId === Roles.HRManager.toString() )
-     && this.loggedId !== item.EmployeeId.toString()  ||
+      this.roleId === Roles.Manager.toString() && this.loggedId !== item.EmployeeId.toString()  ||
        (item.AbsenceProcessStatus === AbsenceProcessStatus.Waiting && this.roleId === Roles.HRManager.toString()
         && this.loggedId !== item.EmployeeId.toString() )) {
       if (item.ExceptionAbsence && item.AbsenceProcessStatus === AbsenceProcessStatus.Created) {
@@ -144,7 +164,6 @@ export class AbscencesListComponent implements OnInit {
         });
     }
   }
-
 
   performRefresh = () => {
     this.grid.refresh();
@@ -185,6 +204,55 @@ export class AbscencesListComponent implements OnInit {
         verticalPosition: 'top'
         });
     }
+  }
+
+  //Odobravanje odsustva iz mejla
+  approveFromMail = (queryParams) => {
+      const employeeAbsence = (queryParams.empAbsId);
+      const employeeId = (queryParams.employeeId);
+      const absenceProcessStatusNew = queryParams.statusApprove;
+      const exceptionAbsence = (queryParams.exception);
+      const numOfDays = queryParams.numOfDays;
+      const absenceType = queryParams.absType;
+      const loggedUserEmail = this.loggedUser.value.data.employeeEmail;
+      const loggedUserRoleId = this.loggedUser.value.data.roleId;
+      const loggedUserId = this.loggedUser.value.data.employeeId;
+
+    this.service.changeAbsenceStatusFromMail(employeeId, employeeAbsence, exceptionAbsence, numOfDays,
+      absenceProcessStatusNew, loggedUserEmail, loggedUserRoleId, loggedUserId)
+      .subscribe(res => {
+        queryParams.AbsenceProcessStatusName = res;
+        this.performRefresh();
+      });
+  }
+
+  //Ponistavanje odsustva iz mejla
+  denyFromMail = queryParams => {
+      const dialogRef = this.dialog.open(DialogDenyMessage, {
+        width: '250px',
+      });
+
+      dialogRef.afterClosed().subscribe(result => {
+        if (result.value.deny) {
+          const employeeAbsence = queryParams.empAbsId;
+          const employeeId = queryParams.employeeId;
+          const exceptionAbsence = queryParams.exception;
+          const absenceProcessStatusNew = queryParams.statusDeny;
+          const numOfDays = queryParams.numOfDays;
+          const absenceType = queryParams.absType;
+          const loggedUserEmail = this.loggedUser.value.data.employeeEmail;
+          const loggedUserRoleId = this.loggedUser.value.data.roleId;
+          const loggedUserId = this.loggedUser.value.data.employeeId;
+
+          this.service.changeAbsenceStatusFromMail(employeeId, employeeAbsence, exceptionAbsence, numOfDays,
+            absenceProcessStatusNew, loggedUserEmail, loggedUserRoleId, loggedUserId)
+            .subscribe(res => {
+              queryParams.AbsenceProcessStatusName = res;
+              this.performRefresh();
+            });
+        }
+      });
+
   }
 
   generate = item => {
@@ -261,7 +329,7 @@ export class AbscencesListComponent implements OnInit {
 
 }
 @Component({
-  selector: 'dialog-deny-message',
+  selector: 'hr-dialog-deny-message',
   templateUrl: 'dialog-deny-message.html',
 })
 export class DialogDenyMessage {

@@ -11,6 +11,10 @@ const routes: Routes = [
    component: AbscencesListComponent,
    canActivate: [AuthGuard]
   },
+  { path: 'lista-odsustava/status',
+   component: AbscencesListComponent,
+   canActivate: [AuthGuard]
+  },
   {
     path: 'odsustvo',
     component: LeaveComponent,

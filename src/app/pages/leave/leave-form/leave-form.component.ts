@@ -74,11 +74,11 @@ export class LeaveFormComponent implements OnInit {
     const date = d.getDate();
     const holidayDays = new Array();
     this.holidayDays.filter(function(days) {
-      if ( days.Month == month && days.Year == year) {
+      if ( days.Month === month && days.Year === year) {
         holidayDays.push(days.DateOfHoliday);
       }
     });
-    if (this.employeeFamilyDay.FamilyHolidayMonth && this.employeeFamilyDay.FamilyHolidayMonth == month) {
+    if (this.employeeFamilyDay.FamilyHolidayMonth && this.employeeFamilyDay.FamilyHolidayMonth === month) {
       return day !== 0 && day !== 6 && !holidayDays.includes(date) && date !== this.employeeFamilyDay.FamilyHolidayDay;
     } else {
       return day !== 0 && day !== 6 && !holidayDays.includes(date);
@@ -201,6 +201,7 @@ export class LeaveFormComponent implements OnInit {
     formResult.absenceProcessStatus = this.absenceProcessStatus;
     formResult.familyHolidayDay = this.employeeFamilyHoliday.FamilyHolidayDay;
     formResult.familyHolidayMonth = this.employeeFamilyHoliday.FamilyHolidayMonth;
+    formResult.root = window.location.href;
 
     this.exceptionAbsence  = this.subsService.checkAbsenceException(this.employeeAbsenceForm.controls['toDate'].value);
     if (this.exceptionAbsence) {
@@ -255,8 +256,7 @@ export class LeaveFormComponent implements OnInit {
   cancelAbsence = () => {
     this.employeeAbsenceForm.controls['fromDate'].reset();
       this.employeeAbsenceForm.controls['toDate'].reset();
-      this.employeeAbsenceForm.controls['replaceEmployee'].reset('');
-      this.filteredOptions = [];
+      this.employeeAbsenceForm.controls['replaceEmployee'].reset();
       this.employeeAbsenceForm.enable();
   }
 

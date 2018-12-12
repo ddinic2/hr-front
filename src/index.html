@@ -18,13 +18,14 @@
 <script>
   window.onload = function () {
     window.addEventListener("message", function (event) {
-     // if(event.data != undefined)
-     // {
-        //const objData =  (JSON.parse(event.data));
-      //} else {
-        const objData = (JSON.parse('{"data":{"username":"djvitorovic","employeeId":"2","roleId":"4", "employeeEmail":"djordje.vitorovic@timsystems.rs"}}'));
+    //  if(event.data != undefined)
+    //  {
+       //const objData =  (JSON.parse(event.data));
+    //   }
+       //else {
+       const objData = (JSON.parse('{"data":{"username":"djvitorovic","employeeId":"1","roleId":"4", "employeeEmail":"djordje.vitorovic@timsystems.rs"}}'));
 
-     // }
+     //}
 
       localStorage.setItem('loggedUserEmployee', JSON.stringify(objData));
     });

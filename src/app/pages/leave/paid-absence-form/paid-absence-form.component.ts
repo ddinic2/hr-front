@@ -197,6 +197,7 @@ export class PaidAbsenceFormComponent implements OnInit {
     formResult.absenceType = this.absenceType;
     formResult.absenceTypeName = this.absenceTypeName;
     formResult.absenceProcessStatus = this.absenceProcessStatus;
+    formResult.root = window.location.href;
 
     this.subsService.postAbsence(formResult).subscribe(res => {
       this.retPostData = res;
