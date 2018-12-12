@@ -1,10 +1,9 @@
 export const environment = {
   production: true,
   db: {
-   ROOT: 'http://10.10.1.56:22900/',
-   // OBS
-    //ROOT: 'http://10.111.10.41:22900/',
-    SUBSTITUTE: 'work-leave',
+   ROOT: 'http://10.10.1.56:22900/',// OBS
+   //ROOT: 'http://10.111.10.41:22900/',
+   SUBSTITUTE: 'work-leave',
     ABSCENCE: 'absences',
     ABSENCE_TYPE: '/absence-types',
     ABSENCE_TYPE_WORKSHEETS: '/absence-types-worksheets',
@@ -16,6 +15,7 @@ export const environment = {
     EMPLOYEE_FAMILY_HOLIDAY: '/employee-family-holiday',
     ABSENCE_SICK_LEAVE_TYPE: '/absence-sick-leave-type',
     ABSENCE_SUBTYPE: '/absence-subtype' ,
+    CHECK_ABSENCE_SUBTYPE: '/check-absence-subtype',
     SICK_LEAVE_CODE: '/sick-leave-code',
     CHANGE_ABSENCE_STATUS: '/change-absence-status',
     EMPLOYEE: 'employee-data',
@@ -32,7 +32,8 @@ export const environment = {
     GET_EMPLOYEE: '/get-employee',
     WORKSHEETS_BILLING: '/worksheets-billing',
     EXPORT_TO_EXCEL: '/export-to-excel',
-    ROOT2: 'http://10.111.10.41:22950/',
+    GET_GENERATE_DOCUMENT: '/get-generate-document',
+   ROOT2: 'http://10.111.10.41:22950/'
   }
 
 };

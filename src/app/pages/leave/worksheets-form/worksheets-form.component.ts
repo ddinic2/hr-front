@@ -30,7 +30,7 @@ export class WorksheetsFormComponent implements OnInit {
   worksheetsMonthsOptions: number[] = [];
   worksheetsYearsOptions: number[] = [];
   orgUnitOptions: any;
-  dateList: number[] = [];
+  dateList: string[] = [];
   absenceTypeOptions: AbsenceType[] = [];
   presenceDetailTypeOptions: any;
   loggedUser: any;
@@ -46,6 +46,7 @@ export class WorksheetsFormComponent implements OnInit {
   rolaHRManager = Roles.HRManager.toString();
   rolaRecord = Roles.Record.toString();
   lockWorksheet: boolean;
+  unlockWorksheet: boolean;
 
 
 
@@ -77,7 +78,7 @@ export class WorksheetsFormComponent implements OnInit {
     this.subService.getWorksheetsMonths().subscribe(res => { this.worksheetsMonthsOptions = res; });
     this.subService.getAbsenceTypeWorksheets().subscribe(res => {
     this.absenceTypeOptions = res;
-      //this.absenceTypeOptions.push({ hrAbsenceTypeID: 0, name: '' })
+
     });
     this.subService.getPresenceDetailType().subscribe(res => { this.presenceDetailTypeOptions = res; });
 
@@ -99,10 +100,10 @@ export class WorksheetsFormComponent implements OnInit {
 
   detailsPresence() {
 
-    console.log('Zakljucana lista: ' + this.lockWorksheet);
     this.lockWorksheet = false;
+    this.unlockWorksheet = false;
     const formResult = this.worksheetsForm.value;
-    this.subService.getEmployeePresenceList(formResult, this.loggedUser.value.data.employeeId)
+    this.subService.getEmployeePresenceList(formResult, this.loggedUser.value.data.employeeId, this.loggedUser.value.data.roleId)
       .subscribe(res => {
       res.map(item => item.DayStatus = item.DayStatus.map(element => {
         return DayStatus.fromCode(element);
@@ -110,14 +111,12 @@ export class WorksheetsFormComponent implements OnInit {
       //  return  DayStatus.fromSubtypeCode(element);
       }),
        this.employeePresenceList = res);
-
-      const month = (this.worksheetsForm.controls['month'].value).toString();
-      const year = (this.worksheetsForm.controls['year'].value).toString();
-      const daysInMonth = _moment(year + month, 'YYYY-MM').daysInMonth();
-      this.dateList = this.dateArrayListDetails(daysInMonth);
+      this.dateList = this.employeePresenceList[0].Dates;
       if (this.employeePresenceList[0].PresenceListStatus === WorksheetsPresenceStatus.Lock
         || this.employeePresenceList[0].PresenceListStatus === WorksheetsPresenceStatus.Verefacition) {
         this.lockWorksheet = true;
+      } else {
+        this.unlockWorksheet = true;
       }
 
       });
@@ -143,7 +142,7 @@ export class WorksheetsFormComponent implements OnInit {
       .subscribe(res => {
       this.comparePresenceList = res;
         const result = this.comparePresenceList.map(m => m.PresenceTypeCode);
-        this.dateList = this.dateArrayListDetails(result[0].length);
+        this.dateList = this.comparePresenceList[0].Dates;
       });
   }
 
@@ -167,8 +166,10 @@ export class WorksheetsFormComponent implements OnInit {
       if (result) {
           empPresenceList.presenceListStatus = WorksheetsPresenceStatus.Lock;
           this.subService.lockWorksheets(empPresenceList, employeePresenceListID);
+          this.lockWorksheet = true;
+          this.unlockWorksheet = false;
         }
-        this.lockWorksheet = true;
+
       });
 
     }
@@ -177,6 +178,13 @@ export class WorksheetsFormComponent implements OnInit {
   }
 
   unlockWorksheets() {
+    if (this.employeePresenceList[0].PresenceListStatus === WorksheetsPresenceStatus.Created
+      || this.employeePresenceList[0].PresenceListStatus === WorksheetsPresenceStatus.Changed) {
+     this.snackBar.open('Lista je već otključana', 'OK', {
+       duration: 10000,
+       verticalPosition: 'top'
+     });
+   } else {
     const formResult = this.worksheetsForm.value;
     this.subService.unlockWorksheetsByManager(formResult, this.loggedUser.value.data.employeeId).subscribe(res => {
       this.retPostData = res;
@@ -184,8 +192,10 @@ export class WorksheetsFormComponent implements OnInit {
         duration: 10000,
         verticalPosition: 'top'
       });
-
+      this.lockWorksheet = false;
+      this.unlockWorksheet = true;
     });
+  }
 
   }
 

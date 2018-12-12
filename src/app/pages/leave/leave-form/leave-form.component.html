@@ -1,5 +1,5 @@
 <form [formGroup]="employeeAbsenceForm">
-  <h3>Zahtevi za godišnji odmor</h3>
+
   <div class="dates-row">
     <mat-form-field >
         <input matInput   placeholder="Stari odmor"  formControlName="remainingDaysPreviousYear">
@@ -27,7 +27,7 @@
       <input type="text" placeholder="Zamena" aria-label="Zamena" matInput formControlName="replaceEmployee"
         [matAutocomplete]="auto">
       <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
-        <mat-option *ngFor="let employee of options" [value]="employee">
+        <mat-option *ngFor="let employee of filteredOptions" [value]="employee">
           {{employee.FirstName}} {{employee.Surname}} {{employee.JobTypeName}}
           <!-- {{option.FirstName}} {{option.Surname}} : {{option.OrgUnitName}} -->
         </mat-option>

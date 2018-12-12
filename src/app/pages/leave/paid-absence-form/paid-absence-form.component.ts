@@ -54,7 +54,7 @@ export class PaidAbsenceFormComponent implements OnInit {
     'EmployeeName',
     'FromDate',
     'ToDate',
-    'NumOfdays',
+    'NumOfDays',
     'AbsenceSubtype',
     'ExceptionAbsenceName',
     'AbsenceProcessStatusName'
@@ -69,8 +69,8 @@ export class PaidAbsenceFormComponent implements OnInit {
     const year = d.getFullYear();
     const date = d.getDate();
     const holidayDays = new Array();
-    this.holidayDays.filter(function(days){
-      if ( days.Month == month && days.Year == year) {
+    this.holidayDays.filter(function(days) {
+      if ( days.Month === month && days.Year === year) {
         holidayDays.push(days.DateOfHoliday);
       }
     });
@@ -91,7 +91,7 @@ export class PaidAbsenceFormComponent implements OnInit {
    }
 
   ngOnInit() {
-    this.subsService.getAbsenceSubtype().subscribe (res => {this.absenceSubtypeOptions = res; });
+    this.subsService.getAbsenceSubtype(this.absenceType).subscribe (res => {this.absenceSubtypeOptions = res; });
     this.loggedUser =  this.loginService.getLoggedInUser();
     this.loggedId = this.loggedUser.value.data.employeeId;
     this.roleId = this.loggedUser.value.data.roleId;
@@ -137,6 +137,25 @@ export class PaidAbsenceFormComponent implements OnInit {
       }
     });
 
+      this.employeePaidAbsenceForm.controls['absenceSubtype'].valueChanges.subscribe(value => {
+        if (value && this.employeePaidAbsenceForm.controls['toDate'].value && this.employeePaidAbsenceForm.controls['fromDate'].value ) {
+          const formResult: EmployeeAbsence = this.employeePaidAbsenceForm.value;
+          this.subsService.getNumberPaidDays(value, this.absenceType, this.employeePaidAbsenceForm.controls['fromDate'].value,
+           this.employeePaidAbsenceForm.controls['toDate'].value).subscribe(result => {
+             if (result) {
+               this.retPostData = result;
+              this.snackBar.open(this.retPostData, 'OK', {
+                duration: 10000,
+                verticalPosition: 'top'
+              });
+              this.employeePaidAbsenceForm.controls['fromDate'].reset();
+              this.employeePaidAbsenceForm.controls['toDate'].reset();
+             }
+
+           });
+        }
+      });
+
       }
 
       detailsEmployeeAbsence = (
@@ -149,22 +168,9 @@ export class PaidAbsenceFormComponent implements OnInit {
       ) => this.absenceService.getAbscences(order, direction, page, count, status, absenceType, this.loggedId, this.roleId)
 
 
-      private _filter(name: string): any[] {
-        if (this.employeeOptions !== undefined) {
-          this.employeeOptions = this.employeeOptions;
-          return this.employeeOptions.filter(
-            (option: any) =>
-              option.FirstName!.toLowerCase().indexOf(name.toLowerCase()) === 0
-          );
-          // return this.options.filter(
-          //   (option: any) =>  option.FullName.includes(name.toLocaleLowerCase())
-          // );
-        }
-      }
 
       displayFn(employee: any): string | undefined {
         if (employee != null) {
-            //return typeof (option) === 'string' ? option : `${option.FirstName ? option.FirstName : 'nema ime'} ${option.Surname ? option.Surname : 'nema prezime'}`;
             return typeof (employee) === 'string' ? employee : `${employee.FirstName} ${employee.Surname} ${employee.JobTypeName}`;
         }
 
@@ -178,6 +184,7 @@ export class PaidAbsenceFormComponent implements OnInit {
     formResult.absenceType = this.absenceType;
     formResult.absenceTypeName = this.absenceTypeName;
     formResult.absenceProcessStatus = this.absenceProcessStatus;
+    formResult.root = window.location.href;
 
     this.subsService.postAbsence(formResult).subscribe(res => {
       this.retPostData = res;

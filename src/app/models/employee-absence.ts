@@ -10,6 +10,7 @@ export interface EmployeeAbsence {
     employeeAbsence?: number;
     absenceProcessStatus: number;
     absenceProcessStatusName: string;
+    absenceProcessStatusNew: number;
     procesStatus: number;
     absenceType: number;
     absenceTypeName: string;
@@ -35,6 +36,7 @@ export interface EmployeeAbsence {
     loggedUsername: string;
     familyHolidayDay: number;
     familyHolidayMonth: number;
+    root: string;
 
 
 }

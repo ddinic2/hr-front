@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream
 <mat-tab-group #tabGroup >
     <mat-tab label="Godišnji odmori">
         <hr-leave-form *ngIf='(roleId === rolaHRManager || roleId === rolaManager) ? true : false' (abscenceSaved)="doARefresh('leave')"></hr-leave-form>
@@ -10,12 +11,22 @@
         <hr-paid-absence-form *ngIf='roleId === rolaHRManager || roleId === rolaManager ? true : false' #editPaidAbsence (abscenceSaved)="doARefresh('paid')" ></hr-paid-absence-form>
         <hr-paid-absence-form *ngIf='(roleId !== rolaHRManager && roleId !== rolaManager) ? true : false'></hr-paid-absence-form>
         <hr-abscences-list *ngIf='roleId === rolaHRManager || roleId === rolaManager ? true : false' #paidFormTable (editAbsence)='editEmployeeAbsence($event)'   [absenceType]="absenceTypes.PaidAbsence" [absProcessStatus]="absenceProcessStatus.Created"></hr-abscences-list>
+=======
+
+
+<mat-tab-group #tabGroup>
+    <mat-tab label="Godisnji odmori">
+        <hr-leave-form (abscenceSaved)="doARefresh('leave')"></hr-leave-form>
+        <h4>Lista odsustva</h4>
+        <hr-abscences-list #leaveFormTable [absenceType]="absenceTypes.Absence" [absProcessStatus]="absenceProcessStatus.Created"></hr-abscences-list>
+>>>>>>> Stashed changes
     </mat-tab>
     <mat-tab label="Bolovanja" *ngIf='roleId === rolaHRManager ? true : false'>
         <hr-sick-absence-form></hr-sick-absence-form>
         <!-- <hr-sick-absence-form #editSickAbsence (abscenceSaved)="doARefresh('sick')"></hr-sick-absence-form> -->
         <!-- <hr-abscences-list #sickFormTable (editAbsence)='editEmployeeAbsence($event)'  [absenceType]="absenceTypes.SickAbsence" [absProcessStatus]="absenceProcessStatus.Created"></hr-abscences-list> -->
     </mat-tab>
+<<<<<<< Updated upstream
     <mat-tab label ="Radne liste" *ngIf='(roleId === rolaHRManager || roleId === rolaRecord) ? true : false'>
         <hr-worksheets-form></hr-worksheets-form>
     </mat-tab>
@@ -24,3 +35,15 @@
   </mat-tab>
 
 </mat-tab-group>
+=======
+    <mat-tab label="Bolovanja">
+        <hr-sick-absence-form (abscenceSaved)="doARefresh('sick')"></hr-sick-absence-form>
+        <h4>Lista odsustva</h4>
+        <hr-abscences-list #sickFormTable [absenceType]="absenceTypes.SickAbsence" [absProcessStatus]="absenceProcessStatus.Created"></hr-abscences-list>
+    </mat-tab>
+    <mat-tab label="Radne liste">
+        <hr-worksheets-form></hr-worksheets-form>
+    </mat-tab>
+
+</mat-tab-group>
+>>>>>>> Stashed changes

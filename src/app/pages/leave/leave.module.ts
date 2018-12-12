@@ -29,7 +29,8 @@ const buttons = [
   { name: 'approve', button: { text: 'Odobri', icon: 'check' } },
   { name: 'deny', button: { text: 'Poništi', icon: 'ban' } },
   { name: 'generate', button: { text: 'Generiši dokument', icon: 'file-text' } },
-  { name: 'remove', button: { text: 'Obriši', icon: 'trash-o' } }
+  { name: 'remove', button: { text: 'Obriši', icon: 'trash-o' } },
+  { name: 'link', button: { text: 'Dokument', icon: 'link' } }
 ];
 
 @NgModule({

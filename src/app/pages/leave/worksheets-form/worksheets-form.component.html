@@ -38,75 +38,20 @@
   <div class="dates-row">
     <button type="submit" mat-raised-button (click)="detailsPresence()" *ngIf='(roleId === rolaHRManager || roleId === rolaRecord) ? true : false'>Prikaži</button>
     <button type="submit" mat-raised-button (click)="compareWorksheets()" *ngIf='roleId === rolaHRManager ? true : false'> Uporedi radne liste</button>
-    <button type="submit" mat-raised-button (click)="lockWorksheets()" *ngIf='roleId === rolaRecord ? true : false'> Zaključaj radnu listu</button>
-    <button type="submit" mat-raised-button (click)="unlockWorksheets()" *ngIf='roleId === rolaHRManager ? true : false'> Otključaj radnu listu</button>
-  </div>
-
-  <br />
-  <br />
-
-  <!-- <div>
-    <table class="mat-elevation-z8">
-      <th>Zaposleni</th>
-      <th *ngFor="let dates of dateList">{{dates}}</th>
-      <tr *ngFor="let item of employeePresenceList">
-        <td>{{ item.EmployeeFullName }} </td>
-        <td *ngFor="let dayStatus of item.DayStatus; let i=index">
-          <div class="dates-row">
-            <div>
-              <form>
-              <mat-form-field>
-                <mat-select (selectionChange)="selectedItem(item,i,$event)" [(value)]="item.DayStatus[i]">
-
-                  <mat-option  *ngFor="let selectOption of absenceTypeOptions" [value]="selectOption.HRAbsenceTypeID">
-                    {{ selectOption.Code }}
-                  </mat-option>
-                </mat-select>
-              </mat-form-field>
-            </form>
-            </div>
-          </div>
-        </td>
-      </tr>
-
-    </table>
-  </div> -->
-  <br />
-  <div>
+    <button type="submit" mat-raised-button (click)="lockWorksheets()" *ngIf='roleId === rolaRecord && unlockWorksheet'> Zaključaj radnu listu</button>
+    <button type="submit" mat-raised-button (click)="unlockWorksheets()" *ngIf='roleId === rolaHRManager  && lockWorksheet'> Otključaj radnu listu</button>
     <button type="submit" mat-raised-button (click)="saveWorksheets()" *ngIf='roleId === rolaRecord ? true : false'> Sačuvaj</button>
+    <i style="padding-left: 10px;" class="fa fa-lock fa-2x" aria-hidden="true" *ngIf='lockWorksheet'></i>
+    <i style="padding-left: 10px;" class="fa fa-unlock fa-2x" aria-hidden="true" *ngIf='unlockWorksheet'></i>
   </div>
 
-  <br/>
 
   <br/>
-  <!-- <div>
-    <table class="mat-elevation-z8">
-      <th>Lista prisutnosti</th>
-      <th *ngFor="let dates of dateList">{{dates}}</th>
-      <tr *ngFor="let item of employeePresenceList">
-        <td>{{ item.EmployeeFullName }} </td>
-        <td *ngFor="let dayStatus of item.PresenceTypeCode; let i=index;">
-        <div class="dates-row">
-            <form>
-              <mat-form-field>
-                  <input matInput [value]="item.PresenceTypeCode[i]" #fieldName1   (keyup)="onKey(item,i,$event)"    maxlength="1" [disabled]="dayStatus == 'NN'">
-              </mat-form-field>
-            </form>
 
-          </div>
-        </td>
-
-      </tr>
-    </table>
-  </div> -->
 </form>
-  <div class="legend">
-    <h4>Legenda za evidentičara</h4>
-    <p>B - bolovanje, PO - plaćeno odsustvo, NPO - porodiljsko odsustvo, GO - godišnji odmor</p>
-    <p>RR - prisutnost (redovan rad), ! - neradni dan(praznik), VP - verski praznik (slava), x -odsutnost (za novozaposlene ili slučaju prestanog radnog odnos), DP - državni praznik</p>
-  </div>
+
 <div>
-<table class="mat-elevation-z8">
+<table class="mat-elevation-z8" *ngIf="employeePresenceList">
     <thead>
         <th>Zaposleni</th>
        <th *ngFor="let dates of dateList">{{dates}}</th>
@@ -131,33 +76,21 @@
     </table>
   </div>
 
+  <div class="legend" *ngIf="employeePresenceList">
+    <h4>Legenda za evidentičara</h4>
+    <p>B - bolovanje, PO - plaćeno odsustvo, NPO - porodiljsko odsustvo, GO - godišnji odmor</p>
+    <p>RR - prisutnost (redovan rad), ! - neradni dan(praznik), VP - verski praznik (slava), x -odsutnost (za novozaposlene ili slučaju prestanog radnog odnos), DP - državni praznik</p>
+  </div>
+
 
 
   <br/>
   <br/>
 
 
- <div class="legend"  *ngIf='roleId === rolaHRManager ? true : false'>
-   <h4>Legenda za HR:</h4>
-   <p>BO3P -bolovanje zbog održavanja trudnoće do 30 dana počelo u prethodnom mesecu, BPV -	bolovanje povreda na radu 100% počelo u tekućem mesecu,
-      BPVP - bolovanje povreda na radu 100% počelo u prethodnom mesecu,
-      PO - Plaćeno odsustvo,
-      POP -	Plaćeno odsustvo počelo u prethodnom mesecu,
-      BPO	- porodiljsko odsustvo,
-      GO - godišnji odmor,
-      GOP	- godišnji odmor počeo u prethodnom mesecu,
-      RR - prisutnost- redovan rad,
-      ! -	neradni dan (praznik),
-      VP - verski praznik(slava),
-      VPP	- verski praznik(slava) počelo u prethodnom mesecu,
-      x	- odsutnost (za novozaposlene ili u slučaju prestanka radnog odnosa),
-      DP - državni praznik,
-      DPP	- državni praznik počeo u prehodnom mesecu,
-      PRUD - privremeno udaljenje sa rada
-      </p>
- </div>
+
   <div>
-    <table class="mat-elevation-z8"  *ngIf='roleId === rolaHRManager ? true : false'>
+    <table class="mat-elevation-z8"  *ngIf='(roleId === rolaHRManager ? true : false) && comparePresenceList'>
       <th>Zaposleni</th>
       <th>Organizaciona jedinica</th>
       <th *ngFor="let item of dateList">{{item}}</th>
@@ -170,6 +103,25 @@
       </tr>
 
     </table>
+  </div>
+  <div class="legend"  *ngIf='(roleId === rolaHRManager ? true : false) && comparePresenceList'>
+    <h4>Legenda za HR:</h4>
+    <p>BO3P -bolovanje zbog održavanja trudnoće do 30 dana počelo u prethodnom mesecu, BPV -	bolovanje povreda na radu 100% počelo u tekućem mesecu,
+       BPVP - bolovanje povreda na radu 100% počelo u prethodnom mesecu,
+       PO - Plaćeno odsustvo,
+       POP -	Plaćeno odsustvo počelo u prethodnom mesecu,
+       BPO	- porodiljsko odsustvo,
+       GO - godišnji odmor,
+       GOP	- godišnji odmor počeo u prethodnom mesecu,
+       RR - prisutnost- redovan rad,
+       ! -	neradni dan (praznik),
+       VP - verski praznik(slava),
+       VPP	- verski praznik(slava) počelo u prethodnom mesecu,
+       x	- odsutnost (za novozaposlene ili u slučaju prestanka radnog odnosa),
+       DP - državni praznik,
+       DPP	- državni praznik počeo u prehodnom mesecu,
+       PRUD - privremeno udaljenje sa rada
+       </p>
   </div>
 
 

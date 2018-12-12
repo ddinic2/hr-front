@@ -17,7 +17,8 @@ export const environment = {
     FAMILY_HOLIDAY: '/family-holiday',
     EMPLOYEE_FAMILY_HOLIDAY: '/employee-family-holiday',
     ABSENCE_SICK_LEAVE_TYPE: '/absence-sick-leave-type',
-    ABSENCE_SUBTYPE:'/absence-subtype' ,
+    ABSENCE_SUBTYPE: '/absence-subtype' ,
+    CHECK_ABSENCE_SUBTYPE: '/check-absence-subtype',
     SICK_LEAVE_CODE: '/sick-leave-code',
     CHANGE_ABSENCE_STATUS: '/change-absence-status',
     EMPLOYEE: 'employee-data',
@@ -33,7 +34,8 @@ export const environment = {
     GENERATE_DOCUMENT: '/generate-document',
     GET_EMPLOYEE: '/get-employee',
     WORKSHEETS_BILLING: '/worksheets-billing',
-    EXPORT_TO_EXCEL: '/export-to-excel'
+    EXPORT_TO_EXCEL: '/export-to-excel',
+    GET_GENERATE_DOCUMENT: '/get-generate-document'
   }
 };
 

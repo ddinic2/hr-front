@@ -5,7 +5,7 @@
               <input type="text" placeholder="Zaposleni" aria-label="Zaposleni" matInput formControlName="employeeAbsenceDetail"
                 [matAutocomplete]="auto">
               <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
-                <mat-option *ngFor="let employee of employeeOptions" [value]="employee">
+                <mat-option *ngFor="let employee of filterOptions" [value]="employee">
                   {{employee.FirstName}} {{employee.Surname}} {{employee.JobTypeName}}
                   <!-- {{option.FirstName}} {{option.Surname}} : {{option.OrgUnitName}} -->
                 </mat-option>
@@ -53,7 +53,7 @@
 
 
   </div>
-  <div>
+  <div class="dates-row">
     <button type="submit" [disabled]="!employeeSickAbsenceForm.valid" mat-raised-button (click)="saveAbsence()">Sačuvaj</button>
     <button type="submit" mat-raised-button (click)="cancelAbsence()">Odustani</button>
   </div>
