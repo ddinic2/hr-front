@@ -98,8 +98,9 @@ export class LeaveFormComponent implements OnInit {
       fromDate: ['', Validators.required],
       toDate: ['', Validators.required],
       replaceEmployee: ['', Validators.required],
-      remainingDays: [''], disabled: true,
-      remainingDaysPreviousYear: ['']
+      remainingDays: [{value: '', disabled: true}],
+      remainingDaysPreviousYear: [{value: '', disabled: true}],
+      totalDays: [{value: '', disabled: true}]
 
     });
 
@@ -113,9 +114,8 @@ export class LeaveFormComponent implements OnInit {
     this.absenceService.getYearVacation(this.loggedId).subscribe(res => {
       this.yearVacation = res;
       this.employeeAbsenceForm.controls['remainingDays'].setValue(this.yearVacation.RemainingDays);
-      this.employeeAbsenceForm.controls['remainingDays'].disable();
       this.employeeAbsenceForm.controls['remainingDaysPreviousYear'].setValue(this.yearVacation.RemainingDaysPreviousYear);
-      this.employeeAbsenceForm.controls['remainingDaysPreviousYear'].disable();
+      this.employeeAbsenceForm.controls['totalDays'].setValue(this.yearVacation.TotalDays);
 
     });
 
@@ -125,14 +125,26 @@ export class LeaveFormComponent implements OnInit {
       this.employeeFamilyDay = res;
   });
 
-    // this.employeeAbsenceForm.controls['fromDate'].valueChanges.subscribe(value => {
-    //   if (value && this.employeeAbsenceForm.controls['toDate'].value) {
-    //     this.subsService.getSubstitutesByDate(value, this.employeeAbsenceForm.controls['toDate'].value, this.loggedUser.value.data.employeeId, this.absenceType).subscribe(result => {
-    //       //this.employeeAbsenceForm.controls['replaceEmployee'].setValue(undefined);
-    //       this.options =  result;
-    //     });
-    //   }
-    // });
+
+    this.employeeAbsenceForm.controls['fromDate'].valueChanges.subscribe(value => {
+      if (value && this.employeeAbsenceForm.controls['toDate'].value) {
+        this.subsService.getSubstitutesByDate(this.employeeAbsenceForm.controls['toDate'].value, value,
+         this.loggedUser.value.data.employeeId, this.absenceType)
+        .subscribe((result) => {
+          if (result == null) {
+            this.snackBar.open('Postoji odsustvo za ovaj vremenski period', 'OK', {
+              duration: 10000,
+              verticalPosition: 'top'
+            });
+            this.employeeAbsenceForm.controls['fromDate'].reset();
+            this.employeeAbsenceForm.controls['toDate'].reset();
+          }
+
+          this.options = result;
+          this.filteredOptions = result;
+        });
+      }
+    });
 
     this.employeeAbsenceForm.controls['toDate'].valueChanges.subscribe(value => {
       if (value && this.employeeAbsenceForm.controls['fromDate'].value) {
