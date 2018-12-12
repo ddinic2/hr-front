@@ -102,3 +102,45 @@ export class How {
   ManagerMark: number;
 }
 
+<<<<<<< Updated upstream
+=======
+export const HOWS: How[] = [
+  {BehaviorDescriptions: 'Skromnost', BehaviorListOfTask: 'Jako je skroman ovaj lik', ManagerGrade: null, EmployeeGrade: null},
+  {BehaviorDescriptions: 'Istrajnost', BehaviorListOfTask: 'Jako je Istrajnost ovaj lik', ManagerGrade: null, EmployeeGrade: null},
+  {BehaviorDescriptions: 'Odlučnost', BehaviorListOfTask: 'Jako je Odlučnost ovaj lik', ManagerGrade: null, EmployeeGrade: null},
+  {BehaviorDescriptions: 'Odnos prema kolegama', BehaviorListOfTask: 'Jako je dobar prema kol.', ManagerGrade: null, EmployeeGrade: null}
+];
+
+export class TotalYearly {
+  Motiv8SurveyAnswer: number;
+  Motiv8Survey: number;
+  TotalMarkWHAT: number;
+  TotalMarkHOW: number;
+  TotalMarkPerformance: number;
+  EmployeePotentialID: number;
+  EmployeePotentialDescription: string;
+  TotalCommentEmployee: string;
+  TotalCommentManager: string;
+}
+
+export class Potential {
+  Motiv8EmployeePotential1: number;
+  PotentialName: string;
+  PotentialCode: string;
+  Created: Date;
+  CreatedBy: Date;
+  Modified: Date;
+  ModifiedBy: number;
+}
+
+export class DevelopmentPlan {
+  Motiv8DevelopmentActionPlan: number;
+  Motiv8SurveyAnswerID: number;
+  DevelopmentNeed: string;
+  DevelopmentAction: string;
+  ResponsibleEmployeeID: number;
+  ResponsibleEmployeeFullName: string;
+  ResponsibleEmployeeHRNumber: string;
+  Deadline: Date;
+}
+>>>>>>> Stashed changes

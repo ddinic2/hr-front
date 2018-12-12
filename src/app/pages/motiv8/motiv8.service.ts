@@ -1,10 +1,12 @@
 import { Injectable } from '@angular/core';
 import { HttpClientModule, HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError , BehaviorSubject, of, from } from 'rxjs';
-import { Test, Status, CategoryOfTask, WhatRequest, WhatHalf, WhatYearly, LoggedUserInfo, How } from 'src/app/models/logged-user-info';
+import { Test, Status, CategoryOfTask, WhatRequest, WhatHalf, WhatYearly,
+  LoggedUserInfo, How, TotalYearly, Potential, DevelopmentPlan } from 'src/app/models/logged-user-info';
 import { catchError, retry } from 'rxjs/operators';
 import 'rxjs/add/operator/catch';
 import { environment } from 'src/environments/environment.prod';
+import { EmployeeMotiv8 } from 'src/app/models/employee';
 
 @Injectable({
   providedIn: 'root'
@@ -94,6 +96,7 @@ export class Motiv8Service {
     return this.http.put<WhatYearly>(url, task);
   }
 
+<<<<<<< Updated upstream
   confirmeEmployeeHalf(task: WhatHalf): Observable<WhatHalf> {
     const url =  environment.db.ROOT2 + 'motiv8/survey-target-eval-hy-approve-employee';
     return this.http.put<WhatHalf>(url, task);
@@ -134,4 +137,37 @@ export class Motiv8Service {
     return this.http.get<LoggedUserInfo>(url);
   }
 
+=======
+  getTotalYearly(id: number): Observable<TotalYearly> {
+    const url = environment.db.ROOT2 + 'motiv8/survey-answer-total-marks?surveyAnswerID=' + id;
+    return this.http.get<TotalYearly>(url);
+  }
+
+  getPotentials(): Observable<Potential> {
+    const url = environment.db.ROOT2 + 'motiv8/employee-potentials';
+    return this.http.get<Potential>(url);
+  }
+
+  addTotalYearly(data) {
+    const url = environment.db.ROOT2 + 'motiv8//survey-answer-total-marks';
+    return this.http.put<TotalYearly>(url, data);
+  }
+
+  getAllEmployees(): Observable<EmployeeMotiv8[]> {
+    const url = environment.db.ROOT2 + 'employee-data';
+    return this.http.get<EmployeeMotiv8[]>(url);
+  }
+
+  getDevelopmentPlan(id): Observable<DevelopmentPlan[]> {
+    return this.http.get<DevelopmentPlan[]>(environment.db.ROOT2 + 'motiv8/survey-answer-development-plans?surveyAnswerID=' + id);
+  }
+
+  addDevelopmentPlanList(data): Observable<DevelopmentPlan[]> {
+    return this.http.put<DevelopmentPlan[]>(environment.db.ROOT2 + 'motiv8/survey-answer-development-plans', data);
+  }
+
+  addDevelopmentPlan(data): Observable<DevelopmentPlan> {
+    return this.http.put<DevelopmentPlan>(environment.db.ROOT2 + 'motiv8/survey-answer-development-plan', data);
+  }
+>>>>>>> Stashed changes
 }
