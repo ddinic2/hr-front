@@ -166,6 +166,8 @@ export class WorksheetsFormComponent implements OnInit {
       if (result) {
           empPresenceList.presenceListStatus = WorksheetsPresenceStatus.Lock;
           this.subService.lockWorksheets(empPresenceList, employeePresenceListID);
+          this.lockWorksheet = true;
+          this.unlockWorksheet = false;
         }
 
       });
