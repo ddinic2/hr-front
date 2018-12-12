@@ -177,7 +177,7 @@ export class WhatRequestComponent implements OnInit {
   getTargetCategory() {
     this.motiv8Serivice.getTargetCategory().subscribe(res => {
       this.categories = res;
-      // console.log('dropdown category', this.categories);
+       console.log('dropdown category', this.categories);
     });
   }
 
@@ -189,12 +189,6 @@ export class WhatRequestComponent implements OnInit {
     });
   }
 
-  // getCurrentUser() {
-  //    this.motiv8Serivice.getDataForLoggedUser(this.loggedUser).subscribe(res => {
-  //      this.currentUser = res;
-  //      console.log('current User what', this.currentUser);
-  //    });
-  //  }
 
   ngOnInit() {
     this.eventsSubscription = this.events.subscribe(res =>  {
@@ -206,8 +200,6 @@ export class WhatRequestComponent implements OnInit {
       });
     this.getTargetCategory();
     this.ifNewForumTrue = false;
-    // this.getTargetWhat();
-    // this.getCurrentUser();
   }
 
 }

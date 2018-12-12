@@ -4,7 +4,7 @@
 
   <form [formGroup]="targetWhat">
     <mat-form-field>
-      <mat-select [(value)]="category" formControlName="TargetCategory" placeholder="Kategorija">
+      <mat-select formControlName="TargetCategory" placeholder="Kategorija">
         <mat-option value={{category.Motiv8TargetCategory1}} *ngFor="let category of categories">{{category.CategoryName}}</mat-option>
       </mat-select>
 
@@ -65,11 +65,11 @@
         {{task.TargetDescription}}
       </li><br>
       <li>
-        <button mat-raised-button *ngIf="task.TargetStatus != 2 || (loggedUser == userToDo.EmployeeID)" (click)="saveAndSendTarget(task)" class="mgtbOne">Sacuvaj i posalji</button>
-        <button mat-raised-button *ngIf="(task.TargetStatusCode == '04' || !task.Motiv8TargetID || (loggedUser == userToDo.EmployeeID))" class="mgtbOne" (click)="deleteUnsaved(i, task.Motiv8TargetID)" color="warn">Obrisi</button>
-        <button mat-raised-button *ngIf="(task.TargetStatusCode == '04')" class="mgtbOne" (click)="edit(task)" color="accent">Izmeni</button>
-        <button mat-raised-button *ngIf="(task.TargetStatusCode == '01')" (click)="reject(task.Motiv8TargetID)" class="mgtbOne myColorGray">Ponisti</button>
-        <button mat-raised-button *ngIf="(task.TargetStatusCode == '01')" (click)="approve(task.Motiv8TargetID)" class="mgtbOne myColorGreen">Odobri</button>
+        <button mat-raised-button *ngIf="task.TargetStatusCode == '04' && (loggedUser == userToDo.EmployeeID)" (click)="saveAndSendTarget(task)" class="mgtbOne">Sacuvaj i posalji</button>
+        <button mat-raised-button *ngIf="(task.TargetStatusCode == '04' && (loggedUser == userToDo.EmployeeID))" class="mgtbOne" (click)="deleteUnsaved(i, task.Motiv8TargetID)" color="warn">Obrisi</button>
+        <button mat-raised-button *ngIf="(task.TargetStatusCode == '04') && (loggedUser == userToDo.EmployeeID)" class="mgtbOne" (click)="edit(task)" color="accent">Izmeni</button>
+        <button mat-raised-button *ngIf="(task.TargetStatusCode == '01') && (loggedUser != userToDo.EmployeeID)" (click)="reject(task.Motiv8TargetID)" class="mgtbOne myColorGray">Ponisti</button>
+        <button mat-raised-button *ngIf="(task.TargetStatusCode == '01') && (loggedUser != userToDo.EmployeeID)" (click)="approve(task.Motiv8TargetID)" class="mgtbOne myColorGreen">Odobri</button>
       </li>
     </ul>
   </div>
