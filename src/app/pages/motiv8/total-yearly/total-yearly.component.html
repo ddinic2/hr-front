@@ -1,6 +1,8 @@
 <div>
   <form [formGroup]="totalGrade" (ngSubmit)="saveAll()" #total="ngForm">
+
     <!-- OCENE -->
+
     <div class="infoCard">
       <mat-form-field class="inline_field">
         <input type="number" required matInput formControlName="totalWHAT" min="1" max="5"
@@ -15,7 +17,9 @@
           placeholder="Ukupna ocena ucinka (1 do 5)"/>
       </mat-form-field>
     </div>
+
     <!-- POTENCIJAL -->
+
     <div class="infoCard">
       <label class="inline_field label" for="potential">Potencijal:</label>
       <mat-form-field class="inline_field" id="potential">
@@ -26,73 +30,84 @@
         </mat-select>
       </mat-form-field>
       <br>
-      <mat-form-field class="inline_field textarea">
+      <mat-form-field class="full-width textarea">
         <textarea formControlName="potentialDesc" matInput placeholder="Unesi tekst"></textarea>
       </mat-form-field>
     </div>
+
+
     <!-- TABELA RAZVOJA -->
+
+
     <div class="infoCard">
-      <!-- TIMS GRID -->
+
       <table mat-table [dataSource]="devPlans" >
 
-        <!--- Note that these columns can be defined in any order.
-              The actual rendered columns are set as a property on the row definition" -->
 
-        <!-- Position Column -->
         <ng-container matColumnDef="DevelopmentNeed">
           <th mat-header-cell *matHeaderCellDef> Razvojna potreba </th>
           <td mat-cell *matCellDef="let element"> {{element.DevelopmentNeed}} </td>
         </ng-container>
 
-        <!-- Name Column -->
         <ng-container matColumnDef="DevelopmentAction">
           <th mat-header-cell *matHeaderCellDef> Aktivnost </th>
           <td mat-cell *matCellDef="let element"> {{element.DevelopmentAction}} </td>
         </ng-container>
 
-        <!-- Weight Column -->
         <ng-container matColumnDef="ResponsibleEmployeeFullName">
           <th mat-header-cell *matHeaderCellDef> Mentor </th>
           <td mat-cell *matCellDef="let element"> {{element.ResponsibleEmployeeFullName}} </td>
         </ng-container>
 
-        <!-- Symbol Column -->
         <ng-container matColumnDef="Deadline">
           <th mat-header-cell *matHeaderCellDef> Rok </th>
           <td mat-cell *matCellDef="let element"> {{element.Deadline}} </td>
         </ng-container>
 
+        <ng-container matColumnDef="Buttons">
+          <th mat-header-cell *matHeaderCellDef></th>
+          <td mat-cell *matCellDef="let element">
+            <button type="button" mat-raised-button color="warn" (click)="deleteDev(element)">Izbrisi</button>
+          </td>
+        </ng-container>
+
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
         <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
       </table>
 
-      <mat-form-field class="inline_field">
-        <input type="text" required matInput formControlName="devNeed"
-          placeholder="Razvojna Potreba"/>
-      </mat-form-field>
-      <mat-form-field class="inline_field">
-        <input type="text" required matInput formControlName="devActivity"
-          placeholder="Aktivnost"/>
-      </mat-form-field>
-      <!-- <mat-form-field>
-        <input type="text" placeholder='Mentor' matInput formControlName="devMentor" [matAutocomplete]="auto" />
-        <mat-autocomplete
-          [displayWith]="objectToString"
-          #auto="matAutocomplete"
-        >
+      <form (ngSubmit)="saveDev()" [formGroup]="devPlan" #devPlanForm="ngForm">
+
+        <mat-form-field class="inline_field">
+          <input type="text" required matInput formControlName="devNeed"
+            placeholder="Razvojna Potreba"/>
+        </mat-form-field>
+        <mat-form-field class="inline_field">
+          <input type="text" required matInput formControlName="devActivity"
+            placeholder="Aktivnost"/>
+        </mat-form-field>
+        <mat-form-field class="inline_field">
+          <input  required type="text" placeholder='Mentor' matInput formControlName="devMentor" [matAutocomplete]="auto" />
+          <mat-autocomplete
+            [displayWith]="objectToString"
+            #auto="matAutocomplete"
+          >
           <div *ngFor="let option of filteredOptions">
-            <mat-option [value]="option" *ngIf="option"> {{ objectToString(option) }} </mat-option>
+            <mat-option [value]="option" *ngIf="option">{{objectToString(option)}}</mat-option>
           </div>
         </mat-autocomplete>
-      </mat-form-field> -->
-      <mat-form-field class="inline_field">
-        <input matInput formControlName="devDeadline" [matDatepicker]="picker" placeholder="Rok">
-        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-        <mat-datepicker #picker></mat-datepicker>
-      </mat-form-field>
-      <button mat-raised-button color="primary" (click)="saveDev()">Dodaj</button>
+        </mat-form-field>
+        <mat-form-field class="inline_field">
+          <input required matInput formControlName="devDeadline" [matDatepicker]="picker" placeholder="Rok">
+          <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
+        </mat-form-field>
+        <button type="submit" mat-raised-button color="primary" [disabled]="!devPlanForm.form.valid">Dodaj</button>
+      </form>
     </div>
+
     <!-- KOMENTARI -->
+
     <div >
       <mat-form-field class="full-width textarea">
         <textarea formControlName="managerComment" matInput placeholder="Komentar poslodavca"></textarea>
@@ -104,6 +119,6 @@
     </div>
 
 
-  <button type="submit" mat-raised-button class="mgtbOne myColorGreen" [disabled]="!total.form.valid">Sacuvaj</button>
+    <button type="submit" mat-raised-button class="mgtbOne myColorGreen" [disabled]="!total.form.valid">Sacuvaj</button>
   </form>
 </div>

@@ -96,7 +96,6 @@ export class Motiv8Service {
     return this.http.put<WhatYearly>(url, task);
   }
 
-<<<<<<< Updated upstream
   confirmeEmployeeHalf(task: WhatHalf): Observable<WhatHalf> {
     const url =  environment.db.ROOT2 + 'motiv8/survey-target-eval-hy-approve-employee';
     return this.http.put<WhatHalf>(url, task);
@@ -137,7 +136,6 @@ export class Motiv8Service {
     return this.http.get<LoggedUserInfo>(url);
   }
 
-=======
   getTotalYearly(id: number): Observable<TotalYearly> {
     const url = environment.db.ROOT2 + 'motiv8/survey-answer-total-marks?surveyAnswerID=' + id;
     return this.http.get<TotalYearly>(url);
@@ -169,5 +167,12 @@ export class Motiv8Service {
   addDevelopmentPlan(data): Observable<DevelopmentPlan> {
     return this.http.put<DevelopmentPlan>(environment.db.ROOT2 + 'motiv8/survey-answer-development-plan', data);
   }
->>>>>>> Stashed changes
+
+  getEmployeeLike(snip): Observable<EmployeeMotiv8[]> {
+    return this.http.get<EmployeeMotiv8[]>(environment.db.ROOT2 + 'employee-data?filterName=' + snip);
+  }
+
+  deleteDevelopmentPlan(id): Observable<any> {
+    return this.http.delete<any>(environment.db.ROOT2 + 'motiv8/survey-answer-development-plan?developmentPlanID=' + id);
+  }
 }

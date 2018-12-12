@@ -2,7 +2,7 @@ import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { LoginService } from 'src/app/shared/shared/login.service';
 import { Motiv8Service } from 'src/app/pages/motiv8/motiv8.service';
 import { LoggedUserInfo } from 'src/app/models/logged-user-info';
-import { Observable } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 @Component({
@@ -22,7 +22,9 @@ export class Motiv8Component implements OnInit {
   // private dataSource = new BehaviorSubject<LoggedUserInfo>(new Data());
   // data = this.dataSource.asObservable();
 
-  @Output() sharedEmployeeData = new EventEmitter<any>();
+  // @Output() sharedEmployeeData = new EventEmitter<any>();
+  eventsSubject: Subject<LoggedUserInfo> = new Subject<LoggedUserInfo>();
+
 
 getLoggedNow() {
   this.loginService.getLoggedInUser().subscribe(res => {
@@ -45,14 +47,14 @@ getDataForEmployee() {
   console.log(this.EmployeeID);
   this.motiv8Service.getDataForLoggedUser(this.EmployeeID).subscribe(res => {
     this.sharedEmployee = res;
-    this.sharedEmployeeData.next(this.sharedEmployee);
+    this.eventsSubject.next(this.sharedEmployee);
     console.log(this.sharedEmployee);
   });
 }
 
 getDataForMe() {
   this.sharedEmployee = this.currentUserInfo;
-  this.sharedEmployeeData.next(this.sharedEmployee);
+  this.eventsSubject.next(this.sharedEmployee);
   console.log('za mene ciljevi', this.sharedEmployee);
 }
 
