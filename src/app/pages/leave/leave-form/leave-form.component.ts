@@ -61,7 +61,7 @@ export class LeaveFormComponent implements OnInit {
     'EmployeeName',
     'FromDate',
     'ToDate',
-    'NumOfdays',
+    'NumOfDays',
     'ExceptionAbsenceName',
     'AbsenceProcessStatusName'
   ];

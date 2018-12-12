@@ -54,7 +54,7 @@ export class SickAbsenceFormComponent implements OnInit {
     'EmployeeName',
     'FromDate',
     'ToDate',
-    'NumOfdays',
+    'NumOfDays',
     'AbsenceProcessStatusName'
   ];
 

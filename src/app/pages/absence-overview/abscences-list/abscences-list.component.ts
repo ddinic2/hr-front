@@ -55,7 +55,7 @@ export class AbscencesListComponent implements OnInit {
     'EmployeeName',
     'FromDate',
     'ToDate',
-    'NumOfdays',
+    'NumOfDays',
     'AbsenceProcessStatusName',
     'AbsenceTypeName',
     'ExceptionAbsenceName',

@@ -54,7 +54,7 @@ export class PaidAbsenceFormComponent implements OnInit {
     'EmployeeName',
     'FromDate',
     'ToDate',
-    'NumOfdays',
+    'NumOfDays',
     'AbsenceSubtype',
     'ExceptionAbsenceName',
     'AbsenceProcessStatusName'
@@ -69,8 +69,8 @@ export class PaidAbsenceFormComponent implements OnInit {
     const year = d.getFullYear();
     const date = d.getDate();
     const holidayDays = new Array();
-    this.holidayDays.filter(function(days){
-      if ( days.Month == month && days.Year == year) {
+    this.holidayDays.filter(function(days) {
+      if ( days.Month === month && days.Year === year) {
         holidayDays.push(days.DateOfHoliday);
       }
     });
@@ -168,22 +168,9 @@ export class PaidAbsenceFormComponent implements OnInit {
       ) => this.absenceService.getAbscences(order, direction, page, count, status, absenceType, this.loggedId, this.roleId)
 
 
-      private _filter(name: string): any[] {
-        if (this.employeeOptions !== undefined) {
-          this.employeeOptions = this.employeeOptions;
-          return this.employeeOptions.filter(
-            (option: any) =>
-              option.FirstName!.toLowerCase().indexOf(name.toLowerCase()) === 0
-          );
-          // return this.options.filter(
-          //   (option: any) =>  option.FullName.includes(name.toLocaleLowerCase())
-          // );
-        }
-      }
 
       displayFn(employee: any): string | undefined {
         if (employee != null) {
-            //return typeof (option) === 'string' ? option : `${option.FirstName ? option.FirstName : 'nema ime'} ${option.Surname ? option.Surname : 'nema prezime'}`;
             return typeof (employee) === 'string' ? employee : `${employee.FirstName} ${employee.Surname} ${employee.JobTypeName}`;
         }
 
