@@ -17,11 +17,16 @@ export class WhatRequestComponent implements OnInit {
   // tslint:disable-next-line:max-line-length
   constructor(private fb: FormBuilder, public snackBar: MatSnackBar, private motiv8Serivice: Motiv8Service) {}
 
+   eventsSubscription: any;
+
   @Input() loggedUser: any;
   @Input() sharedEmployeeData: LoggedUserInfo;
-  @Input() event: EventEmitter;
 
-  currentUser: LoggedUserInfo;
+  @Input() events: Observable<LoggedUserInfo>;
+
+  // currentUser: LoggedUserInfo;
+
+  userToDo: LoggedUserInfo;
 
   targetWhat = this.fb.group({
     TargetCategory: [''],
@@ -47,10 +52,6 @@ export class WhatRequestComponent implements OnInit {
 
   ifNewForumTrue: boolean;
 
-  sharedEmployeeDataToChild(event) {
-    console.log('evo ga evventtt!!!', event);
-  }
-
   addTask() {
     console.log(this.targetWhat.value);
 
@@ -70,26 +71,27 @@ export class WhatRequestComponent implements OnInit {
     }
 
     if (this.targetWhat.value.Motiv8TargetID) {
+
       this.motiv8Serivice.updateWhatTask(this.targetWhat.value).subscribe(res => {
         if ( res ) {
           this.snackBar.open('Uspesno izmenjen cilj.', 'OK', {
             duration: 4000,
           });
-          this.getTargetWhat();
+          this.getTargetWhat(this.userToDo.SurveyAnswerID);
         }
        } );
     }
 
     if (!this.targetWhat.value.Motiv8TargetID) {
       this.targetWhat.value.Motiv8TargetID = -1;
-      this.targetWhat.value.Motiv8SurveyAnswerID = 2;
+     this.targetWhat.value.Motiv8SurveyAnswerID = this.userToDo.SurveyAnswerID;
       this.targetWhat.value.TargetCategory = Number(this.targetWhat.value.TargetCategory);
       this.motiv8Serivice.addNewWhatRequest(this.targetWhat.value).subscribe(res => {
         if ( res ) {
           this.snackBar.open('Uspesno dodat novi cilj.', 'OK', {
             duration: 4000,
           });
-          this.getTargetWhat();
+          this.getTargetWhat(this.userToDo.SurveyAnswerID);
         }
       });
     }
@@ -109,7 +111,7 @@ export class WhatRequestComponent implements OnInit {
           this.snackBar.open('Uspesno obrisan cilj.', 'OK', {
             duration: 4000,
           });
-          this.getTargetWhat();
+          this.getTargetWhat(this.userToDo.SurveyAnswerID);
         }
        }
        );
@@ -144,7 +146,7 @@ export class WhatRequestComponent implements OnInit {
         this.snackBar.open('Odbili ste cilj.', 'OK', {
           duration: 4000,
         });
-        this.getTargetWhat();
+        this.getTargetWhat(this.userToDo.SurveyAnswerID);
       }
     } );
   }
@@ -155,7 +157,7 @@ export class WhatRequestComponent implements OnInit {
         this.snackBar.open('Uspesno set odobrili cilj.', 'OK', {
           duration: 4000,
         });
-        this.getTargetWhat();
+        this.getTargetWhat(this.userToDo.SurveyAnswerID);
       }
     });
   }
@@ -167,7 +169,7 @@ export class WhatRequestComponent implements OnInit {
         this.snackBar.open('Uspesno cuvanje i porosledjivanje cilja.', 'OK', {
           duration: 4000,
         });
-        this.getTargetWhat();
+        this.getTargetWhat(task.Motiv8SurveyAnswerID);
       }
     });
   }
@@ -179,25 +181,33 @@ export class WhatRequestComponent implements OnInit {
     });
   }
 
-  getTargetWhat() {
-    this.motiv8Serivice.getTargetWhat(2).subscribe(res => {
+  getTargetWhat(id) {
+    this.motiv8Serivice.getTargetWhat(id).subscribe(res => {
       this.tasks = res;
       console.log('tab 1', this.tasks);
+      console.log('ulogovani ID', this.loggedUser);
     });
   }
 
-  getCurrentUser() {
-     this.motiv8Serivice.getDataForLoggedUser(this.loggedUser).subscribe(res => {
-       this.currentUser = res;
-       console.log('current User what', this.currentUser);
-     });
-   }
+  // getCurrentUser() {
+  //    this.motiv8Serivice.getDataForLoggedUser(this.loggedUser).subscribe(res => {
+  //      this.currentUser = res;
+  //      console.log('current User what', this.currentUser);
+  //    });
+  //  }
 
   ngOnInit() {
+    this.eventsSubscription = this.events.subscribe(res =>  {
+      this.userToDo = res;
+      console.log('prosledjeni', this.userToDo);
+      if (res) {
+        this.getTargetWhat(this.userToDo.SurveyAnswerID);
+      }
+      });
     this.getTargetCategory();
     this.ifNewForumTrue = false;
-    this.getTargetWhat();
-    this.getCurrentUser();
+    // this.getTargetWhat();
+    // this.getCurrentUser();
   }
 
 }
