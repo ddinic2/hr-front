@@ -35,10 +35,10 @@ export class WhatHalfComponent implements OnInit {
   });
 
   commentArea = this.fb.group({
-    TargetEmployeeComment: [''],
-    TargetManagerComment: [''],
-    TargetActionPlane: [''],
-    Motiv8SurveyAnswerID: ['']
+    CommentEmployeeHY: [''],
+    CommentManagerHY: [''],
+    AgreedActionPlanHY: [''],
+    Motiv8SurveyAnswer: ['']
   });
 
   categories: CategoryOfTask[];
@@ -74,6 +74,15 @@ export class WhatHalfComponent implements OnInit {
 
   addComment() {
     alert('dodaj komentar');
+    this.commentArea.value.Motiv8SurveyAnswer = 2;
+    this.motiv8Service.addCommentHalf(this.commentArea.value).subscribe(res => {
+      if (res) {
+        this.snackBar.open('Uspesno ste ostavili komentar.', 'OK', {
+          duration: 4000
+        });
+        this.commentArea.reset();
+      }
+    });
   }
 
   saveExistTask() {
@@ -99,6 +108,28 @@ export class WhatHalfComponent implements OnInit {
     });
     this.employeeWhat.reset();
     this.ifNewForumTrue = false;
+  }
+
+  confirmeEmployee(task) {
+    this.motiv8Service.confirmeEmployeeHalf(task).subscribe(res => {
+      if (res) {
+        this.snackBar.open('Uspesno ste potvrdili.', 'OK', {
+          duration: 4000
+        });
+        this.getTargetWhatHalf();
+      }
+    });
+  }
+
+  confirmeManager(task) {
+    this.motiv8Service.confirmeManagerHalf(task).subscribe(res => {
+      if (res) {
+        this.snackBar.open('Uspesno ste potvrdili.', 'OK', {
+          duration: 4000
+        });
+        this.getTargetWhatHalf();
+      }
+    });
   }
 
   constructor(

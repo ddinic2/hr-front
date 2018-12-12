@@ -1,7 +1,18 @@
+<div *ngIf="currentUserInfo.EmployeeIsManager" class="row"><mat-form-field>
+    <mat-select [(value)]="EmployeeID">
+      <mat-option *ngFor="let item of listOfEmployeeByManager" value="{{ item.EmployeeID }}">{{item.EmployeeFullName}}</mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <button class="mySelectButton" mat-raised-button (click)="getDataForEmployee()">Prikazi ciljeva za odabranog zapolenog</button>
+  <button class="mySelectButton" mat-raised-button (click)="getDataForMe()">Moji ciljevi</button>
+</div>
+
 <hr-info-card [loggedUser]="currentUser"></hr-info-card>
 <mat-tab-group>
   <mat-tab label="Godisnji WHAT obrazac">
-    <hr-what-request [loggedUser]="currentUser"></hr-what-request>
+    <hr-what-request [loggedUser]="currentUser" (sharedEmployeeData)='sharedEmployeeDataToChild($event)' ></hr-what-request>
+      <!-- [sharedEmployeeData]="sharedEmployeeData" -->
    </mat-tab>
   <mat-tab label="Polugodisnja WHAT ocena">
      <hr-what-half [loggedUser]="currentUser"></hr-what-half>
@@ -10,7 +21,7 @@
   <hr-what-yearly [loggedUser]="currentUser"></hr-what-yearly>
   </mat-tab>
   <mat-tab label="Godisnji HOW">
-    <hr-how></hr-how>
+    <hr-how [loggedUser]="currentUser"></hr-how>
   </mat-tab>
   <mat-tab label="Ukupna godisnja ocena"> Ukupna godisnja ocena </mat-tab>
 </mat-tab-group>

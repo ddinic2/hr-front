@@ -1,11 +1,11 @@
 <div class="row" *ngIf="ifNewForumTrue">
 
     <form [formGroup]="employeeWhat">
-      <mat-form-field>
+      <!-- <mat-form-field>
         <mat-select [(value)]="category" formControlName="TargetCategory" placeholder="Kategorija">
           <mat-option value={{category.Motiv8TargetCategory1}} *ngFor="let category of categories">{{category.CategoryName}}</mat-option>
         </mat-select>
-      </mat-form-field>
+      </mat-form-field> -->
 
       <mat-form-field>
           <mat-select [(value)]="status" formControlName="TargetEvaluationStatus" placeholder="Status">
@@ -51,12 +51,16 @@
         <li>
           <small>Opis:</small><br>
           {{task.TargetDescription}}
+        </li>
+        <li *ngIf="task.TargetEvaluationProgressPercent">
+          <small>Procenat zavrsenog:</small><br>
+          {{task.TargetEvaluationProgressPercent}}
         </li><br>
         <li>
             <!-- <button mat-raised-button class="mgtbOne">Sacuvaj i posalji</button> -->
-            <button mat-raised-button class="mgtbOne" (click)="edit(task)" color="accent">Izmeni</button>
-            <button mat-raised-button class="mgtbOne myColorGray">Potvrdi (zaposleni)</button>
-            <button mat-raised-button class="mgtbOne myColorGreen">Potvrdi (rukovodilac)</button>
+            <button mat-raised-button class="mgtbOne" (click)="edit(task)" color="accent" *ngIf="!task.ApprovedByEmployee">Izmeni</button>
+            <button mat-raised-button class="mgtbOne myColorGray" (click)="confirmeEmployee(task)" *ngIf="!task.ApprovedByEmployee">Potvrdi (zaposleni)</button>
+            <button mat-raised-button class="mgtbOne myColorGreen" (click)="confirmeManager(task)" *ngIf="!task.ApprovedByManager">Potvrdi (rukovodilac)</button>
           </li>
       </ul>
     </div>
@@ -66,15 +70,15 @@
   <div class="row">
     <form [formGroup]="commentArea">
       <mat-form-field class="full-width">
-        <textarea matInput required formControlName="TargetEmployeeComment" placeholder="Komentar podnosioca"></textarea>
+        <textarea matInput required formControlName="CommentEmployeeHY" placeholder="Komentar podnosioca"></textarea>
       </mat-form-field>
 
       <mat-form-field class="full-width">
-        <textarea matInput required formControlName="TargetManagerComment" placeholder="Komentar nadredjenog"></textarea>
+        <textarea matInput required formControlName="CommentManagerHY" placeholder="Komentar nadredjenog"></textarea>
       </mat-form-field>
 
       <mat-form-field class="full-width">
-        <textarea matInput required formControlName="TargetActionPlane" placeholder="Dogovoreni akcioni plan"></textarea>
+        <textarea matInput required formControlName="AgreedActionPlanHY" placeholder="Dogovoreni akcioni plan"></textarea>
       </mat-form-field>
     </form>
 

@@ -36,7 +36,7 @@
   </form>
   <button mat-raised-button class="mgB" color="myColor" (click)="addTask()">Sacuvaj</button>
 </div>
-<ng-container *ngIf="tasks">
+<ng-container *ngIf="tasks && pickedUserInfo">
 
   <div class="infoCard" *ngFor="let task of tasks; let i = index">
     <ul class="inline">
@@ -65,7 +65,7 @@
         {{task.TargetDescription}}
       </li><br>
       <li>
-        <button mat-raised-button *ngIf="(task.TargetStatusCode != '01')" (click)="saveAndSendTarget(task)" class="mgtbOne">Sacuvaj i posalji</button>
+        <button mat-raised-button *ngIf="task.TargetStatus != 2 || (task.TargetStatusCode == '01')" (click)="saveAndSendTarget(task)" class="mgtbOne">Sacuvaj i posalji</button>
         <button mat-raised-button *ngIf="(task.TargetStatusCode == '04' || !task.Motiv8TargetID)" class="mgtbOne" (click)="deleteUnsaved(i, task.Motiv8TargetID)" color="warn">Obrisi</button>
         <button mat-raised-button *ngIf="(task.TargetStatusCode == '04')" class="mgtbOne" (click)="edit(task)" color="accent">Izmeni</button>
         <button mat-raised-button *ngIf="(task.TargetStatusCode == '01')" (click)="reject(task.Motiv8TargetID)" class="mgtbOne myColorGray">Ponisti</button>

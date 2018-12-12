@@ -1,19 +1,19 @@
-
-  .half{
-    width: 40%;
-    float: left;
-  }
-  .halfFirst{
-    width: 40%;
-    float: left;
-  }
-  .inlineList> li{
-    display: inline-block;
-    list-style-type: none;
-  }
-  mat-form-field{
-    width: 220px;
-  }
-  .inlineList>li{
-    margin-right: 10px;
-  }
+mat-form-field{
+  width: 220px;
+}
+.row{
+  width: 100%;
+}
+.myItem{
+  -webkit-box-shadow: 11px -4px 44px -12px rgba(172, 171, 172, 0.945);
+  -moz-box-shadow: 11px -4px 44px -12px rgba(138, 135, 138, 0.945);
+  box-shadow: 11px -4px 44px -12px rgba(138, 135, 138, 0.945);
+  border: 1px solid lightgray;
+  border-radius: 5px;
+  margin-top: 5px;
+  padding: 10px;
+  margin-bottom: 10px;
+}
+mat-form-field{
+  margin-right: 30px;
+}

@@ -94,4 +94,44 @@ export class Motiv8Service {
     return this.http.put<WhatYearly>(url, task);
   }
 
+  confirmeEmployeeHalf(task: WhatHalf): Observable<WhatHalf> {
+    const url =  environment.db.ROOT2 + 'motiv8/survey-target-eval-hy-approve-employee';
+    return this.http.put<WhatHalf>(url, task);
+  }
+
+  confirmeManagerHalf(task: WhatHalf): Observable<WhatHalf> {
+    const url = environment.db.ROOT2 + 'motiv8/survey-target-eval-hy-approve-manager';
+    return this.http.put<WhatHalf>(url, task);
+  }
+
+  approveEmployeeYearly(task: WhatYearly): Observable<WhatYearly> {
+    const url = environment.db.ROOT2 + 'motiv8/survey-target-eval-fy-approve-employee';
+    return this.http.put<WhatYearly>(url, task);
+  }
+
+  approveManagerYearly(task: WhatYearly): Observable<WhatYearly> {
+    const url = environment.db.ROOT2 + 'motiv8/survey-target-eval-fy-approve-manager';
+    return this.http.put<WhatYearly>(url, task);
+  }
+
+  getListOfHow(id): Observable<How> {
+    const url = environment.db.ROOT2 + 'motiv8/survey-answer-behavior-marks?surveyAnswerID=' + id;
+    return this.http.get<How>(url);
+  }
+
+  addHow(task): Observable<How> {
+    const url = environment.db.ROOT2 + 'motiv8/survey-answer-behavior-marks';
+    return this.http.put<How>(url, task);
+  }
+
+  addCommentHalf(task): Observable<any> {
+    const url = environment.db.ROOT2 + 'motiv8/survey-eval-hy';
+    return this.http.put<any>(url, task);
+  }
+
+  getEmployeeByManager(id): Observable<LoggedUserInfo> {
+    const url = environment.db.ROOT2 + 'motiv8/survey-sub-employees?employeeID=' + id;
+    return this.http.get<LoggedUserInfo>(url);
+  }
+
 }

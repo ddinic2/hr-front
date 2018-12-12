@@ -1,22 +1,22 @@
 <div class="row" *ngIf="ifNewForumTrue">
 
   <form [formGroup]="employeeWhat">
-    <mat-form-field>
+    <!-- <mat-form-field>
       <mat-select [(value)]="category" formControlName="CategoryName" placeholder="Kategorija">
         <mat-option value={{category.Motiv8TargetCategory1}} *ngFor="let category of categories">{{category.CategoryName}}</mat-option>
       </mat-select>
-    </mat-form-field>
+    </mat-form-field> -->
 
     <mat-form-field>
       <input required matInput formControlName="MeasurableResult" placeholder="Merljiv rezultat">
     </mat-form-field>
 
     <mat-form-field>
-      <input type="number" required matInput formControlName="TargetEmployeeGrade" min="1" max="5" placeholder="Ocena zaposlenog (1 do 5)">
+      <input type="number" required matInput formControlName="TargetEmployeeMark" min="1" max="5" placeholder="Ocena zaposlenog (1 do 5)">
     </mat-form-field>
 
     <mat-form-field>
-      <input type="number" required matInput formControlName="TargetManagerGrade" min="1" max="5" placeholder="Ocena nadredjenog (1 do 5)">
+      <input type="number" required matInput formControlName="TargetManagerMark" min="1" max="5" placeholder="Ocena nadredjenog (1 do 5)">
     </mat-form-field><br>
 
     <mat-form-field class="full-width">
@@ -62,12 +62,20 @@
       <li>
         <small>Opis:</small><br>
         {{task.TargetDescription}}
+      </li>
+      <li *ngIf="task.TargetEmployeeMark">
+        <small>Ocena zaposlenog:</small><br>
+        {{task.TargetEmployeeMark}}
+      </li>
+      <li *ngIf="task.TargetManagerMark">
+        <small>Ocena nadredjenog:</small><br>
+        {{task.TargetManagerMark}}
       </li><br>
       <li>
         <!-- <button mat-raised-button class="mgtbOne">Sacuvaj i posalji</button> -->
         <button mat-raised-button class="mgtbOne" (click)="edit(task)" color="accent">Izmeni</button>
-        <button mat-raised-button class="mgtbOne myColorGray">Sacuvaj i prosledi (zaposleni)</button>
-        <button mat-raised-button class="mgtbOne myColorGreen">Sacuvaj i potvrdi (rukovodilac)</button>
+        <button mat-raised-button class="mgtbOne myColorGray" *ngIf="task.TargetEmployeeMark" (click)="approveEmployee(task)">Sacuvaj i prosledi (zaposleni)</button>
+        <button mat-raised-button class="mgtbOne myColorGreen" *ngIf="task.TargetManagerMark" (click)="approveManager(task)">Sacuvaj i potvrdi (rukovodilac)</button>
       </li>
     </ul>
   </div>

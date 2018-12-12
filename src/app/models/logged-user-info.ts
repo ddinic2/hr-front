@@ -11,6 +11,8 @@ export class LoggedUserInfo {
   EmployeeGrade: number;
   SurveyStartDate: Date;
   SurveyEndDate: Date;
+  EmployeeIsManager: boolean;
+  SurveyAnswerID: number;
 }
 
 export class Category {
@@ -91,15 +93,12 @@ export class WhatYearly {
 }
 
 export class How {
-  BehaviorDescriptions: string;
-  BehaviorListOfTask: string;
-  ManagerGrade: number;
-  EmployeeGrade: number;
+  Motiv8SurveyBehaviorAnswerID: number;
+  Motiv8SurveyBehaviorType: number;
+  BehaviorCode: string;
+  BehaviorName: string;
+  BehaviorDescription: string;
+  EmployeeMark: number;
+  ManagerMark: number;
 }
 
-export const HOWS: How[] = [
-  {BehaviorDescriptions: 'Skromnost', BehaviorListOfTask: 'Jako je skroman ovaj lik', ManagerGrade: null, EmployeeGrade: null},
-  {BehaviorDescriptions: 'Istrajnost', BehaviorListOfTask: 'Jako je Istrajnost ovaj lik', ManagerGrade: null, EmployeeGrade: null},
-  {BehaviorDescriptions: 'Odlučnost', BehaviorListOfTask: 'Jako je Odlučnost ovaj lik', ManagerGrade: null, EmployeeGrade: null},
-  {BehaviorDescriptions: 'Odnos prema kolegama', BehaviorListOfTask: 'Jako je dobar prema kol.', ManagerGrade: null, EmployeeGrade: null}
-];

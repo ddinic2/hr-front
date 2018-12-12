@@ -3,6 +3,8 @@ import { Category, Test, CategoryOfTask, WhatRequest, LoggedUserInfo } from 'src
 import { FormGroup, FormControl, FormBuilder } from '@angular/forms';
 import { MatSnackBar } from '@angular/material';
 import { Motiv8Service } from '../motiv8.service';
+import { Observable } from 'rxjs';
+import { EventEmitter } from 'events';
 
 
 @Component({
@@ -12,12 +14,14 @@ import { Motiv8Service } from '../motiv8.service';
 })
 export class WhatRequestComponent implements OnInit {
   // categories: Category[];
-  constructor(private fb: FormBuilder, public snackBar: MatSnackBar, private motiv8Serivice: Motiv8Service) { }
+  // tslint:disable-next-line:max-line-length
+  constructor(private fb: FormBuilder, public snackBar: MatSnackBar, private motiv8Serivice: Motiv8Service) {}
 
   @Input() loggedUser: any;
+  @Input() sharedEmployeeData: LoggedUserInfo;
+  @Input() event: EventEmitter;
 
   currentUser: LoggedUserInfo;
-
 
   targetWhat = this.fb.group({
     TargetCategory: [''],
@@ -42,6 +46,11 @@ export class WhatRequestComponent implements OnInit {
 
 
   ifNewForumTrue: boolean;
+
+  sharedEmployeeDataToChild(event) {
+    console.log('evo ga evventtt!!!', event);
+  }
+
   addTask() {
     console.log(this.targetWhat.value);
 
@@ -173,7 +182,7 @@ export class WhatRequestComponent implements OnInit {
   getTargetWhat() {
     this.motiv8Serivice.getTargetWhat(2).subscribe(res => {
       this.tasks = res;
-      // console.log('tasks what', this.tasks);
+      console.log('tab 1', this.tasks);
     });
   }
 
