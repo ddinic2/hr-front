@@ -5,9 +5,10 @@ import * as _ from 'lodash';
 import { Motiv8Service } from '../motiv8.service';
 import { getViewData } from '@angular/core/src/render3/instructions';
 import { TotalYearly, WhatYearly, DevelopmentPlan, LoggedUserInfo } from 'src/app/models/logged-user-info';
-import { MatSnackBar } from '@angular/material';
+import { MatSnackBar, throwMatDialogContentAlreadyAttachedError } from '@angular/material';
 
 const lod = _;
+
 @Component({
   selector: 'hr-total',
   templateUrl: './total-yearly.component.html',
@@ -23,18 +24,17 @@ export class TotalYearlyComponent implements OnInit {
   data = new TotalYearly();
 
   // autocomplete
-  minimalChars = 3;
+  minimalChars = 2;
   filteredOptions;
-  source: Function;
   searchCriteria = 'default';
   lastValue = '';
-  filterFields = ['EmployeeFullName'];
+  filterFields = ['FirstName', 'Surname'];
 
   selectedPotential;
   potentialOptions;
   // plan razvoja
-  devPlans;
-  displayedColumns = ['DevelopmentNeed', 'DevelopmentAction', 'ResponsibleEmployeeFullName', 'Deadline'];
+  devPlans = [];
+  displayedColumns = ['DevelopmentNeed', 'DevelopmentAction', 'ResponsibleEmployeeFullName', 'Deadline', 'Buttons'];
 
   constructor(private formBuilder: FormBuilder,  private service: Motiv8Service, public snackBar: MatSnackBar ) {
 
@@ -47,7 +47,10 @@ export class TotalYearlyComponent implements OnInit {
     potential: [''],
     potentialDesc: [''],
     managerComment: [''],
-    employeeComment: [''],
+    employeeComment: ['']
+  });
+
+  devPlan = this.formBuilder.group({
     devActivity: [''],
     devMentor: [''],
     devNeed: [''],
@@ -55,23 +58,29 @@ export class TotalYearlyComponent implements OnInit {
   });
 
   ngOnInit() {
-    this.service.getTotalYearly(this.user).subscribe(data => {
-      this.data = data;
-      this.patchValues();
+    this.service.getDataForLoggedUser(this.user).subscribe(data => {
+      this.userData = data;
+      this.service.getTotalYearly(this.userData.SurveyAnswerID).subscribe(res => {
+        this.data = res;
+        this.patchValues();
+      });
+      this.service.getPotentials().subscribe(res => this.potentialOptions = res);
+      this.service.getDevelopmentPlan(this.userData.SurveyAnswerID).subscribe(res => this.devPlans = res);
     });
-    this.service.getPotentials().subscribe(data => this.potentialOptions = data);
-    this.service.getDevelopmentPlan(this.user).subscribe(data => this.devPlans = data);
-    this.service.getDataForLoggedUser(this.user).subscribe(data => this.userData = data);
+  this.handleAutocomplete();
   }
 
   patchValues() {
-    this.totalGrade.controls.totalWHAT.patchValue(this.data.TotalMarkWHAT);
-    this.totalGrade.controls.totalHOW.patchValue(this.data.TotalMarkHOW);
-    this.totalGrade.controls.total.patchValue(this.data.TotalMarkPerformance);
-    this.totalGrade.controls.potential.patchValue(this.data.EmployeePotentialID);
-    this.totalGrade.controls.potentialDesc.patchValue(this.data.EmployeePotentialDescription);
-    this.totalGrade.controls.employeeComment.patchValue(this.data.TotalCommentEmployee);
-    this.totalGrade.controls.managerComment.patchValue(this.data.TotalCommentManager);
+    if (!this.data) {
+      return;
+    }
+    this.totalGrade.controls.totalWHAT.setValue(this.data.TotalMarkWHAT ? this.data.TotalMarkWHAT : undefined);
+    this.totalGrade.controls.totalHOW.setValue(this.data.TotalMarkHOW ? this.data.TotalMarkHOW : undefined);
+    this.totalGrade.controls.total.setValue(this.data.TotalMarkPerformance ? this.data.TotalMarkPerformance : undefined);
+    this.totalGrade.controls.potential.setValue(this.data.EmployeePotentialID);
+    this.totalGrade.controls.potentialDesc.setValue(this.data.EmployeePotentialDescription);
+    this.totalGrade.controls.employeeComment.setValue(this.data.TotalCommentEmployee);
+    this.totalGrade.controls.managerComment.setValue(this.data.TotalCommentManager);
   }
 
   getField = (source, fieldPath: string) => lod.get(source, fieldPath, '');
@@ -80,10 +89,10 @@ export class TotalYearlyComponent implements OnInit {
     const object = this.createDevPlan();
     if (object) {
       this.service.addDevelopmentPlan(object).subscribe(data => {
-        console.log('USPEH');
-        this.snackBar.open('Uspesno uneseni podaci', 'OK', {
-          duration: 4000
+        this.service.getDevelopmentPlan(this.userData.SurveyAnswerID).subscribe(res => {
+          this.devPlans = res;
         });
+        this.throwOk();
       });
     }
   }
@@ -91,77 +100,88 @@ export class TotalYearlyComponent implements OnInit {
   createDevPlan() {
     const object = new DevelopmentPlan();
 
-    object.Deadline = this.totalGrade.controls.devDeadline.value;
-    object.DevelopmentAction = this.totalGrade.controls.devActivity.value;
-    object.DevelopmentNeed = this.totalGrade.controls.devNeed.value;
+    object.Deadline = this.devPlan.controls.devDeadline.value;
+    object.DevelopmentAction = this.devPlan.controls.devActivity.value;
+    object.DevelopmentNeed = this.devPlan.controls.devNeed.value;
     object.Motiv8SurveyAnswerID = this.data.Motiv8SurveyAnswer;
-    object.ResponsibleEmployeeFullName = this.userData.EmployeeFullName;
-    object.ResponsibleEmployeeHRNumber = this.userData.EmployeeHRNumber;
-    object.ResponsibleEmployeeID = this.userData.EmployeeID;
+    object.ResponsibleEmployeeFullName = this.devPlan.controls.devMentor.value.FirstName +
+     ' ' + this.devPlan.controls.devMentor.value.Surname;
+    object.ResponsibleEmployeeHRNumber = this.devPlan.controls.devMentor.value.EmployeeHRNumber;
+    object.ResponsibleEmployeeID = this.devPlan.controls.devMentor.value.EmployeeID;
 
     return object;
   }
 
-  saveToDatabase(row) {
-    console.log(row);
+  deleteDev = (element: DevelopmentPlan) => {
+    console.log(element);
+    if (!element) {
+      this.throwError();
+    } else {
+      this.service.deleteDevelopmentPlan(element.Motiv8DevelopmentActionPlan).subscribe(data => {
+        if (data === 1) {
+          this.throwOk();
+          this.service.getDevelopmentPlan(this.userData.SurveyAnswerID).subscribe(res => {
+            this.devPlans = res;
+          });
+        } else {
+          this.throwError();
+        }
+      });
+    }
   }
 
+  handleAutocomplete = () => {
+    if (this.minimalChars === 0) {
+      this.service.getEmployeeLike('').subscribe(result => {
+        this.filteredOptions = result;
+      });
+  }
+      this.devPlan.controls.devMentor.valueChanges
+        .pipe(
+          debounceTime(500),
+          map(value => (value && typeof value === 'string' ? value : ''))
+        )
+        .subscribe(value => {
+          if (value.length >= (this.minimalChars - 1 > 0 ? this.minimalChars : 0)) {
+            if (value.includes(this.lastValue) && this.lastValue && this.lastValue.length < value.length) {
+              this.filteredOptions = this._filter(value);
+            } else {
+              this.service.getEmployeeLike(value).subscribe(result => {
+                this.filteredOptions = result;
+              });
+            }
+            this.lastValue = value;
+          }
+        });
+  }
+  private _filter(value: string) {
+    const filterValue = value.toLowerCase();
 
+    if (!this.filteredOptions) {
+      return;
+    }
 
-  // handleAutocomplete() {
-  //   if (this.minimalChars === 0) {
-  //     this.service('value', this.searchCriteria).subscribe(result => {
-  //       this.filteredOptions = result;
-  //     });
-  // }
+    return this.filteredOptions.filter(option => {
+      let include = false;
+      let str;
+      this.filterFields.forEach(element => {
+        str = this.getField(option, element) ? this.getField(option, element).toLowerCase() : '';
+        include = include || str.includes(filterValue);
+      });
+      return (
+        include ||
+        this.objectToString(option)
+         .toLowerCase()
+          .includes(filterValue)
+      );
+    });
+  }
 
-  //   if (this.source) {
-  //     this.totalGrade.controls.devMentor.valueChanges
-  //       .pipe(
-  //         debounceTime(500),
-  //         map(value => (value && typeof value === 'string' ? value : ''))
-  //       )
-  //       .subscribe(value => {
-  //         if (value.length >= (this.minimalChars - 1 > 0 ? this.minimalChars : 0)) {
-  //           if (value.includes(this.lastValue) && this.lastValue && this.lastValue.length < value.length) {
-  //             this.filteredOptions = this._filter(value);
-  //           } else {
-  //             this.source(value, this.searchCriteria).subscribe(result => {
-  //               console.log(this.searchCriteria);
-  //               console.log(result);
-  //               this.filteredOptions = result;
-  //             });
-  //           }
-  //           this.lastValue = value;
-  //         }
-  //       });
-  //   }
-  // }
-  // private _filter(value: string) {
-  //   const filterValue = value.toLowerCase();
-
-  //   if (!this.filteredOptions) {
-  //     return;
-  //   }
-
-  //   return this.filteredOptions.filter(option => {
-  //     let include = false;
-  //     let str;
-  //     this.filterFields.forEach(element => {
-  //       str = this.getField(option, element) ? this.getField(option, element) : '';
-  //       include = include || str.includes(filterValue);
-  //     });
-  //     return (
-  //       include ||
-  //       this.objectToString(option)
-  //        .toLowerCase()
-  //         .includes(filterValue)
-  //     );
-  //   });
-  // }
-
-  objectToString(option) {
-    return this.getField(option, 'EmployeeFullName');
+  objectToString = (option) => {
+    if (!option) {
+      return '';
+    }
+    return this.getField(option, 'FirstName') + ' ' + this.getField(option, 'Surname');
   }
 
   // da li je zaposleni ili rukovodilac
@@ -173,18 +193,19 @@ export class TotalYearlyComponent implements OnInit {
     const object = this.createObject();
     this.service.addTotalYearly(object).subscribe(data => {
       if (data) {
-        this.snackBar.open('Uspesan unos podataka', 'OK', {
-          duration: 4000,
-        });
+        this.throwOk();
       } else {
-        this.snackBar.open('Doslo je do greske pri cuvanju podataka', 'OK', {
-          duration: 4000,
-        });
+        this.throwError();
       }
     }) ;
   }
 
   createObject() {
+
+    if (!this.data) {
+      this.throwOk();
+    }
+
     const object = new TotalYearly();
 
     object.Motiv8Survey = this.data.Motiv8Survey;
@@ -199,6 +220,18 @@ export class TotalYearlyComponent implements OnInit {
 
     console.log(object);
     return object;
+  }
+
+  throwOk() {
+    this.snackBar.open('Uspesno', 'OK', {
+      duration: 4000,
+    });
+  }
+
+  throwError() {
+    this.snackBar.open('Doslo je do greske', 'OK', {
+      duration: 4000,
+    });
   }
 
 }
