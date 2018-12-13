@@ -75,10 +75,10 @@ export class AbscenceService {
   }
 
   changeAbsenceStatusFromMail = (employeeId: string, employeeAbsence: string, exceptionAbsence: string, numOfDays: string,
-    absenceProcessStatusNew: string, loggedUserEmail: string, loggedUserRoleId: string, loggedUserId: string) => {
+    absenceProcessStatusNew: string, absenceType: string, loggedUserEmail: string, loggedUserRoleId: string, loggedUserId: string) => {
     const url = environment.db.ROOT + environment.db.ABSCENCE + environment.db.CHANGE_ABSENCE_STATUS;
-   const  obj = {employeeId, employeeAbsence, exceptionAbsence,
-    absenceProcessStatusNew, loggedUserEmail, loggedUserRoleId, loggedUserId };
+   const  obj = {employeeId, employeeAbsence, exceptionAbsence, numOfDays, absenceProcessStatusNew,absenceType,
+     loggedUserEmail, loggedUserRoleId, loggedUserId };
        return this.http.post(url, obj);
    }
 
@@ -94,10 +94,11 @@ export class AbscenceService {
   //   }
 
 
-  generateDocument = (employeeAbsence: number, employeeId: number, absenceType: number,
-    loggedUserId: number, loggedUserEmail: string, loggedUserRoleId: number) => {
+  generateDocument = (employeeAbsence: number, employeeId: number, absenceType: number, absenceProcessStatus: number,
+    loggedUserId: number, loggedUserEmail: string, loggedUserRoleId: number, absenceProcessStatusNew: number) => {
     const url = environment.db.ROOT + environment.db.ABSCENCE + environment.db.GENERATE_DOCUMENT;
-    const obj = {employeeAbsence, employeeId, absenceType, loggedUserId, loggedUserEmail, loggedUserRoleId };
+    const obj = {employeeAbsence, employeeId, absenceType, absenceProcessStatus,
+       loggedUserId, loggedUserEmail, loggedUserRoleId, absenceProcessStatusNew };
       return this.http.post(url, obj, {
         responseType: 'blob',
         observe: 'response',

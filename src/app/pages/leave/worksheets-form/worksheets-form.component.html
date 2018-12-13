@@ -41,6 +41,7 @@
     <button type="submit" mat-raised-button (click)="lockWorksheets()" *ngIf='roleId === rolaRecord && unlockWorksheet'> Zaključaj radnu listu</button>
     <button type="submit" mat-raised-button (click)="unlockWorksheets()" *ngIf='roleId === rolaHRManager  && lockWorksheet'> Otključaj radnu listu</button>
     <button type="submit" mat-raised-button (click)="saveWorksheets()" *ngIf='roleId === rolaRecord ? true : false'> Sačuvaj</button>
+    <button (click)="download()">download </button>
     <i style="padding-left: 10px;" class="fa fa-lock fa-2x" aria-hidden="true" *ngIf='lockWorksheet'></i>
     <i style="padding-left: 10px;" class="fa fa-unlock fa-2x" aria-hidden="true" *ngIf='unlockWorksheet'></i>
   </div>

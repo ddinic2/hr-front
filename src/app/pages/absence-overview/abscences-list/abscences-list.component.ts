@@ -116,8 +116,8 @@ export class AbscencesListComponent implements OnInit {
 
   remove = item => {
     const absenceId = item.EmployeeAbsence;
-    if (item.AbsenceProcessStatus !== AbsenceProcessStatus.Approved && this.loggedId !== item.EmployeeId.toString()
-    && this.roleId === Roles.HRManager.toString()) {
+    if ((item.AbsenceProcessStatus !== AbsenceProcessStatus.Approved || item.AbsenceProcessStatus !== AbsenceProcessStatus.Generate )
+      && this.loggedId !== item.EmployeeId.toString() && this.roleId === Roles.HRManager.toString()) {
       this.service.removeAbsence(absenceId).subscribe(res => {
         this.retPostData = res;
          this.snackBar.open(this.retPostData, 'OK', {
@@ -219,7 +219,7 @@ export class AbscencesListComponent implements OnInit {
       const loggedUserId = this.loggedUser.value.data.employeeId;
 
     this.service.changeAbsenceStatusFromMail(employeeId, employeeAbsence, exceptionAbsence, numOfDays,
-      absenceProcessStatusNew, loggedUserEmail, loggedUserRoleId, loggedUserId)
+      absenceProcessStatusNew, absenceType,  loggedUserEmail, loggedUserRoleId, loggedUserId)
       .subscribe(res => {
         queryParams.AbsenceProcessStatusName = res;
         this.performRefresh();
@@ -245,7 +245,7 @@ export class AbscencesListComponent implements OnInit {
           const loggedUserId = this.loggedUser.value.data.employeeId;
 
           this.service.changeAbsenceStatusFromMail(employeeId, employeeAbsence, exceptionAbsence, numOfDays,
-            absenceProcessStatusNew, loggedUserEmail, loggedUserRoleId, loggedUserId)
+            absenceProcessStatusNew, absenceType, loggedUserEmail, loggedUserRoleId, loggedUserId)
             .subscribe(res => {
               queryParams.AbsenceProcessStatusName = res;
               this.performRefresh();
@@ -259,11 +259,13 @@ export class AbscencesListComponent implements OnInit {
     if (item.AbsenceProcessStatus === AbsenceProcessStatus.Approved && this.roleId === Roles.HRManager.toString()
     && this.loggedId !== item.EmployeeId.toString()) {
       item.LoggedUserId = this.loggedUser.value.data.employeeId;
-    item.LoggedUserEmail = this.loggedUser.value.data.employeeEmail;
-    item.LoggedUserRoleId = this.loggedUser.value.data.roleId;
-    this.service.generateDocument(item.EmployeeAbsence, item.EmployeeId, item.AbsenceType,
-    item.LoggedUserId, item.LoggedUserEmail, item.LoggedUserRoleId )
+      item.LoggedUserEmail = this.loggedUser.value.data.employeeEmail;
+      item.LoggedUserRoleId = this.loggedUser.value.data.roleId;
+      item.AbsenceProcessStatusNew = AbsenceProcessStatus.Generate;
+    this.service.generateDocument(item.EmployeeAbsence, item.EmployeeId, item.AbsenceType, item.AbsenceProcessStatus,
+    item.LoggedUserId, item.LoggedUserEmail, item.LoggedUserRoleId, item.AbsenceProcessStatusNew )
     .subscribe(data => {
+      this.performRefresh();
         let thefile = {};
         thefile = data;
         //thefile = new File(data, 'data.xlsx');
@@ -291,7 +293,7 @@ export class AbscencesListComponent implements OnInit {
   }
 
   link = item => {
-    if (this.roleId === Roles.HRManager.toString() && item.AbsenceProcessStatus === AbsenceProcessStatus.Approved
+    if (this.roleId === Roles.HRManager.toString() && item.AbsenceProcessStatus === AbsenceProcessStatus.Generate
     && this.loggedId !== item.EmployeeId.toString()) {
       this.service.getDocument(item.EmployeeAbsence, item.EmployeeId)
       .subscribe(data => {
@@ -318,7 +320,7 @@ export class AbscencesListComponent implements OnInit {
 
       });
     } else {
-      this.snackBar.open('Dokument nije u statusu "odobren" ili nemate pravana da otvorite dokument!', 'OK', {
+      this.snackBar.open('Dokument nije u statusu "Generisan" ili nemate pravana da otvorite dokument!', 'OK', {
         duration: 10000,
         verticalPosition: 'top'
         });

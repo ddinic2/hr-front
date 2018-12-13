@@ -15,6 +15,11 @@ import { forEach } from '@angular/router/src/utils/collection';
 import * as _moment from 'moment';
 import * as lodash from 'lodash';
 import { Roles } from 'src/app/models/enums/role';
+import * as jsPDF from 'jspdf-autotable';
+
+
+//declare let jsPDF;
+
 
 const _ = lodash;
 
@@ -49,14 +54,14 @@ export class WorksheetsFormComponent implements OnInit {
   unlockWorksheet: boolean;
 
 
-
 @ViewChildren('inputs') inputs;
 
   constructor(private _fromBuilder: FormBuilder,
      public subService: SubstituteService,
       public loginService: LoginService,
        public dialog: MatDialog,
-        public snackBar: MatSnackBar) {
+        public snackBar: MatSnackBar,
+        ) {
     this.worksheetsForm = this._fromBuilder.group({
       orgUnit: [''],
       year: [''],
@@ -198,6 +203,35 @@ export class WorksheetsFormComponent implements OnInit {
   }
 
   }
+
+
+
+  download() {
+
+    const columns = [
+      {title: 'ID', dataKey: 'id'},
+      {title: 'Name', dataKey: 'name'},
+      {title: 'Country', dataKey: 'country'}
+  ];
+  const rows = [
+      {'id': 1, 'name': 'Shaw', 'country': 'Tanzania'},
+      {'id': 2, 'name': 'Nelson', 'country': 'Kazakhstan'},
+      {'id': 3, 'name': 'Garcia', 'country': 'Madagascar'}
+  ];
+
+    // const doc = new jsPDF();
+    // doc.text(20, 20, 'Hello world!');
+    // doc.text(20, 30, 'This is client-side Javascript, pumping out a PDF.');
+    // doc.addPage();
+    // doc.text(20, 20, 'Do you like that?');
+
+    // // Save the PDF
+    // doc.save('RadnaLista.pdf');
+
+    const doc = new jsPDF('p', 'pt');
+    doc.autoTable(columns, rows);
+    doc.save('table.pdf');
+}
 
 
 
