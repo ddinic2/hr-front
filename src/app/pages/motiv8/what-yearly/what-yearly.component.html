@@ -11,11 +11,11 @@
       <input required matInput formControlName="MeasurableResult" placeholder="Merljiv rezultat">
     </mat-form-field>
 
-    <mat-form-field>
+    <mat-form-field *ngIf="(loggedUser == userToDo.EmployeeID)">
       <input type="number" required matInput formControlName="TargetEmployeeMark" min="1" max="5" placeholder="Ocena zaposlenog (1 do 5)">
     </mat-form-field>
 
-    <mat-form-field>
+    <mat-form-field *ngIf="!(loggedUser == userToDo.EmployeeID)">
       <input type="number" required matInput formControlName="TargetManagerMark" min="1" max="5" placeholder="Ocena nadredjenog (1 do 5)">
     </mat-form-field><br>
 
@@ -23,11 +23,11 @@
       <textarea matInput required formControlName="TargetDescription" placeholder="Opis"></textarea>
     </mat-form-field><br>
 
-    <mat-form-field class="full-width">
+    <mat-form-field *ngIf="(loggedUser == userToDo.EmployeeID)" class="full-width">
       <textarea matInput required formControlName="TargetEmployeeComment" placeholder="Komentar zaposlenog"></textarea>
     </mat-form-field>
 
-    <mat-form-field class="full-width">
+    <mat-form-field *ngIf="!(loggedUser == userToDo.EmployeeID)" class="full-width">
       <textarea matInput required formControlName="TargetManagerComment" placeholder="Komentar nadredjenog"></textarea>
     </mat-form-field>
 
@@ -73,9 +73,9 @@
       </li><br>
       <li>
         <!-- <button mat-raised-button class="mgtbOne">Sacuvaj i posalji</button> -->
-        <button mat-raised-button class="mgtbOne" (click)="edit(task)" color="accent">Izmeni</button>
-        <button mat-raised-button class="mgtbOne myColorGray" *ngIf="task.TargetEmployeeMark" (click)="approveEmployee(task)">Sacuvaj i prosledi (zaposleni)</button>
-        <button mat-raised-button class="mgtbOne myColorGreen" *ngIf="task.TargetManagerMark" (click)="approveManager(task)">Sacuvaj i potvrdi (rukovodilac)</button>
+        <button mat-raised-button class="mgtbOne" (click)="edit(task)" color="accent">Izmeni / oceni</button>
+        <button mat-raised-button class="mgtbOne myColorGray" *ngIf="task.TargetEmployeeMark && (loggedUser == userToDo.EmployeeID) && !task.ApprovedByEmployee" (click)="approveEmployee(task)">Sacuvaj i prosledi (zaposleni)</button>
+        <button mat-raised-button class="mgtbOne myColorGreen" *ngIf="task.TargetManagerMark && !(loggedUser == userToDo.EmployeeID)" (click)="approveManager(task)">Sacuvaj i potvrdi (rukovodilac)</button>
       </li>
     </ul>
   </div>

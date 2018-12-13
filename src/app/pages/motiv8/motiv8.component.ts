@@ -19,10 +19,6 @@ export class Motiv8Component implements OnInit {
   EmployeeID = null;
   sharedEmployee: any;
 
-  // private dataSource = new BehaviorSubject<LoggedUserInfo>(new Data());
-  // data = this.dataSource.asObservable();
-
-  // @Output() sharedEmployeeData = new EventEmitter<any>();
   eventsSubject: Subject<LoggedUserInfo> = new Subject<LoggedUserInfo>();
 
 

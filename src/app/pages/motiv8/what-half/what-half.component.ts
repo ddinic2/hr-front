@@ -9,6 +9,7 @@ import {
 } from 'src/app/models/logged-user-info';
 import { MatSnackBar } from '@angular/material';
 import { Motiv8Service } from '../motiv8.service';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'hr-what-half',
@@ -43,9 +44,14 @@ export class WhatHalfComponent implements OnInit {
 
   categories: CategoryOfTask[];
   statuses: Status[];
+  comments: any;
 
+  eventsSubscription: any;
   currentUser: LoggedUserInfo;
   @Input() loggedUser;
+  @Input() events: Observable<LoggedUserInfo>;
+
+  userToDo: LoggedUserInfo;
 
   edit(task) {
     console.log('izabrani', task);
@@ -73,14 +79,26 @@ export class WhatHalfComponent implements OnInit {
   }
 
   addComment() {
-    alert('dodaj komentar');
-    this.commentArea.value.Motiv8SurveyAnswer = 2;
+    // if (!this.commentArea.value.AgreedActionPlanHY) {
+    //   this.snackBar.open('Molimo Vas popunite sva polja ispravno.', 'OK', {
+    //     duration: 4000
+    //   });
+    //   return;
+    // }
+    if (Number(this.loggedUser) !== this.userToDo.EmployeeID) {
+      this.commentArea.value.CommentEmployeeHY = this.comments[0].CommentEmployeeHY;
+      this.commentArea.value.AgreedActionPlanHY = this.comments[0].AgreedActionPlanHY;
+    }
+    this.commentArea.value.Motiv8SurveyAnswer = this.tasks[0].Motiv8SurveyAnswerID;
     this.motiv8Service.addCommentHalf(this.commentArea.value).subscribe(res => {
       if (res) {
         this.snackBar.open('Uspesno ste ostavili komentar.', 'OK', {
           duration: 4000
         });
         this.commentArea.reset();
+        this.motiv8Service.getCommentForHY(this.tasks[0].Motiv8SurveyAnswerID).subscribe(res1 => {
+          this.comments = res1;
+        });
       }
     });
   }
@@ -152,27 +170,37 @@ export class WhatHalfComponent implements OnInit {
   }
 
   getTargetWhatHalf() {
-    this.motiv8Service.getTargetWhatHalf(this.loggedUser).subscribe(res => {
+    this.motiv8Service.getTargetWhatHalf(this.userToDo.SurveyAnswerID).subscribe(res => {
       this.tasks = res;
       console.log('res tab 2', this.tasks);
+      this.motiv8Service.getCommentForHY(this.tasks[0].Motiv8SurveyAnswerID).subscribe(res1 => {
+        this.comments = new Array(res1);
+      });
     });
   }
 
   // tslint:disable-next-line:member-ordering
   ifNewForumTrue: boolean;
 
-  getCurrentUser() {
-    this.motiv8Service.getDataForLoggedUser(this.loggedUser).subscribe(res => {
-      this.currentUser = res;
-      console.log('current User what Half', this.currentUser);
-    });
-  }
+  // getCurrentUser() {
+  //   this.motiv8Service.getDataForLoggedUser(this.loggedUser).subscribe(res => {
+  //     this.currentUser = res;
+  //     console.log('current User what Half', this.currentUser);
+  //   });
+  // }
   ngOnInit() {
+    this.eventsSubscription = this.events.subscribe(res =>  {
+      this.userToDo = res;
+      console.log('prosledjeni', this.userToDo);
+      if (res) {
+        this.getTargetWhatHalf();
+      }
+      });
     this.getStatusOfTask();
     this.getTargetCategory();
 
     this.ifNewForumTrue = false;
-    this.getTargetWhatHalf();
-    this.getCurrentUser();
+    // this.getTargetWhatHalf();
+    // this.getCurrentUser();
   }
 }

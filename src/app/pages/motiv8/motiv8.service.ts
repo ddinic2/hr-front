@@ -175,4 +175,9 @@ export class Motiv8Service {
   deleteDevelopmentPlan(id): Observable<any> {
     return this.http.delete<any>(environment.db.ROOT2 + 'motiv8/survey-answer-development-plan?developmentPlanID=' + id);
   }
+
+  getCommentForHY(id): Observable<any> {
+    const url = environment.db.ROOT2 + 'motiv8/survey-eval-hy?surveyID=' + id;
+    return this.http.get<any>(url);
+  }
 }

@@ -3,6 +3,7 @@ import { FormGroup, FormControl, FormBuilder } from '@angular/forms';
 import { CategoryOfTask, Status, WhatYearly, LoggedUserInfo } from 'src/app/models/logged-user-info';
 import { MatSnackBar } from '@angular/material';
 import { Motiv8Service } from '../motiv8.service';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'hr-what-yearly',
@@ -29,14 +30,19 @@ export class WhatYearlyComponent implements OnInit {
 
   @Input() loggedUser;
 
+  @Input() events: Observable<LoggedUserInfo>;
+
+  userToDo: LoggedUserInfo;
+  eventsSubscription: any;
+
   categories: CategoryOfTask[];
 
   ifNewForumTrue: boolean;
 
-  currentUser: LoggedUserInfo;
+  // currentUser: LoggedUserInfo;
 
   edit(task) {
-    console.log('izabrani', task);
+    // console.log('izabrani', task);
     this.ifNewForumTrue = true;
     this.employeeWhat.patchValue({
       CategoryName: task.CategoryName,
@@ -50,11 +56,11 @@ export class WhatYearlyComponent implements OnInit {
       TargetEvaluationPeriod: task.TargetEvaluationPeriod,
       Motiv8TargetID: task.Motiv8TargetID
     });
-    console.log('nova vrednost', this.employeeWhat.value);
+    // console.log('nova vrednost', this.employeeWhat.value);
   }
 
   getWhatYearly() {
-    this.motiv8Serivice.getTargetWhatYearly(this.loggedUser).subscribe(res => {
+    this.motiv8Serivice.getTargetWhatYearly(this.userToDo.SurveyAnswerID).subscribe(res => {
       this.tasks = res;
       console.log('tab 3', this.tasks);
     });
@@ -69,16 +75,16 @@ export class WhatYearlyComponent implements OnInit {
 
   saveExistTask() {
     // tslint:disable-next-line:max-line-length
-    if (this.currentUser.EmployeeManagerID) {
+    if (Number(this.loggedUser) !== this.userToDo.EmployeeID) {
       // tslint:disable-next-line:max-line-length
-      if (!this.employeeWhat.value.TargetMagnagerMark || !this.employeeWhat.value.TargetManagerComment || Number(this.employeeWhat.value.TargetMagnagerMark) > 5 || Number(this.employeeWhat.value.TargetMagnagerMark) < 1 ) {
+      if (!this.employeeWhat.value.TargetManagerMark || !this.employeeWhat.value.TargetManagerComment || Number(this.employeeWhat.value.TargetManagerMark) > 5 || Number(this.employeeWhat.value.TargetManagerMark) < 1 ) {
         this.snackBar.open('Molimo Vas popunite sva polja ispravno.', 'OK', {
           duration: 4000,
         });
         return;
       }
     }
-    if (!this.currentUser.EmployeeManagerID) {
+    if (Number(this.loggedUser) === this.userToDo.EmployeeID) {
       // tslint:disable-next-line:max-line-length
       if (!this.employeeWhat.value.TargetEmployeeMark || !this.employeeWhat.value.TargetEmployeeComment  || Number(this.employeeWhat.value.TargetEmployeeMark) > 5 || Number(this.employeeWhat.value.TargetEmployeeMark) < 1 ) {
         this.snackBar.open('Molimo Vas popunite sva polja ispravno.', 'OK', {
@@ -121,17 +127,24 @@ export class WhatYearlyComponent implements OnInit {
     });
   }
 
-  getCurrentUser() {
-    this.motiv8Serivice.getDataForLoggedUser(this.loggedUser).subscribe(res => {
-      this.currentUser = res;
-      // console.log('current User what', this.currentUser);
-    });
-  }
+  // getCurrentUser() {
+  //   this.motiv8Serivice.getDataForLoggedUser(this.loggedUser).subscribe(res => {
+  //     this.currentUser = res;
+  //     // console.log('current User what', this.currentUser);
+  //   });
+  // }
 
   ngOnInit() {
+    this.eventsSubscription = this.events.subscribe(res =>  {
+      this.userToDo = res;
+      console.log('prosledjeni', this.userToDo);
+      if (res) {
+        this.getWhatYearly();
+      }
+      });
     this.ifNewForumTrue = false;
-    this.getWhatYearly();
+    // this.getWhatYearly();
     this.getTargetCategory();
-    this.getCurrentUser();
+    // this.getCurrentUser();
   }
 }

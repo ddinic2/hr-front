@@ -60,3 +60,10 @@ mat-form-field{
   background-color: #616161;
   color: white;
 }
+
+.myCommentList>li{
+  list-style-type: none;
+  display: inline-block;
+  margin-top: 5px;
+  margin-bottom: 2px;
+}

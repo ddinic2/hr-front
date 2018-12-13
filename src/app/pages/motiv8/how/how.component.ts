@@ -3,6 +3,7 @@ import { How, LoggedUserInfo } from 'src/app/models/logged-user-info';
 import { FormBuilder , FormsModule } from '@angular/forms';
 import { Motiv8Service } from '../motiv8.service';
 import { MatSnackBar } from '@angular/material';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'hr-how',
@@ -12,24 +13,15 @@ import { MatSnackBar } from '@angular/material';
 export class HowComponent implements OnInit {
 
   @Input() loggedUser;
+  @Input() events: Observable<LoggedUserInfo>;
 
-  currentUser: any;
+  userToDo: LoggedUserInfo;
+  eventsSubscription: any;
+
   tasks: any;
   task: How;
-  temp: any;
 
   constructor(private fb: FormBuilder, public snackBar: MatSnackBar , private motiv8Service: Motiv8Service) { }
-
-  gradeHow = this.fb.group({
-    EmployeeGradeFor1: [''],
-    ManagerGradeFor1: [''],
-    EmployeeGradeFor2: [''],
-    ManagerGradeFor2: [''],
-    EmployeeGradeFor3: [''],
-    ManagerGradeFor3: [''],
-    EmployeeGradeFor4: [''],
-    ManagerGradeFor4: ['']
-  });
 
   save() {
    console.log('task my val', this.tasks);
@@ -38,33 +30,27 @@ export class HowComponent implements OnInit {
       this.snackBar.open('Uspesno ste sacuvali.', 'OK', {
         duration: 4000
       });
-      this.getHowList(this.temp);
+      this.getHowList();
      }
    });
   }
 
-  getHowList(id) {
-    this.motiv8Service.getListOfHow(id).subscribe(res => {
+  getHowList() {
+    this.motiv8Service.getListOfHow(this.userToDo.SurveyAnswerID).subscribe(res => {
       this.tasks = res;
       console.log('taskovi HOW', this.tasks);
     });
   }
 
 
-  getCurrentUser() {
-    this.motiv8Service.getDataForLoggedUser(this.loggedUser).subscribe(res => {
-      this.currentUser = res;
-      if (this.currentUser) {
-        this.temp =  this.currentUser.EmployeeID;
-        this.getHowList(this.temp);
-      }
-      console.log('current User HOW', this.currentUser);
-    });
-  }
-
-
   ngOnInit() {
-    this.getCurrentUser();
+    this.eventsSubscription = this.events.subscribe(res =>  {
+      this.userToDo = res;
+      console.log('prosledjeni', this.userToDo);
+      if (res) {
+        this.getHowList();
+      }
+      });
   }
 
 }

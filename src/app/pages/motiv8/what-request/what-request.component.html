@@ -70,7 +70,7 @@
         <button mat-raised-button *ngIf="(task.TargetStatusCode == '04') && (loggedUser == userToDo.EmployeeID)" class="mgtbOne" (click)="edit(task)" color="accent">Izmeni</button>
         <button mat-raised-button *ngIf="(task.TargetStatusCode == '01') && (loggedUser != userToDo.EmployeeID)" (click)="reject(task.Motiv8TargetID)" class="mgtbOne myColorGray">Ponisti</button>
         <button mat-raised-button *ngIf="(task.TargetStatusCode == '01') && (loggedUser != userToDo.EmployeeID)" (click)="approve(task.Motiv8TargetID)" class="mgtbOne myColorGreen">Odobri</button>
-      </li>
+       </li>
     </ul>
   </div>
 
