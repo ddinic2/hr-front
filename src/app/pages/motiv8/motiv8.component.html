@@ -1,6 +1,6 @@
 <hr-info-card [loggedUser]="currentUser"></hr-info-card>
 
-<div class="row"><mat-form-field>
+<div *ngIf="ifData === true" class="row"><mat-form-field>
     <mat-select [(value)]="EmployeeID">
       <mat-option *ngFor="let item of listOfEmployeeByManager" value="{{ item.EmployeeID }}">{{item.EmployeeFullName}}</mat-option>
     </mat-select>

@@ -6,7 +6,7 @@
       </mat-select>
     </mat-form-field> -->
     <mat-form-field>
-        <mat-select [(value)]="status" formControlName="TargetEvaluationStatus" placeholder="Status">
+        <mat-select formControlName="TargetEvaluationStatus" placeholder="Status">
           <mat-option value={{status.Motiv8TargetEvaluationStatus1}} *ngFor="let status of statuses">{{status.StatusName}}</mat-option>
         </mat-select>
       </mat-form-field>
@@ -50,25 +50,25 @@
       <li>
           <!-- <button mat-raised-button class="mgtbOne">Sacuvaj i posalji</button> -->
           <button mat-raised-button class="mgtbOne" (click)="edit(task)" color="accent" *ngIf="!task.ApprovedByEmployee && (loggedUser == userToDo.EmployeeID)">Izmeni</button>
-          <button mat-raised-button class="mgtbOne myColorGray" (click)="confirmeEmployee(task)" *ngIf="!task.ApprovedByEmployee && (loggedUser == userToDo.EmployeeID) && task.TargetEvaluationProgressPercent">Potvrdi (zaposleni)</button>
-          <button mat-raised-button class="mgtbOne myColorGreen" (click)="confirmeManager(task)" *ngIf="!task.ApprovedByManager && !(loggedUser == userToDo.EmployeeID)">Potvrdi (rukovodilac)</button>
+          <button mat-raised-button class="mgtbOne myColorGray" (click)="confirmeEmployee(task)" *ngIf="!task.ApprovedByEmployee && (userToDo && loggedUser == userToDo.EmployeeID) && task.TargetEvaluationProgressPercent">Potvrdi (zaposleni)</button>
+          <button mat-raised-button class="mgtbOne myColorGreen" (click)="confirmeManager(task)" *ngIf="!task.ApprovedByManager && !(userToDo && loggedUser == userToDo.EmployeeID)">Potvrdi (rukovodilac)</button>
         </li>
     </ul>
   </div>
 </ng-container>
 <div *ngIf="tasks" class="row">
   <form [formGroup]="commentArea">
-    <mat-form-field *ngIf="(loggedUser == userToDo.EmployeeID)" class="full-width">     <!-- && !comments[0].CommentEmployeeHY -->
+    <mat-form-field *ngIf="(userToDo && loggedUser == userToDo.EmployeeID)" class="full-width">     <!-- && !comments[0].CommentEmployeeHY -->
       <textarea matInput required formControlName="CommentEmployeeHY" placeholder="Komentar podnosioca"></textarea>
     </mat-form-field>
-    <mat-form-field *ngIf="!(loggedUser == userToDo.EmployeeID)" class="full-width">
+    <mat-form-field *ngIf="!(userToDo && loggedUser == userToDo.EmployeeID)" class="full-width">
       <textarea matInput required formControlName="CommentManagerHY" placeholder="Komentar nadredjenog"></textarea>
     </mat-form-field>
-    <mat-form-field *ngIf="(loggedUser == userToDo.EmployeeID)" class="full-width">
+    <mat-form-field *ngIf="(userToDo && loggedUser == userToDo.EmployeeID)" class="full-width">
       <textarea matInput required formControlName="AgreedActionPlanHY" placeholder="Dogovoreni akcioni plan"></textarea>
     </mat-form-field>
   </form>
-  <button [disabled]="((loggedUser == userToDo.EmployeeID) && comments[0].CommentEmployeeHY && comments[0].AgreedActionPlanHY) && comments[0].CommentManagerHY" mat-raised-button class="mgtbOne" (click)="addComment()" color="accent">Dodaj komentar</button>
+  <button [disabled]="((userToDo && loggedUser == userToDo.EmployeeID) && comments && comments[0].CommentEmployeeHY && comments[0].AgreedActionPlanHY) && comments[0].CommentManagerHY" mat-raised-button class="mgtbOne" (click)="addComment()" color="accent">Dodaj komentar</button>
 </div>
 <ul class="myCommentList" *ngIf="comments">
   <li *ngFor="let comment of comments">

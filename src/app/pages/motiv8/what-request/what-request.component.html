@@ -1,4 +1,4 @@
-<button *ngIf="!ifNewForumTrue && (loggedUser == userToDo.EmployeeID)" mat-raised-button class="mgTB" (click)="openNewForm()" color="primary">Dodaj novi</button>
+<button *ngIf="!ifNewForumTrue && (userToDo && loggedUser == userToDo.EmployeeID)" mat-raised-button class="mgTB" (click)="openNewForm()" color="primary">Dodaj novi</button>
 
 <div class="row" *ngIf="ifNewForumTrue">
 

@@ -29,6 +29,7 @@ getLoggedNow() {
     // console.log('Motiv 8 controler CURR us', this.currentUser);
       this.motiv8Service.getDataForLoggedUser(this.currentUser).subscribe(res2 => {
         this.currentUserInfo = res2;
+        this.ifData = true;
          console.log('Motiv 8 controler CURR us INFO', this.currentUserInfo);
         if (this.currentUserInfo.EmployeeIsManager) {
           this.motiv8Service.getEmployeeByManager(this.currentUserInfo.EmployeeID).subscribe(res3 => {

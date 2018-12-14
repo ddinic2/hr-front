@@ -20,7 +20,7 @@
 
     <!-- POTENCIJAL -->
 
-    <div class="infoCard">
+    <div *ngIf="canEdit() === true" class="infoCard">
       <label class="inline_field label" for="potential">Potencijal:</label>
       <mat-form-field class="inline_field" id="potential">
         <mat-select formControlName="potential" [(value)]="selectedPotential">

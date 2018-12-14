@@ -240,7 +240,7 @@ export class TotalYearlyComponent implements OnInit {
 
   // da li je zaposleni ili rukovodilac
   canEdit(): boolean {
-    return this.loggedUserData.EmployeeIsManager && this.loggedUserData.EmployeeID !== this.userData.EmployeeID;
+    return this.loggedUserData && this.loggedUserData.EmployeeIsManager && this.loggedUserData.EmployeeID !== this.userData.EmployeeID;
   }
 
   saveAll() {
