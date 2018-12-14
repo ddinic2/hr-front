@@ -67,7 +67,8 @@
         <ng-container matColumnDef="Buttons">
           <th mat-header-cell *matHeaderCellDef></th>
           <td mat-cell *matCellDef="let element">
-            <button type="button" mat-raised-button color="warn" (click)="deleteDev(element)">Izbrisi</button>
+            <button type="button" mat-raised-button color="warn" [disabled]="canEdit() === false" (click)="deleteDev(element)">Obrisi</button>
+            <button *ngIf="isDevEdit !== true" style="margin-left: 15px" type="button" mat-raised-button color="accent" [disabled]="canEdit() === false" (click)="editDev(element)">Izmeni</button>
           </td>
         </ng-container>
 
@@ -75,35 +76,37 @@
         <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
 
       </table>
+      <div *ngIf="canEdit() === true">
+        <form (ngSubmit)="saveDev()" [formGroup]="devPlan" #devPlanForm="ngForm">
 
-      <form (ngSubmit)="saveDev()" [formGroup]="devPlan" #devPlanForm="ngForm">
-
-        <mat-form-field class="inline_field">
-          <input type="text" required matInput formControlName="devNeed"
-            placeholder="Razvojna Potreba"/>
-        </mat-form-field>
-        <mat-form-field class="inline_field">
-          <input type="text" required matInput formControlName="devActivity"
-            placeholder="Aktivnost"/>
-        </mat-form-field>
-        <mat-form-field class="inline_field">
-          <input  required type="text" placeholder='Mentor' matInput formControlName="devMentor" [matAutocomplete]="auto" />
-          <mat-autocomplete
-            [displayWith]="objectToString"
-            #auto="matAutocomplete"
-          >
-          <div *ngFor="let option of filteredOptions">
-            <mat-option [value]="option" *ngIf="option">{{objectToString(option)}}</mat-option>
-          </div>
-        </mat-autocomplete>
-        </mat-form-field>
-        <mat-form-field class="inline_field">
-          <input required matInput formControlName="devDeadline" [matDatepicker]="picker" placeholder="Rok">
-          <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-          <mat-datepicker #picker></mat-datepicker>
-        </mat-form-field>
-        <button type="submit" mat-raised-button color="primary" [disabled]="!devPlanForm.form.valid">Dodaj</button>
-      </form>
+          <mat-form-field class="inline_field">
+            <input type="text" required matInput formControlName="devNeed"
+              placeholder="Razvojna Potreba"/>
+          </mat-form-field>
+          <mat-form-field class="inline_field">
+            <input type="text" required matInput formControlName="devActivity"
+             placeholder="Aktivnost"/>
+          </mat-form-field>
+          <mat-form-field class="inline_field">
+            <input  required type="text" placeholder='Mentor' matInput formControlName="devMentor" [matAutocomplete]="auto" />
+            <mat-autocomplete
+              [displayWith]="objectToString"
+              #auto="matAutocomplete"
+            >
+            <div *ngFor="let option of filteredOptions">
+              <mat-option [value]="option" *ngIf="option">{{objectToString(option)}}</mat-option>
+            </div>
+          </mat-autocomplete>
+          </mat-form-field>
+          <mat-form-field class="inline_field">
+            <input required matInput formControlName="devDeadline" [matDatepicker]="picker" placeholder="Rok">
+            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+          </mat-form-field>
+          <button *ngIf="isDevEdit === true" style="margin-left: 15px" type="button" mat-raised-button color="accent" [disabled]="canEdit() === false" (click)="saveDev()">Izmeni</button>
+          <button *ngIf="isDevEdit !== true" type="submit" style="margin-left: 15px" mat-raised-button class="mgtbOne myColorGreen" [disabled]="!devPlanForm.form.valid">Dodaj</button>
+        </form>
+      </div>
     </div>
 
     <!-- KOMENTARI -->
@@ -118,7 +121,8 @@
       </mat-form-field>
     </div>
 
-
-    <button type="submit" mat-raised-button class="mgtbOne myColorGreen" [disabled]="!total.form.valid">Sacuvaj</button>
+    <div *ngIf="canEdit() === true">
+      <button type="submit" mat-raised-button class="mgtbOne myColorGreen" [disabled]="!total.form.valid">Sacuvaj</button>
+    </div>
   </form>
 </div>

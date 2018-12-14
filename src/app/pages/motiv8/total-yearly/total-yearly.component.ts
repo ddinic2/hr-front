@@ -6,6 +6,7 @@ import { Motiv8Service } from '../motiv8.service';
 import { getViewData } from '@angular/core/src/render3/instructions';
 import { TotalYearly, WhatYearly, DevelopmentPlan, LoggedUserInfo } from 'src/app/models/logged-user-info';
 import { MatSnackBar, throwMatDialogContentAlreadyAttachedError } from '@angular/material';
+import { Observable } from 'rxjs';
 
 const lod = _;
 
@@ -18,6 +19,12 @@ export class TotalYearlyComponent implements OnInit {
 
   @Input()
   user;
+  loggedUserData: LoggedUserInfo;
+
+  @Input()
+  events: Observable<LoggedUserInfo>;
+  eventsSubscription: any;
+
   userData: LoggedUserInfo;
 
   // page source
@@ -35,6 +42,8 @@ export class TotalYearlyComponent implements OnInit {
   // plan razvoja
   devPlans = [];
   displayedColumns = ['DevelopmentNeed', 'DevelopmentAction', 'ResponsibleEmployeeFullName', 'Deadline', 'Buttons'];
+  isDevEdit = false;
+  currentEditElement: DevelopmentPlan;
 
   constructor(private formBuilder: FormBuilder,  private service: Motiv8Service, public snackBar: MatSnackBar ) {
 
@@ -58,20 +67,39 @@ export class TotalYearlyComponent implements OnInit {
   });
 
   ngOnInit() {
-    this.service.getDataForLoggedUser(this.user).subscribe(data => {
-      this.userData = data;
-      this.service.getTotalYearly(this.userData.SurveyAnswerID).subscribe(res => {
-        this.data = res;
-        this.patchValues();
-      });
-      this.service.getPotentials().subscribe(res => this.potentialOptions = res);
-      this.service.getDevelopmentPlan(this.userData.SurveyAnswerID).subscribe(res => this.devPlans = res);
+
+    this.totalGrade.disable();
+    this.service.getDataForLoggedUser(this.user).subscribe(res => {
+      this.loggedUserData = res;
+      console.log('logovani' + res);
     });
+
+
+    this.eventsSubscription = this.events.subscribe(res =>  {
+      this.userData = res;
+      if (res) {
+        if (this.canEdit()) {
+          this.totalGrade.enable();
+        } else {
+          this.totalGrade.disable();
+        }
+        this.service.getTotalYearly(this.userData.SurveyAnswerID).subscribe(data => {
+          this.data = data;
+          this.patchValues();
+        });
+        this.service.getPotentials().subscribe(data => this.potentialOptions = data);
+        this.service.getDevelopmentPlan(this.userData.SurveyAnswerID).subscribe(data => this.devPlans = data);
+      }
+    });
+
   this.handleAutocomplete();
+
   }
 
   patchValues() {
+
     if (!this.data) {
+      this.totalGrade.reset();
       return;
     }
     this.totalGrade.controls.totalWHAT.setValue(this.data.TotalMarkWHAT ? this.data.TotalMarkWHAT : undefined);
@@ -81,6 +109,8 @@ export class TotalYearlyComponent implements OnInit {
     this.totalGrade.controls.potentialDesc.setValue(this.data.EmployeePotentialDescription);
     this.totalGrade.controls.employeeComment.setValue(this.data.TotalCommentEmployee);
     this.totalGrade.controls.managerComment.setValue(this.data.TotalCommentManager);
+
+
   }
 
   getField = (source, fieldPath: string) => lod.get(source, fieldPath, '');
@@ -95,6 +125,8 @@ export class TotalYearlyComponent implements OnInit {
         this.throwOk();
       });
     }
+    this.isDevEdit = false;
+    this.devPlan.reset();
   }
 
   createDevPlan() {
@@ -103,12 +135,19 @@ export class TotalYearlyComponent implements OnInit {
     object.Deadline = this.devPlan.controls.devDeadline.value;
     object.DevelopmentAction = this.devPlan.controls.devActivity.value;
     object.DevelopmentNeed = this.devPlan.controls.devNeed.value;
-    object.Motiv8SurveyAnswerID = this.data.Motiv8SurveyAnswer;
+    if (this.isDevEdit) {
+      object.Motiv8SurveyAnswerID = this.currentEditElement.Motiv8SurveyAnswerID;
+      object.Motiv8DevelopmentActionPlan = this.currentEditElement.Motiv8DevelopmentActionPlan;
+    } else {
+      object.Motiv8SurveyAnswerID = this.data.Motiv8SurveyAnswer;
+    }
     object.ResponsibleEmployeeFullName = this.devPlan.controls.devMentor.value.FirstName +
      ' ' + this.devPlan.controls.devMentor.value.Surname;
     object.ResponsibleEmployeeHRNumber = this.devPlan.controls.devMentor.value.EmployeeHRNumber;
     object.ResponsibleEmployeeID = this.devPlan.controls.devMentor.value.EmployeeID;
 
+    console.log(object);
+    console.log(this.currentEditElement);
     return object;
   }
 
@@ -128,6 +167,21 @@ export class TotalYearlyComponent implements OnInit {
         }
       });
     }
+  }
+
+  editDev(element: DevelopmentPlan) {
+    this.isDevEdit = true;
+    this.setDevFields(element);
+    this.currentEditElement = element;
+  }
+
+  setDevFields(element: DevelopmentPlan) {
+    console.log(element);
+    this.devPlan.controls.devNeed.setValue(element.DevelopmentNeed);
+    this.devPlan.controls.devActivity.patchValue(element.DevelopmentAction);
+    this.devPlan.controls.devDeadline.setValue(element.Deadline);
+    this.service.getEmployeeLike(element.ResponsibleEmployeeFullName.split(' ')[0])
+            .subscribe(data => this.devPlan.controls.devMentor.setValue(data[0]));
   }
 
   handleAutocomplete = () => {
@@ -185,8 +239,8 @@ export class TotalYearlyComponent implements OnInit {
   }
 
   // da li je zaposleni ili rukovodilac
-  canEdit() {
-    return true;
+  canEdit(): boolean {
+    return this.loggedUserData.EmployeeIsManager && this.loggedUserData.EmployeeID !== this.userData.EmployeeID;
   }
 
   saveAll() {
@@ -203,7 +257,7 @@ export class TotalYearlyComponent implements OnInit {
   createObject() {
 
     if (!this.data) {
-      this.throwOk();
+      this.throwError();
     }
 
     const object = new TotalYearly();

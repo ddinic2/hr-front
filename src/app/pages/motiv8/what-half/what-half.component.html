@@ -69,7 +69,23 @@
 
   <div *ngIf="tasks" class="row">
     <form [formGroup]="commentArea">
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
       <mat-form-field *ngIf="(loggedUser == userToDo.EmployeeID)" class="full-width">     <!-- && !comments[0].CommentEmployeeHY -->
+=======
+      <mat-form-field *ngIf="(loggedUser == userToDo.EmployeeID)" class="full-width">
+>>>>>>> Stashed changes
+=======
+      <mat-form-field *ngIf="(loggedUser == userToDo.EmployeeID)" class="full-width">
+>>>>>>> Stashed changes
+=======
+      <mat-form-field *ngIf="(loggedUser == userToDo.EmployeeID)" class="full-width">
+>>>>>>> Stashed changes
+=======
+      <mat-form-field *ngIf="(loggedUser == userToDo.EmployeeID)" class="full-width">
+>>>>>>> Stashed changes
         <textarea matInput required formControlName="CommentEmployeeHY" placeholder="Komentar podnosioca"></textarea>
       </mat-form-field>
 
@@ -82,7 +98,7 @@
       </mat-form-field>
     </form>
 
-    <button [disabled]="((loggedUser == userToDo.EmployeeID) && comments[0].CommentEmployeeHY && comments[0].AgreedActionPlanHY) && comments[0].CommentManagerHY" mat-raised-button class="mgtbOne" (click)="addComment()" color="accent">Dodaj komentar</button>
+    <button [disabled]="((loggedUser == userToDo.EmployeeID)) " mat-raised-button class="mgtbOne" (click)="addComment()" color="accent">Dodaj komentar</button>
   </div>
 
   <ul class="myCommentList" *ngIf="comments">
