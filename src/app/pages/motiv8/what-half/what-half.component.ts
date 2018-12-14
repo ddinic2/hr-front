@@ -95,10 +95,10 @@ export class WhatHalfComponent implements OnInit {
         this.snackBar.open('Uspesno ste ostavili komentar.', 'OK', {
           duration: 4000
         });
-        this.commentArea.reset();
         this.motiv8Service.getCommentForHY(this.tasks[0].Motiv8SurveyAnswerID).subscribe(res1 => {
           this.comments = res1;
         });
+        this.commentArea.reset();
       }
     });
   }

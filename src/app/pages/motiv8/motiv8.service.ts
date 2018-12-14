@@ -121,8 +121,13 @@ export class Motiv8Service {
     return this.http.get<How>(url);
   }
 
-  addHow(task): Observable<How> {
-    const url = environment.db.ROOT2 + 'motiv8/survey-answer-behavior-marks';
+  addHowByEmployee(task): Observable<How> {
+    const url = environment.db.ROOT2 + 'motiv8/survey-answer-behavior-marks-approve-employee';
+    return this.http.put<How>(url, task);
+  }
+
+  addHowByManager(task): Observable<How> {
+    const url = environment.db.ROOT2 + 'motiv8/survey-answer-behavior-marks-approve-manager';
     return this.http.put<How>(url, task);
   }
 

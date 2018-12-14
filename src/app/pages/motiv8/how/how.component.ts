@@ -23,16 +23,28 @@ export class HowComponent implements OnInit {
 
   constructor(private fb: FormBuilder, public snackBar: MatSnackBar , private motiv8Service: Motiv8Service) { }
 
-  save() {
+  saveAndSend() {
    console.log('task my val', this.tasks);
-   this.motiv8Service.addHow(this.tasks).subscribe(res => {
-     if (res) {
-      this.snackBar.open('Uspesno ste sacuvali.', 'OK', {
-        duration: 4000
-      });
-      this.getHowList();
-     }
-   });
+   if (Number(this.loggedUser) !== this.userToDo.EmployeeID) {
+    this.motiv8Service.addHowByManager(this.tasks).subscribe(res => {
+      if (res) {
+       this.snackBar.open('Uspesno ste sacuvali i potvrdili.', 'OK', {
+         duration: 4000
+       });
+       this.getHowList();
+      }
+    });
+   }
+   if (Number(this.loggedUser) === this.userToDo.EmployeeID) {
+    this.motiv8Service.addHowByEmployee(this.tasks).subscribe(res => {
+      if (res) {
+       this.snackBar.open('Uspesno ste sacuvali i prosledili.', 'OK', {
+         duration: 4000
+       });
+       this.getHowList();
+      }
+    });
+   }
   }
 
   getHowList() {

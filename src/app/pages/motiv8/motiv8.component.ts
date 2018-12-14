@@ -18,6 +18,7 @@ export class Motiv8Component implements OnInit {
   listOfEmployeeByManager: any;
   EmployeeID = null;
   sharedEmployee: any;
+  ifData: any;
 
   eventsSubject: Subject<LoggedUserInfo> = new Subject<LoggedUserInfo>();
 
@@ -45,6 +46,9 @@ getDataForEmployee() {
     this.sharedEmployee = res;
     this.eventsSubject.next(this.sharedEmployee);
     console.log(this.sharedEmployee);
+//     setTimeout(() => {
+//       this.ifData = true;
+//  }, 5000);
   });
 }
 
@@ -52,10 +56,14 @@ getDataForMe() {
   this.sharedEmployee = this.currentUserInfo;
   this.eventsSubject.next(this.sharedEmployee);
   console.log('za mene ciljevi', this.sharedEmployee);
+//   setTimeout(() => {
+//     this.ifData = true;
+// }, 5000);
 }
 
   ngOnInit() {
     this.getLoggedNow();
+    this.ifData = false;
   }
 
 }

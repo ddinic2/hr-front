@@ -10,21 +10,22 @@
   <button class="mySelectButton" mat-raised-button (click)="getDataForMe()">Moji ciljevi</button>
 </div>
 
-
-<mat-tab-group>
-  <mat-tab label="Godisnji WHAT obrazac">
-    <hr-what-request [loggedUser]="currentUser" [events]="eventsSubject.asObservable()"></hr-what-request>
-   </mat-tab>
-  <mat-tab label="Polugodisnja WHAT ocena">
-     <hr-what-half [loggedUser]="currentUser" [events]="eventsSubject.asObservable()"></hr-what-half>
-  </mat-tab>
-  <mat-tab label="Godisnja WHAT ocena">
-  <hr-what-yearly [loggedUser]="currentUser" [events]="eventsSubject.asObservable()"></hr-what-yearly>
-  </mat-tab>
-  <mat-tab label="Godisnji HOW">
-    <hr-how [loggedUser]="currentUser" [events]="eventsSubject.asObservable()"></hr-how>
-  </mat-tab>
-  <mat-tab label="Ukupna godisnja ocena">
-    <hr-total [user]="currentUser"></hr-total>
-  </mat-tab>
-</mat-tab-group>
+<!-- <div *ngIf="ifData"> -->
+  <mat-tab-group>
+    <mat-tab label="Godisnji WHAT obrazac">
+      <hr-what-request [loggedUser]="currentUser" [events]="eventsSubject.asObservable()"></hr-what-request>
+    </mat-tab>
+    <mat-tab label="Polugodisnja WHAT ocena">
+      <hr-what-half [loggedUser]="currentUser" [events]="eventsSubject.asObservable()"></hr-what-half>
+    </mat-tab>
+    <mat-tab label="Godisnja WHAT ocena">
+    <hr-what-yearly [loggedUser]="currentUser" [events]="eventsSubject.asObservable()"></hr-what-yearly>
+    </mat-tab>
+    <mat-tab label="Godisnji HOW">
+      <hr-how [loggedUser]="currentUser" [events]="eventsSubject.asObservable()"></hr-how>
+    </mat-tab>
+    <mat-tab label="Ukupna godisnja ocena">
+      <hr-total [user]="currentUser"></hr-total>
+    </mat-tab>
+  </mat-tab-group>
+<!-- </div> -->
