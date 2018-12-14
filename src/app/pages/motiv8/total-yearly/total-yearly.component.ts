@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, ViewChild } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { debounceTime, map } from 'rxjs/operators';
 import * as _ from 'lodash';
@@ -16,6 +16,8 @@ const lod = _;
   styleUrls: ['./total-yearly.component.scss']
 })
 export class TotalYearlyComponent implements OnInit {
+
+  @ViewChild('devPlanForm') myForm;
 
   @Input()
   user;
@@ -127,6 +129,7 @@ export class TotalYearlyComponent implements OnInit {
     }
     this.isDevEdit = false;
     this.devPlan.reset();
+    this.myForm.resetForm();
   }
 
   createDevPlan() {
