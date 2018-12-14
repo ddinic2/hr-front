@@ -82,11 +82,14 @@ export class TotalYearlyComponent implements OnInit {
       if (res) {
         if (this.canEdit()) {
           this.totalGrade.enable();
+          this.totalGrade.controls.employeeComment.disable();
         } else {
           this.totalGrade.disable();
+          this.totalGrade.controls.employeeComment.enable();
         }
         this.service.getTotalYearly(this.userData.SurveyAnswerID).subscribe(data => {
           this.data = data;
+          console.log(data + ' PROVERA');
           this.patchValues();
         });
         this.service.getPotentials().subscribe(data => this.potentialOptions = data);
@@ -243,7 +246,8 @@ export class TotalYearlyComponent implements OnInit {
 
   // da li je zaposleni ili rukovodilac
   canEdit(): boolean {
-    return this.loggedUserData && this.loggedUserData.EmployeeIsManager && this.loggedUserData.EmployeeID !== this.userData.EmployeeID;
+    return this.loggedUserData && this.userData &&
+            this.loggedUserData.EmployeeIsManager && this.loggedUserData.EmployeeID !== this.userData.EmployeeID;
   }
 
   saveAll() {

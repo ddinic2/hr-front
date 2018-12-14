@@ -113,16 +113,13 @@
 
     <div >
       <mat-form-field class="full-width textarea">
-        <textarea formControlName="managerComment" matInput placeholder="Komentar poslodavca"></textarea>
+        <textarea formControlName="managerComment"  matInput placeholder="Komentar poslodavca"></textarea>
       </mat-form-field>
       <br>
       <mat-form-field class="full-width textare">
-        <textarea formControlName="employeeComment" matInput placeholder="Komentar zaposlenog"></textarea>
+        <textarea formControlName="employeeComment"  matInput placeholder="Komentar zaposlenog"></textarea>
       </mat-form-field>
     </div>
-
-    <div *ngIf="canEdit() === true">
-      <button type="submit" mat-raised-button class="mgtbOne myColorGreen" [disabled]="!total.form.valid">Sacuvaj</button>
-    </div>
+    <button type="submit" mat-raised-button class="mgtbOne myColorGreen" [disabled]="!total.form.valid">Sacuvaj</button>
   </form>
 </div>
