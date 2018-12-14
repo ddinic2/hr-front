@@ -24,7 +24,8 @@ export class AbscencesListComponent implements OnInit {
   loggedUser: any;
   data: any;
   ok: boolean;
-  loggedId: string;
+  loggedEmployeeId: string;
+  loggedUserId: string;
   roleId: string;
   rolaHRManager = Roles.HRManager;
   rolaRecord = Roles.Record;
@@ -69,7 +70,8 @@ export class AbscencesListComponent implements OnInit {
 
   ngOnInit() {
     this.loggedUser = this.loginService.getLoggedInUser();
-    this.loggedId = this.loggedUser.value.data.employeeId;
+    this.loggedEmployeeId = this.loggedUser.value.data.employeeId;
+    this.loggedUserId = this.loggedUser.value.data.userId;
     this.roleId = this.loggedUser.value.data.roleId;
     this.checkRoot();
   }
@@ -96,9 +98,9 @@ export class AbscencesListComponent implements OnInit {
     count = 20,
     status: number = this.absProcessStatus,
     absenceType: number = this.absenceType,
-    loggedId: string = this.loggedId,
+    loggedEmployeeId: string = this.loggedEmployeeId,
     roleId: string = this.roleId
-    ) => this.service.getAbscences(order, direction, page, count, status, absenceType, loggedId, roleId)
+    ) => this.service.getAbscences(order, direction, page, count, status, absenceType, loggedEmployeeId, roleId)
 
 
   edit = item => {
@@ -117,7 +119,7 @@ export class AbscencesListComponent implements OnInit {
   remove = item => {
     const absenceId = item.EmployeeAbsence;
     if ((item.AbsenceProcessStatus !== AbsenceProcessStatus.Approved || item.AbsenceProcessStatus !== AbsenceProcessStatus.Generate )
-      && this.loggedId !== item.EmployeeId.toString() && this.roleId === Roles.HRManager.toString()) {
+      && this.loggedEmployeeId !== item.EmployeeId.toString() && this.roleId === Roles.HRManager.toString()) {
       this.service.removeAbsence(absenceId).subscribe(res => {
         this.retPostData = res;
          this.snackBar.open(this.retPostData, 'OK', {
@@ -139,15 +141,16 @@ export class AbscencesListComponent implements OnInit {
   //Odobravanje odsustva NAPOMENA: LoggedUser da se zameni sa objektom
   approve = item => {
     if (item.AbsenceProcessStatus === AbsenceProcessStatus.Created &&
-      this.roleId === Roles.Manager.toString() && this.loggedId !== item.EmployeeId.toString()  ||
+      this.roleId === Roles.Manager.toString() && this.loggedEmployeeId !== item.EmployeeId.toString()  ||
        (item.AbsenceProcessStatus === AbsenceProcessStatus.Waiting && this.roleId === Roles.HRManager.toString()
-        && this.loggedId !== item.EmployeeId.toString() )) {
+        && this.loggedEmployeeId !== item.EmployeeId.toString() )) {
       if (item.ExceptionAbsence && item.AbsenceProcessStatus === AbsenceProcessStatus.Created) {
         item.AbsenceProcessStatusNew = this.absenceProcessStatus.Waiting;
       } else {
         item.AbsenceProcessStatusNew = this.absenceProcessStatus.Approved;
       }
-    item.LoggedUserId = this.loggedUser.value.data.employeeId;
+    item.LoggedEmployeeId = this.loggedUser.value.data.employeeId;
+    item.LoggedUserId = this.loggedUser.value.data.userId;
     item.LoggedUserEmail = this.loggedUser.value.data.employeeEmail;
     item.LoggedUserRoleId = this.loggedUser.value.data.roleId;
     item.LoggedUsername = this.loggedUser.value.data.username;
@@ -173,11 +176,11 @@ export class AbscencesListComponent implements OnInit {
   deny = item => {
       if ((item.AbsenceProcessStatus === AbsenceProcessStatus.Created
              || item.AbsenceProcessStatus === AbsenceProcessStatus.Waiting)
-             && this.loggedId !== item.EmployeeId.toString()
+             && this.loggedEmployeeId !== item.EmployeeId.toString()
              && (this.roleId === Roles.Manager.toString()) ||
        (item.AbsenceProcessStatus !== AbsenceProcessStatus.Deny
                 && this.roleId === Roles.HRManager.toString()
-                 && this.loggedId !== item.EmployeeId.toString())) {
+                 && this.loggedEmployeeId !== item.EmployeeId.toString())) {
       const dialogRef = this.dialog.open(DialogDenyMessage, {
         width: '250px',
       });
@@ -186,7 +189,8 @@ export class AbscencesListComponent implements OnInit {
         if (result.value.deny) {
           item.AbsenceProcessStatusNew = this.absenceProcessStatus.Deny;
           item.description = result.value.description;
-          item.LoggedUserId = this.loggedUser.value.data.employeeId;
+          item.LoggedUserId = this.loggedUser.value.data.userId;
+          item.loggedEmployeeId = this.loggedUser.value.data.employeeId;
           item.LoggedUserEmail = this.loggedUser.value.data.employeeEmail;
           item.LoggedUserRoleId = this.loggedUser.value.data.roleId;
           item.LoggedUsername = this.loggedUser.value.data.username;
@@ -216,10 +220,11 @@ export class AbscencesListComponent implements OnInit {
       const absenceType = queryParams.absType;
       const loggedUserEmail = this.loggedUser.value.data.employeeEmail;
       const loggedUserRoleId = this.loggedUser.value.data.roleId;
-      const loggedUserId = this.loggedUser.value.data.employeeId;
+      const loggedUserId = this.loggedUser.value.data.userId;
+      const loggedEmployeeId = this.loggedUser.value.data.employeeId;
 
     this.service.changeAbsenceStatusFromMail(employeeId, employeeAbsence, exceptionAbsence, numOfDays,
-      absenceProcessStatusNew, absenceType,  loggedUserEmail, loggedUserRoleId, loggedUserId)
+      absenceProcessStatusNew, absenceType,  loggedUserEmail, loggedUserRoleId, loggedEmployeeId, loggedUserId)
       .subscribe(res => {
         queryParams.AbsenceProcessStatusName = res;
         this.performRefresh();
@@ -242,10 +247,11 @@ export class AbscencesListComponent implements OnInit {
           const absenceType = queryParams.absType;
           const loggedUserEmail = this.loggedUser.value.data.employeeEmail;
           const loggedUserRoleId = this.loggedUser.value.data.roleId;
-          const loggedUserId = this.loggedUser.value.data.employeeId;
+          const loggedEmployeeId = this.loggedUser.value.data.employeeId;
+          const loggedUserId = this.loggedUser.value.data.userId;
 
           this.service.changeAbsenceStatusFromMail(employeeId, employeeAbsence, exceptionAbsence, numOfDays,
-            absenceProcessStatusNew, absenceType, loggedUserEmail, loggedUserRoleId, loggedUserId)
+            absenceProcessStatusNew, absenceType, loggedUserEmail, loggedUserRoleId, loggedEmployeeId, loggedUserId)
             .subscribe(res => {
               queryParams.AbsenceProcessStatusName = res;
               this.performRefresh();
@@ -257,13 +263,14 @@ export class AbscencesListComponent implements OnInit {
 
   generate = item => {
     if (item.AbsenceProcessStatus === AbsenceProcessStatus.Approved && this.roleId === Roles.HRManager.toString()
-    && this.loggedId !== item.EmployeeId.toString()) {
-      item.LoggedUserId = this.loggedUser.value.data.employeeId;
+    && this.loggedEmployeeId !== item.EmployeeId.toString()) {
+      item.LoggedEmployeeId = this.loggedUser.value.data.employeeId;
+      item.LoggedUserId = this.loggedUser.value.data.userId;
       item.LoggedUserEmail = this.loggedUser.value.data.employeeEmail;
       item.LoggedUserRoleId = this.loggedUser.value.data.roleId;
       item.AbsenceProcessStatusNew = AbsenceProcessStatus.Generate;
     this.service.generateDocument(item.EmployeeAbsence, item.EmployeeId, item.AbsenceType, item.AbsenceProcessStatus,
-    item.LoggedUserId, item.LoggedUserEmail, item.LoggedUserRoleId, item.AbsenceProcessStatusNew )
+    item.LoggedEmployeeId, item.LoggedUserEmail, item.LoggedUserRoleId, item.AbsenceProcessStatusNew, item.LoggedUserId  )
     .subscribe(data => {
       this.performRefresh();
         let thefile = {};
@@ -294,7 +301,7 @@ export class AbscencesListComponent implements OnInit {
 
   link = item => {
     if (this.roleId === Roles.HRManager.toString() && item.AbsenceProcessStatus === AbsenceProcessStatus.Generate
-    && this.loggedId !== item.EmployeeId.toString()) {
+    && this.loggedEmployeeId !== item.EmployeeId.toString()) {
       this.service.getDocument(item.EmployeeAbsence, item.EmployeeId)
       .subscribe(data => {
         if (data.body != null) {

@@ -37,7 +37,7 @@ export class LeaveFormComponent implements OnInit {
   employeeFamilyDay: any;
   employeeFamilyHoliday: any;
   showTable: boolean;
-  loggedId: string;
+  loggedEmployeeId: string;
   roleId: string;
   pipesToApply = [];
   rolaHRManager = Roles.HRManager.toString();
@@ -106,12 +106,12 @@ export class LeaveFormComponent implements OnInit {
 
 
     this.loggedUser =  this.loginService.getLoggedInUser();
-    this.loggedId = this.loggedUser.value.data.employeeId;
+    this.loggedEmployeeId = this.loggedUser.value.data.employeeId;
     this.roleId = this.loggedUser.value.data.roleId;
     this.subsService.getHolidayDaysForCalendar().subscribe(res => {
         this.holidayDays = res;
     });
-    this.absenceService.getYearVacation(this.loggedId).subscribe(res => {
+    this.absenceService.getYearVacation(this.loggedEmployeeId).subscribe(res => {
       this.yearVacation = res;
       this.employeeAbsenceForm.controls['remainingDays'].setValue(this.yearVacation.RemainingDays);
       this.employeeAbsenceForm.controls['remainingDaysPreviousYear'].setValue(this.yearVacation.RemainingDaysPreviousYear);
@@ -185,7 +185,7 @@ export class LeaveFormComponent implements OnInit {
       count = 20,
       status: number,
       absenceType: number = this.absenceType
-    ) => this.absenceService.getAbscences(order, direction, page, count, status, absenceType, this.loggedId, this.roleId)
+    ) => this.absenceService.getAbscences(order, direction, page, count, status, absenceType, this.loggedEmployeeId, this.roleId)
 
   private _filter(name: string): any[] {
     if (this.options !== undefined) {
@@ -206,7 +206,8 @@ export class LeaveFormComponent implements OnInit {
 
   saveAbsence() {
     const formResult: EmployeeAbsence = this.employeeAbsenceForm.value;
-    formResult.loggedUserId = this.loggedUser.value.data.employeeId;
+    formResult.loggedEmployeeId = this.loggedUser.value.data.employeeId;
+    formResult.loggedUserId = this.loggedUser.value.data.userId;
     formResult.loggedUserEmail =  this.loggedUser.value.data.employeeEmail;
     formResult.absenceType = this.absenceType;
     formResult.absenceTypeName = this.absenceTypeName;

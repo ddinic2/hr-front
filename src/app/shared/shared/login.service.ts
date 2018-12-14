@@ -21,7 +21,7 @@ export class LoginService {
 
       return new Promise((resolve, reject) => {
         setTimeout(() => {
-          let smth = localStorage.getItem('loggedUserEmployee');
+          const smth = localStorage.getItem('loggedUserEmployee');
           console.log('Objekat iz loginServisa: ' + JSON.stringify(smth));
           this.loggedInUser = JSON.parse(smth);
           this.loggedUser.next(this.loggedInUser);

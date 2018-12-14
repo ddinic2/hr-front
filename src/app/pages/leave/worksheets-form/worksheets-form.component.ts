@@ -15,13 +15,16 @@ import { forEach } from '@angular/router/src/utils/collection';
 import * as _moment from 'moment';
 import * as lodash from 'lodash';
 import { Roles } from 'src/app/models/enums/role';
-import * as jsPDF from 'jspdf-autotable';
+import { PdfPrint } from 'src/app/models/pdf-print';
+// import * as jsPDF from 'jspdf-autotable';
 
 
-//declare let jsPDF;
+
+declare var jsPDF;
 
 
 const _ = lodash;
+// const pdf = jsPDF;
 
 
 @Component({
@@ -41,17 +44,20 @@ export class WorksheetsFormComponent implements OnInit {
   loggedUser: any;
   employeePresenceList: any;
   comparePresenceList: any;
-  loginUserId: number;
   presenceListStatus: any;
   checkedRes: boolean;
   registratorOptions: any;
   message: string;
   roleId: string;
-  loggedId: string;
+  loggedEmployeeId: string;
+  loggedUserId: string;
   rolaHRManager = Roles.HRManager.toString();
   rolaRecord = Roles.Record.toString();
   lockWorksheet: boolean;
   unlockWorksheet: boolean;
+
+  title: string;
+  dataKey: string;
 
 
 @ViewChildren('inputs') inputs;
@@ -77,8 +83,9 @@ export class WorksheetsFormComponent implements OnInit {
   ngOnInit() {
     this.loggedUser = this.loginService.getLoggedInUser();
     this.roleId = this.loggedUser.value.data.roleId;
-    this.loggedId = this.loggedUser.value.data.employeeId;
-    this.subService.getOrgUnit(this.roleId, this.loggedId).subscribe(res => { this.orgUnitOptions = res; });
+    this.loggedEmployeeId = this.loggedUser.value.data.employeeId;
+    this.loggedUserId = this.loggedUser.value.data.employeeId;
+    this.subService.getOrgUnit(this.roleId, this.loggedEmployeeId).subscribe(res => { this.orgUnitOptions = res; });
     this.subService.getWorksheetsYears().subscribe(res => { this.worksheetsYearsOptions = res; });
     this.subService.getWorksheetsMonths().subscribe(res => { this.worksheetsMonthsOptions = res; });
     this.subService.getAbsenceTypeWorksheets().subscribe(res => {
@@ -108,7 +115,7 @@ export class WorksheetsFormComponent implements OnInit {
     this.lockWorksheet = false;
     this.unlockWorksheet = false;
     const formResult = this.worksheetsForm.value;
-    this.subService.getEmployeePresenceList(formResult, this.loggedUser.value.data.employeeId, this.loggedUser.value.data.roleId)
+    this.subService.getEmployeePresenceList(formResult, this.loggedEmployeeId, this.roleId, this.loggedUserId)
       .subscribe(res => {
       res.map(item => item.DayStatus = item.DayStatus.map(element => {
         return DayStatus.fromCode(element);
@@ -143,7 +150,7 @@ export class WorksheetsFormComponent implements OnInit {
 
   compareWorksheets() {
     const formResult = this.worksheetsForm.value;
-    this.subService.compareWorksheetsByRegistrator(formResult, this.loggedUser.value.data.employeeId)
+    this.subService.compareWorksheetsByRegistrator(formResult, this.loggedEmployeeId, this.loggedUserId)
       .subscribe(res => {
       this.comparePresenceList = res;
         const result = this.comparePresenceList.map(m => m.PresenceTypeCode);
@@ -159,7 +166,8 @@ export class WorksheetsFormComponent implements OnInit {
         verticalPosition: 'top'
       });
     } else {
-    this.employeePresenceList.loginUserId = this.loggedUser.value.data.employeeId;
+    this.employeePresenceList.loggedEmployeeId = this.loggedUser.value.data.employeeId;
+    this.employeePresenceList.loggedUserId = this.loggedUser.value.data.userId;
     this.employeePresenceList.presenceListStatus = WorksheetsPresenceStatus.Lock;
     const empPresenceList: EmployeePresenceList = this.employeePresenceList;
     const employeePresenceListID = this.employeePresenceList[0].EmployeePresenceListID;
@@ -191,7 +199,7 @@ export class WorksheetsFormComponent implements OnInit {
      });
    } else {
     const formResult = this.worksheetsForm.value;
-    this.subService.unlockWorksheetsByManager(formResult, this.loggedUser.value.data.employeeId).subscribe(res => {
+    this.subService.unlockWorksheetsByManager(formResult, this.loggedEmployeeId, this.loggedUserId).subscribe(res => {
       this.retPostData = res;
       this.snackBar.open(this.retPostData, 'OK', {
         duration: 10000,
@@ -206,34 +214,43 @@ export class WorksheetsFormComponent implements OnInit {
 
 
 
-  download() {
+//   download() {
+// const columns = PdfPrint.setPrint(this.dateList);
 
-    const columns = [
-      {title: 'ID', dataKey: 'id'},
-      {title: 'Name', dataKey: 'name'},
-      {title: 'Country', dataKey: 'country'}
-  ];
-  const rows = [
-      {'id': 1, 'name': 'Shaw', 'country': 'Tanzania'},
-      {'id': 2, 'name': 'Nelson', 'country': 'Kazakhstan'},
-      {'id': 3, 'name': 'Garcia', 'country': 'Madagascar'}
-  ];
+//     const columns1 = [
+//       {title: 'ID', dataKey: 'id'},
+//       {title: 'Name', dataKey: 'name'},
+//       {title: 'Country', dataKey: 'country'}
+//   ];
+//   const rows = [
+//       {'id': 1, 'name': 'Shaw', 'country': 'Tanzania'},
+//       {'id': 2, 'name': 'Nelson', 'country': 'Kazakhstan'},
+//       {'id': 3, 'name': 'Garcia', 'country': 'Madagascar'}
+//   ];
 
-    // const doc = new jsPDF();
-    // doc.text(20, 20, 'Hello world!');
-    // doc.text(20, 30, 'This is client-side Javascript, pumping out a PDF.');
-    // doc.addPage();
-    // doc.text(20, 20, 'Do you like that?');
+//     // const doc = new jsPDF();
+//     // doc.text(20, 20, 'Hello world!');
+//     // doc.text(20, 30, 'This is client-side Javascript, pumping out a PDF.');
+//     // doc.addPage();
+//     // doc.text(20, 20, 'Do you like that?');
 
-    // // Save the PDF
-    // doc.save('RadnaLista.pdf');
+//     // // Save the PDF
+//     // doc.save('RadnaLista.pdf');
 
-    const doc = new jsPDF('p', 'pt');
-    doc.autoTable(columns, rows);
-    doc.save('table.pdf');
-}
+//     const doc = new jsPDF('p', 'pt');
+//     doc.autoTable(columns, rows);
+//     doc.save('table.pdf');
+// }
 
-
+// setPrint = (dateList) => {
+// const pdfColumns = [];
+//   for (let i = 1; i < dateList.length; i++) {
+//     this.title = dateList[i];
+//     this.dataKey = i.toString();
+//     pdfColumns.push(this.title, this.dataKey);
+//   }
+//   return pdfColumns;
+// }
 
   selectedItem = (item, index, event) => {
       item.DayStatus[index] = event.value;
@@ -278,32 +295,13 @@ export class WorksheetsFormComponent implements OnInit {
   //           presenceListCopy[i].AbsenceSubtype[ii] = dayStatus;
   //     }
   //  }
-    this.loginUserId = this.loggedUser.value.data.employeeId;
-    presenceListCopy.loginUserId = this.loggedUser.value.data.employeeId;
+    this.loggedEmployeeId = this.loggedUser.value.data.employeeId;
+    presenceListCopy.loggedEmployeeId = this.loggedUser.value.data.employeeId;
+    presenceListCopy.loggedUserId = this.loggedUserId;
 
     const empPresenceList: EmployeePresenceList = presenceListCopy;
     empPresenceList.presenceListStatus = WorksheetsPresenceStatus.Created;
     this.subService.putWorksheets(empPresenceList);
-    //this.subService.checkedPresenceStatus(empPresenceList);
-    // if (empPresenceList.lockPresenceList) {
-
-    //   const dialogRef = this.dialog.open(DialogOverviewWorksheets, {
-    //     width: '250px'
-    //   });
-
-    //   dialogRef.afterClosed().subscribe(result => {
-    //     if (result) {
-    //       empPresenceList.presenceListStatus = WorksheetsPresenceStatus.Lock;
-    //       this.subService.putWorksheets(empPresenceList);
-
-    //     }
-
-    //   });
-    // }
-    // else {
-    //   empPresenceList.presenceListStatus = WorksheetsPresenceStatus.Created;
-    //   this.subService.putWorksheets(empPresenceList);
-    // }
 
   }
 

@@ -30,6 +30,7 @@ export interface EmployeeAbsence {
     jobTypePosition: null;
     position: number;
     replaceEmployee: number;
+    loggedEmployeeId: string;
     loggedUserId: string;
     loggedUserEmail: string;
     loggedUserRoleId: string;

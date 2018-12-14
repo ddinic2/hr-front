@@ -33,7 +33,7 @@ export class PaidAbsenceFormComponent implements OnInit {
   absenceSubtypeOptions: AbsenceSubtype[] = [];
   employeeOptions: Employee[] = [];
   holidayDays: any;
-  loggedId: string;
+  loggedEmployeeId: string;
   roleId: string;
   pipesToApply = [];
   rolaHRManager = Roles.HRManager.toString();
@@ -55,7 +55,7 @@ export class PaidAbsenceFormComponent implements OnInit {
     'FromDate',
     'ToDate',
     'NumOfDays',
-    'AbsenceSubtype',
+    'AbsenceSubtypeName',
     'ExceptionAbsenceName',
     'AbsenceProcessStatusName'
   ];
@@ -93,7 +93,7 @@ export class PaidAbsenceFormComponent implements OnInit {
   ngOnInit() {
     this.subsService.getAbsenceSubtype(this.absenceType).subscribe (res => {this.absenceSubtypeOptions = res; });
     this.loggedUser =  this.loginService.getLoggedInUser();
-    this.loggedId = this.loggedUser.value.data.employeeId;
+    this.loggedEmployeeId = this.loggedUser.value.data.employeeId;
     this.roleId = this.loggedUser.value.data.roleId;
     // this.subsService.getEmployee().subscribe(res => {this.employeeOptions = res; });
     this.subsService.getHolidayDaysForCalendar().subscribe(res => {
@@ -102,7 +102,7 @@ export class PaidAbsenceFormComponent implements OnInit {
 
   this.employeePaidAbsenceForm.controls['fromDate'].valueChanges.subscribe(value => {
     const employee = this.employeePaidAbsenceForm.controls['employeeAbsenceDetail'].value;
-    if (value && this.employeePaidAbsenceForm.controls['toDate'].value && this.loggedId ) {
+    if (value && this.employeePaidAbsenceForm.controls['toDate'].value && this.loggedEmployeeId ) {
       this.subsService.getSubstitutesByDate(this.employeePaidAbsenceForm.controls['toDate'].value, value,
       this.loggedUser.value.data.employeeId , this.absenceType).subscribe((result) => {
         if (result == null) {
@@ -121,7 +121,7 @@ export class PaidAbsenceFormComponent implements OnInit {
 
     this.employeePaidAbsenceForm.controls['toDate'].valueChanges.subscribe(value => {
       const employee = this.employeePaidAbsenceForm.controls['employeeAbsenceDetail'].value;
-      if (value && this.employeePaidAbsenceForm.controls['fromDate'].value && this.loggedId) {
+      if (value && this.employeePaidAbsenceForm.controls['fromDate'].value && this.loggedEmployeeId) {
         this.subsService.getSubstitutesByDate(this.employeePaidAbsenceForm.controls['fromDate'].value, value,
         this.loggedUser.value.data.employeeId, this.absenceType).subscribe((result) => {
           if (result == null) {
@@ -165,7 +165,7 @@ export class PaidAbsenceFormComponent implements OnInit {
         count = 20,
         status: number,
         absenceType: number = this.absenceType,
-      ) => this.absenceService.getAbscences(order, direction, page, count, status, absenceType, this.loggedId, this.roleId)
+      ) => this.absenceService.getAbscences(order, direction, page, count, status, absenceType, this.loggedEmployeeId, this.roleId)
 
 
 
@@ -179,7 +179,8 @@ export class PaidAbsenceFormComponent implements OnInit {
 
   saveAbsence() {
     const formResult: EmployeeAbsence = this.employeePaidAbsenceForm.value;
-    formResult.loggedUserId = this.loggedUser.value.data.employeeId;
+    formResult.loggedEmployeeId = this.loggedUser.value.data.employeeId;
+    formResult.loggedUserId = this.loggedUser.value.data.userId;
     formResult.loggedUserEmail =  this.loggedUser.value.data.employeeEmail;
     formResult.absenceType = this.absenceType;
     formResult.absenceTypeName = this.absenceTypeName;

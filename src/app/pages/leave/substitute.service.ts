@@ -133,26 +133,27 @@ export class SubstituteService {
     return this.http.get<number[]>(url);
   }
 
-  getOrgUnit = (roleId: string, loggedId: string) => {
+  getOrgUnit = (roleId: string, loggedEmployeeId: string) => {
     const url = environment.db.ROOT + environment.db.ORG_UNIT;
     const obj = {
       params: new HttpParams()
       .set('roleId', roleId)
-      .set('loggedId', loggedId)
+      .set('loggedEmployeeId', loggedEmployeeId)
     };
     return this.http.get<any[]>(url, obj);
   }
 
 
 
-  getEmployeePresenceList = (formResult, employeeId: number , roleId: string) => {
+  getEmployeePresenceList = (formResult, loggedEmployeeId: string , roleId: string, loggedUserId: string) => {
     const obj = {
       params: new HttpParams()
       .set('Month', formResult.month.toString())
       .set('Year', formResult.year.toString())
       .set('OrgUnitId', formResult.orgUnit.OrgUnitId.toString())
-      .set('EmployeeId', employeeId.toString())
-      .set('RoleId', roleId.toString())
+      .set('loggedEmployeeId', loggedEmployeeId)
+      .set('RoleId', roleId)
+      .set('loggedUserId', loggedUserId)
     };
     const url = environment.db.ROOT + environment.db.WORKSHEETS;
     return this.http.get<any[]>(url, obj);
@@ -204,12 +205,13 @@ export class SubstituteService {
   //     return this.http.get(url, obj);
   // }
 
-  compareWorksheetsByRegistrator = (data: any, loginUserId: number) => {
+  compareWorksheetsByRegistrator = (data: any, loggedEmployeeId: string, loggedUserId: string) => {
     const obj = {
       params: new HttpParams()
       .set('Month', data.month.toString())
       .set('Year', data.year.toString())
-      .set('LoginUser', loginUserId.toString())
+      .set('loggedEmployeeId', loggedEmployeeId)
+      .set('loggedUserId', loggedUserId)
 
     };
       const url = environment.db.ROOT + environment.db.WORKSHEETS + environment.db.COMPARE_WORKSHEETS;
@@ -219,7 +221,8 @@ export class SubstituteService {
   lockWorksheets = (empPresenceList: EmployeePresenceList, employeePresenceListID: number) => {
     const obj = {
       params: new HttpParams()
-      .set('LoginUserId', empPresenceList.loginUserId.toString())
+      .set('loggedEmployeeId', empPresenceList.loggedEmployeeId.toString())
+      .set('loggedUserId', empPresenceList.loggedEmployeeId.toString())
       .set('employeePresenceListID', employeePresenceListID.toString())
     };
     const presenceListStatusId = empPresenceList.presenceListStatus;
@@ -233,19 +236,20 @@ export class SubstituteService {
     });
   }
 
-  unlockWorksheetsByManager = (data: any, loginUserId: number) => {
+  unlockWorksheetsByManager = (data: any, loggedEmployeeId: string, loggedUserId: string) => {
     const obj = {
       params: new HttpParams()
       .set('Month', data.month.toString())
       .set('Year', data.year.toString())
-      .set('LoginUser', loginUserId.toString())
+      .set('loggedEmployeeId', loggedEmployeeId)
+      .set('loggedUserId', loggedUserId)
       .set('OrgUnit', data.orgUnit.OrgUnitId.toString())
     };
       const url = environment.db.ROOT + environment.db.WORKSHEETS + environment.db.UNLOCK_WORKSHEETS;
       return this.http.get(url, obj);
   }
 
-  getSubstitutesByDate = (dateFrom: Date, dateTo: Date, loggedUserId: number, absenceType: any) => {
+  getSubstitutesByDate = (dateFrom: Date, dateTo: Date, loggedEmployeeId: number, absenceType: any) => {
     const startDate = moment(dateFrom);
     const endDate = moment(dateTo);
 
@@ -253,7 +257,7 @@ export class SubstituteService {
       params: new HttpParams()
         .set('DateFrom', startDate.format(this.dateFormat))
         .set('DateTo', endDate.format(this.dateFormat))
-        .set('loggedUserId', loggedUserId.toString())
+        .set('loggedEmployeeId', loggedEmployeeId.toString())
         .set('AbsenceType', absenceType.toString())
     };
     const url = environment.db.ROOT + environment.db.ABSCENCE + environment.db.EMPLOYEE_SUBSITUTE;
@@ -271,7 +275,8 @@ export class SubstituteService {
     const startDateForExcep = employeeAbsence.fromDate.toDateString().substring(0, 15);
     const dateHoliday = this.holidayDateslist.map(m => m.Date);
 
-    const dateException = this.getExceptionDate(dateNow, dateHoliday);
+    if (employeeAbsence.absenceType === AbsenceTypes.Absence) {
+      const dateException = this.getExceptionDate(dateNow, dateHoliday);
     dateException.forEach(function (item) {
       const index = startDateForExcep.indexOf(item);
       if (index !== -1) {
@@ -279,6 +284,9 @@ export class SubstituteService {
       }
 
     });
+
+    }
+
 
 
   const dateArrayFamilyHoliday = this.dateArrayFamilyHoliday(startDate, endDate, employeeAbsence.absenceType,
@@ -380,7 +388,8 @@ export class SubstituteService {
       const url = environment.db.ROOT + environment.db.WORKSHEETS;
       const obj = {
         params: new HttpParams()
-        .set('LoginUserId', employeePresenceList.loginUserId.toString())
+        .set('loggedEmployeeId', employeePresenceList.loggedEmployeeId.toString())
+        .set('loggedUserId', employeePresenceList.loggedUserId.toString())
         .set('PresenceListStausId', employeePresenceList.presenceListStatus.toString())
       };
 

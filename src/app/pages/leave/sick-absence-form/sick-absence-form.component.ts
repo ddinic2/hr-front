@@ -39,7 +39,7 @@ export class SickAbsenceFormComponent implements OnInit {
   absenceTypeName = 'Bolovanje';
   absenceProcessStatus = AbsenceProcessStatus.Created;
   holidayDays: any;
-  loggedId: string;
+  loggedEmployeeId: string;
   roleId: string;
 
   columnNameArray = [
@@ -94,7 +94,7 @@ export class SickAbsenceFormComponent implements OnInit {
     this.subsService.getAbsenceSubtype(this.absenceType).subscribe(res => {this.absenceSubtypeOptions = res; });
     this.subsService.getSickLeaveCode().subscribe(res => {this.sickLeaveCodeOptions = res; });
     this.loggedUser =  this.loginService.getLoggedInUser();
-    this.loggedId = this.loggedUser.value.data.employeeId;
+    this.loggedEmployeeId = this.loggedUser.value.data.employeeId;
     this.roleId = this.loggedUser.value.data.roleId;
     this.subsService.getEmployee().subscribe(res => {
       this.employeeOptions = res;
@@ -163,7 +163,7 @@ export class SickAbsenceFormComponent implements OnInit {
     status: number,
     absenceType: number = this.absenceType
   ) => {
-    return this.absenceService.getAbscences(order, direction, page, count, status, absenceType, this.loggedId, this.roleId);
+    return this.absenceService.getAbscences(order, direction, page, count, status, absenceType, this.loggedEmployeeId, this.roleId);
   }
 
   private _filter(name: string): any[] {
@@ -187,7 +187,8 @@ export class SickAbsenceFormComponent implements OnInit {
 
   saveAbsence() {
     const formResult: EmployeeAbsence = this.employeeSickAbsenceForm.value;
-    formResult.loggedUserId = this.loggedUser.value.data.employeeId;
+    formResult.loggedEmployeeId = this.loggedUser.value.data.employeeId;
+    formResult.loggedUserId = this.loggedUser.value.data.userId;
     formResult.loggedUserEmail =  this.loggedUser.value.data.employeeEmail;
     formResult.absenceType = this.absenceType;
     formResult.absenceTypeName = this.absenceTypeName;

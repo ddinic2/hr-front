@@ -27,7 +27,7 @@ export class AbscenceService {
     count = 20,
     status: number,
     absenceType: number,
-    loggedId: string,
+    loggedEmployeeId: string,
     roleId: string
   ) => {
     let URL = environment.db.ROOT + environment.db.ABSCENCE + '?';
@@ -44,16 +44,17 @@ export class AbscenceService {
     if (absenceType) {
       URL += `&absenceType=${absenceType}`;
     }
-    if (loggedId) {
-      URL += `&loggedId=${loggedId}`;
+    if (loggedEmployeeId) {
+      URL += `&loggedEmployeeId=${loggedEmployeeId}`;
     }
     if (roleId) {
       URL += `&roleId=${roleId}`;
     }
-    console.log("URL: ", URL);
+    console.log('URL: ', URL);
     return this.http.get(URL);
 
-  };
+  }
+
   editAbsence = (item: EmployeeAbsence) => {
     const url = environment.db.ROOT + environment.db.ABSCENCE;
     return this.http.put(url, item);
@@ -75,10 +76,11 @@ export class AbscenceService {
   }
 
   changeAbsenceStatusFromMail = (employeeId: string, employeeAbsence: string, exceptionAbsence: string, numOfDays: string,
-    absenceProcessStatusNew: string, absenceType: string, loggedUserEmail: string, loggedUserRoleId: string, loggedUserId: string) => {
+    absenceProcessStatusNew: string, absenceType: string, loggedUserEmail: string,
+     loggedUserRoleId: string, loggedEmployeeId: string, loggedUserId: string) => {
     const url = environment.db.ROOT + environment.db.ABSCENCE + environment.db.CHANGE_ABSENCE_STATUS;
-   const  obj = {employeeId, employeeAbsence, exceptionAbsence, numOfDays, absenceProcessStatusNew,absenceType,
-     loggedUserEmail, loggedUserRoleId, loggedUserId };
+   const  obj = {employeeId, employeeAbsence, exceptionAbsence, numOfDays, absenceProcessStatusNew, absenceType,
+     loggedUserEmail, loggedUserRoleId, loggedEmployeeId, loggedUserId };
        return this.http.post(url, obj);
    }
 
@@ -95,10 +97,11 @@ export class AbscenceService {
 
 
   generateDocument = (employeeAbsence: number, employeeId: number, absenceType: number, absenceProcessStatus: number,
-    loggedUserId: number, loggedUserEmail: string, loggedUserRoleId: number, absenceProcessStatusNew: number) => {
+    loggedEmployeeId: number, loggedUserEmail: string,
+     loggedUserRoleId: number, absenceProcessStatusNew: number, loggedUserId: number ) => {
     const url = environment.db.ROOT + environment.db.ABSCENCE + environment.db.GENERATE_DOCUMENT;
     const obj = {employeeAbsence, employeeId, absenceType, absenceProcessStatus,
-       loggedUserId, loggedUserEmail, loggedUserRoleId, absenceProcessStatusNew };
+      loggedEmployeeId, loggedUserEmail, loggedUserRoleId, absenceProcessStatusNew, loggedUserId };
       return this.http.post(url, obj, {
         responseType: 'blob',
         observe: 'response',
@@ -115,10 +118,10 @@ export class AbscenceService {
       }).pipe(tap(response => console.log(response)));
     }
 
-    getYearVacation = (loggedId: string) => {
+    getYearVacation = (loggedEmployeeId: string) => {
       let URL = environment.db.ROOT + environment.db.ABSCENCE + environment.db.YEAR_VACATION + '?';
-      if (loggedId) {
-        URL += `loggedId=${loggedId}`;
+      if (loggedEmployeeId) {
+        URL += `loggedEmployeeId=${loggedEmployeeId}`;
       }
       console.log("URL getYear: ", URL);
       return this.http.get(URL);
