@@ -1,110 +1,79 @@
 <div class="row" *ngIf="ifNewForumTrue">
-
-    <form [formGroup]="employeeWhat">
-      <!-- <mat-form-field>
-        <mat-select [(value)]="category" formControlName="TargetCategory" placeholder="Kategorija">
-          <mat-option value={{category.Motiv8TargetCategory1}} *ngFor="let category of categories">{{category.CategoryName}}</mat-option>
+  <form [formGroup]="employeeWhat">
+    <!-- <mat-form-field>
+      <mat-select [(value)]="category" formControlName="TargetCategory" placeholder="Kategorija">
+        <mat-option value={{category.Motiv8TargetCategory1}} *ngFor="let category of categories">{{category.CategoryName}}</mat-option>
+      </mat-select>
+    </mat-form-field> -->
+    <mat-form-field>
+        <mat-select [(value)]="status" formControlName="TargetEvaluationStatus" placeholder="Status">
+          <mat-option value={{status.Motiv8TargetEvaluationStatus1}} *ngFor="let status of statuses">{{status.StatusName}}</mat-option>
         </mat-select>
-      </mat-form-field> -->
-
-      <mat-form-field>
-          <mat-select [(value)]="status" formControlName="TargetEvaluationStatus" placeholder="Status">
-            <mat-option value={{status.Motiv8TargetEvaluationStatus1}} *ngFor="let status of statuses">{{status.StatusName}}</mat-option>
-          </mat-select>
-        </mat-form-field>
-
-      <mat-form-field>
-        <input type="number" required matInput formControlName="TargetEvaluationProgressPercent" min="0" max="100" placeholder="Procenat zavrsenog (0 do 100%)">
-      </mat-form-field><br>
-
-
-
-
-
-    </form>
-    <button *ngIf="ifNewForumTrue" mat-raised-button class="mgB" color="myColor" (click)="saveExistTask()">Sacuvaj</button>
+      </mat-form-field>
+    <mat-form-field>
+      <input type="number" required matInput formControlName="TargetEvaluationProgressPercent" min="0" max="100" placeholder="Procenat zavrsenog (0 do 100%)">
+    </mat-form-field><br>
+  </form>
+  <button *ngIf="ifNewForumTrue" mat-raised-button class="mgB" color="myColor" (click)="saveExistTask()">Sacuvaj</button>
 </div>
 <ng-container *ngIf="tasks">
-
-    <div class="infoCard" *ngFor="let task of tasks; let i = index">
-      <ul class="inline">
-        <li>
-          <small>Kategorija:</small><br>
-          {{task.TargetCategoryName}}
+  <div class="infoCard" *ngFor="let task of tasks; let i = index">
+    <ul class="inline">
+      <li>
+        <small>Kategorija:</small><br>
+        {{task.TargetCategoryName}}
+      </li>
+      <li>
+        <small>Naziv:</small><br>
+        {{task.TargetName}}
+      </li>
+      <li>
+        <small>Merljiv rezultat:</small><br>
+        {{task.MeasurableResult}}
+      </li>
+      <li>
+        <small>Rok:</small><br>
+        {{task.TargetDueDate | date:'dd-MM-yyyy'}}
+      </li>
+      <li>
+        <small>Tezina:</small><br>
+        {{task.TargetWeight}}
+      </li>
+      <li>
+        <small>Opis:</small><br>
+        {{task.TargetDescription}}
+      </li>
+      <li *ngIf="task.TargetEvaluationProgressPercent">
+        <small>Procenat zavrsenog:</small><br>
+        {{task.TargetEvaluationProgressPercent}}
+      </li><br>
+      <li>
+          <!-- <button mat-raised-button class="mgtbOne">Sacuvaj i posalji</button> -->
+          <button mat-raised-button class="mgtbOne" (click)="edit(task)" color="accent" *ngIf="!task.ApprovedByEmployee && (loggedUser == userToDo.EmployeeID)">Izmeni</button>
+          <button mat-raised-button class="mgtbOne myColorGray" (click)="confirmeEmployee(task)" *ngIf="!task.ApprovedByEmployee && (loggedUser == userToDo.EmployeeID) && task.TargetEvaluationProgressPercent">Potvrdi (zaposleni)</button>
+          <button mat-raised-button class="mgtbOne myColorGreen" (click)="confirmeManager(task)" *ngIf="!task.ApprovedByManager && !(loggedUser == userToDo.EmployeeID)">Potvrdi (rukovodilac)</button>
         </li>
-        <li>
-          <small>Naziv:</small><br>
-          {{task.TargetName}}
-        </li>
-        <li>
-          <small>Merljiv rezultat:</small><br>
-          {{task.MeasurableResult}}
-        </li>
-        <li>
-          <small>Rok:</small><br>
-          {{task.TargetDueDate | date:'dd-MM-yyyy'}}
-        </li>
-        <li>
-          <small>Tezina:</small><br>
-          {{task.TargetWeight}}
-        </li>
-        <li>
-          <small>Opis:</small><br>
-          {{task.TargetDescription}}
-        </li>
-        <li *ngIf="task.TargetEvaluationProgressPercent">
-          <small>Procenat zavrsenog:</small><br>
-          {{task.TargetEvaluationProgressPercent}}
-        </li><br>
-        <li>
-            <!-- <button mat-raised-button class="mgtbOne">Sacuvaj i posalji</button> -->
-            <button mat-raised-button class="mgtbOne" (click)="edit(task)" color="accent" *ngIf="!task.ApprovedByEmployee && (loggedUser == userToDo.EmployeeID)">Izmeni</button>
-            <button mat-raised-button class="mgtbOne myColorGray" (click)="confirmeEmployee(task)" *ngIf="!task.ApprovedByEmployee && (loggedUser == userToDo.EmployeeID) && task.TargetEvaluationProgressPercent">Potvrdi (zaposleni)</button>
-            <button mat-raised-button class="mgtbOne myColorGreen" (click)="confirmeManager(task)" *ngIf="!task.ApprovedByManager && !(loggedUser == userToDo.EmployeeID)">Potvrdi (rukovodilac)</button>
-          </li>
-      </ul>
-    </div>
-
-  </ng-container>
-
-  <div *ngIf="tasks" class="row">
-    <form [formGroup]="commentArea">
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-      <mat-form-field *ngIf="(loggedUser == userToDo.EmployeeID)" class="full-width">     <!-- && !comments[0].CommentEmployeeHY -->
-=======
-      <mat-form-field *ngIf="(loggedUser == userToDo.EmployeeID)" class="full-width">
->>>>>>> Stashed changes
-=======
-      <mat-form-field *ngIf="(loggedUser == userToDo.EmployeeID)" class="full-width">
->>>>>>> Stashed changes
-=======
-      <mat-form-field *ngIf="(loggedUser == userToDo.EmployeeID)" class="full-width">
->>>>>>> Stashed changes
-=======
-      <mat-form-field *ngIf="(loggedUser == userToDo.EmployeeID)" class="full-width">
->>>>>>> Stashed changes
-        <textarea matInput required formControlName="CommentEmployeeHY" placeholder="Komentar podnosioca"></textarea>
-      </mat-form-field>
-
-      <mat-form-field *ngIf="!(loggedUser == userToDo.EmployeeID)" class="full-width">
-        <textarea matInput required formControlName="CommentManagerHY" placeholder="Komentar nadredjenog"></textarea>
-      </mat-form-field>
-
-      <mat-form-field *ngIf="(loggedUser == userToDo.EmployeeID)" class="full-width">
-        <textarea matInput required formControlName="AgreedActionPlanHY" placeholder="Dogovoreni akcioni plan"></textarea>
-      </mat-form-field>
-    </form>
-
-    <button [disabled]="((loggedUser == userToDo.EmployeeID)) " mat-raised-button class="mgtbOne" (click)="addComment()" color="accent">Dodaj komentar</button>
+    </ul>
   </div>
-
-  <ul class="myCommentList" *ngIf="comments">
-    <li *ngFor="let comment of comments">
-      <small>Zaposleni: </small> {{comment.CommentEmployeeHY}}<br>
-      <small>Menadzer: </small>  {{comment.CommentManagerHY}}<br>
-      <small>Dogovoreni akcioni plan: </small>  {{comment.AgreedActionPlanHY}}
-    </li>
-  </ul>
+</ng-container>
+<div *ngIf="tasks" class="row">
+  <form [formGroup]="commentArea">
+    <mat-form-field *ngIf="(loggedUser == userToDo.EmployeeID)" class="full-width">     <!-- && !comments[0].CommentEmployeeHY -->
+      <textarea matInput required formControlName="CommentEmployeeHY" placeholder="Komentar podnosioca"></textarea>
+    </mat-form-field>
+    <mat-form-field *ngIf="!(loggedUser == userToDo.EmployeeID)" class="full-width">
+      <textarea matInput required formControlName="CommentManagerHY" placeholder="Komentar nadredjenog"></textarea>
+    </mat-form-field>
+    <mat-form-field *ngIf="(loggedUser == userToDo.EmployeeID)" class="full-width">
+      <textarea matInput required formControlName="AgreedActionPlanHY" placeholder="Dogovoreni akcioni plan"></textarea>
+    </mat-form-field>
+  </form>
+  <button [disabled]="((loggedUser == userToDo.EmployeeID) && comments[0].CommentEmployeeHY && comments[0].AgreedActionPlanHY) && comments[0].CommentManagerHY" mat-raised-button class="mgtbOne" (click)="addComment()" color="accent">Dodaj komentar</button>
+</div>
+<ul class="myCommentList" *ngIf="comments">
+  <li *ngFor="let comment of comments">
+    <small>Zaposleni: </small> {{comment.CommentEmployeeHY}}<br>
+    <small>Menadzer: </small>  {{comment.CommentManagerHY}}<br>
+    <small>Dogovoreni akcioni plan: </small>  {{comment.AgreedActionPlanHY}}
+  </li>
+</ul>
