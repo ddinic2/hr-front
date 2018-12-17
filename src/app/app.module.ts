@@ -17,10 +17,11 @@ import { HttpClientModule , HttpErrorResponse } from '@angular/common/http';
 import { HowComponent } from './pages/motiv8/how/how.component';
 import { TimsGridModule } from 'libs/timsystems-lib';
 import { TotalYearlyComponent } from './pages/motiv8/total-yearly/total-yearly.component';
+import { MatStarRatingComponent } from './pages/motiv8/mat-star-rating/mat-star-rating.component';
 
 @NgModule({
   // tslint:disable-next-line:max-line-length
-  declarations: [AppComponent, Motiv8Component, InfoCardComponent, WhatRequestComponent, WhatHalfComponent, WhatYearlyComponent, HowComponent, TotalYearlyComponent],
+  declarations: [AppComponent, Motiv8Component, InfoCardComponent, WhatRequestComponent, WhatHalfComponent, WhatYearlyComponent, HowComponent, TotalYearlyComponent, MatStarRatingComponent],
   // tslint:disable-next-line:max-line-length
   imports: [BrowserModule, FormsModule, TimsGridModule, MatTableModule, AppRoutingModule, LeaveModule, MatAutocompleteModule, MatButtonModule, MatDialogModule, MatFormFieldModule , ReactiveFormsModule, MatTabsModule, MatSelectModule, MatInputModule, MatDatepickerModule, MatSnackBarModule, HttpClientModule],
   providers: [],
