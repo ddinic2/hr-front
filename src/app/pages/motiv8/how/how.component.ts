@@ -20,12 +20,23 @@ export class HowComponent implements OnInit {
 
   tasks: any;
   task: How;
+  rating: any;
+  starCount: any;
+  starColor: any;
 
   constructor(private fb: FormBuilder, public snackBar: MatSnackBar , private motiv8Service: Motiv8Service) { }
 
   saveAndSend() {
    console.log('task my val', this.tasks);
    if (Number(this.loggedUser) !== this.userToDo.EmployeeID) {
+     for (let i = 0; i < this.tasks.length; i++) {
+       if (this.tasks[i].ManagerMark == null) {
+        this.snackBar.open('Morate uneti sve ocene.', 'OK', {
+          duration: 4000
+        });
+        return;
+       }
+     }
     this.motiv8Service.addHowByManager(this.tasks).subscribe(res => {
       if (res) {
        this.snackBar.open('Uspesno ste sacuvali i potvrdili.', 'OK', {
@@ -36,6 +47,14 @@ export class HowComponent implements OnInit {
     });
    }
    if (Number(this.loggedUser) === this.userToDo.EmployeeID) {
+    for (let i = 0; i < this.tasks.length; i++) {
+      if (this.tasks[i].EmployeeMark == null) {
+       this.snackBar.open('Morate uneti sve ocene.', 'OK', {
+         duration: 4000
+       });
+       return;
+      }
+    }
     this.motiv8Service.addHowByEmployee(this.tasks).subscribe(res => {
       if (res) {
        this.snackBar.open('Uspesno ste sacuvali i prosledili.', 'OK', {
@@ -50,7 +69,7 @@ export class HowComponent implements OnInit {
   getHowList() {
     this.motiv8Service.getListOfHow(this.userToDo.SurveyAnswerID).subscribe(res => {
       this.tasks = res;
-      console.log('taskovi HOW', this.tasks);
+      console.log('4 tab', this.tasks);
     });
   }
 
@@ -58,11 +77,14 @@ export class HowComponent implements OnInit {
   ngOnInit() {
     this.eventsSubscription = this.events.subscribe(res =>  {
       this.userToDo = res;
-      console.log('prosledjeni', this.userToDo);
+      // console.log('prosledjeni', this.userToDo);
       if (res) {
         this.getHowList();
       }
       });
+      this.rating = 1;
+      this.starCount = 0;
+      this.starColor = 'primary';
   }
 
 }

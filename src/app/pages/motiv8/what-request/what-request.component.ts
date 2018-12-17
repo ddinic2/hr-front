@@ -18,6 +18,7 @@ export class WhatRequestComponent implements OnInit {
   constructor(private fb: FormBuilder, public snackBar: MatSnackBar, private motiv8Serivice: Motiv8Service) {}
 
    eventsSubscription: any;
+   tempVal: any;
 
   @Input() loggedUser: any;
   @Input() sharedEmployeeData: LoggedUserInfo;
@@ -63,11 +64,24 @@ export class WhatRequestComponent implements OnInit {
       return;
     }
 
-    if (this.tasks.length === 6) {
+    if (this.tasks.length === 7) {
       this.snackBar.open('Maksimalni broj ciljeva je 7', 'OK', {
         duration: 4000,
       });
       return;
+    }
+
+    if (this.tasks.length > 4) {
+
+      for (let i = 0; i < this.tasks.length; i++) {
+        this.tempVal += this.tasks[i].TargetWeight;
+      }
+      if ((this.tempVal + this.targetWhat.value.TargetWeight) > 100) {
+        this.snackBar.open('Ukupna tezina svih ciljeva moze biti maksimum 100%', 'OK', {
+          duration: 4000,
+        });
+        return;
+       }
     }
 
     if (this.targetWhat.value.Motiv8TargetID) {
@@ -200,6 +214,7 @@ export class WhatRequestComponent implements OnInit {
       });
     this.getTargetCategory();
     this.ifNewForumTrue = false;
+    this.tempVal = 0;
   }
 
 }

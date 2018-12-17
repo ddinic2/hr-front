@@ -56,7 +56,7 @@
     </ul>
   </div>
 </ng-container>
-<div *ngIf="tasks" class="row">
+<div *ngIf="tasks && tasks[0]" class="row">
   <form [formGroup]="commentArea">
     <mat-form-field *ngIf="(userToDo && loggedUser == userToDo.EmployeeID)" class="full-width">     <!-- && !comments[0].CommentEmployeeHY -->
       <textarea matInput required formControlName="CommentEmployeeHY" placeholder="Komentar podnosioca"></textarea>
@@ -68,12 +68,12 @@
       <textarea matInput required formControlName="AgreedActionPlanHY" placeholder="Dogovoreni akcioni plan"></textarea>
     </mat-form-field>
   </form>
-  <button [disabled]="((userToDo && loggedUser == userToDo.EmployeeID) && comments && comments[0].CommentEmployeeHY && comments[0].AgreedActionPlanHY) && comments[0].CommentManagerHY" mat-raised-button class="mgtbOne" (click)="addComment()" color="accent">Dodaj komentar</button>
+  <button [disabled]="((userToDo && loggedUser == userToDo.EmployeeID) && comments && comments.CommentEmployeeHY && comments.AgreedActionPlanHY) && comments.CommentManagerHY" mat-raised-button class="mgtbOne" (click)="addComment()" color="accent">Dodaj komentar</button>
 </div>
 <ul class="myCommentList" *ngIf="comments">
-  <li *ngFor="let comment of comments">
-    <small>Zaposleni: </small> {{comment.CommentEmployeeHY}}<br>
-    <small>Menadzer: </small>  {{comment.CommentManagerHY}}<br>
-    <small>Dogovoreni akcioni plan: </small>  {{comment.AgreedActionPlanHY}}
+  <li>
+    <small>Zaposleni: </small> {{comments.CommentEmployeeHY}}<br>
+    <small>Menadzer: </small>  {{comments.CommentManagerHY}}<br>
+    <small>Dogovoreni akcioni plan: </small>  {{comments.AgreedActionPlanHY}}
   </li>
 </ul>

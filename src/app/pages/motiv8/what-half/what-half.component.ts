@@ -86,8 +86,8 @@ export class WhatHalfComponent implements OnInit {
     //   return;
     // }
     if (Number(this.loggedUser) !== this.userToDo.EmployeeID) {
-      this.commentArea.value.CommentEmployeeHY = this.comments[0].CommentEmployeeHY;
-      this.commentArea.value.AgreedActionPlanHY = this.comments[0].AgreedActionPlanHY;
+      this.commentArea.value.CommentEmployeeHY = this.comments.CommentEmployeeHY;
+      this.commentArea.value.AgreedActionPlanHY = this.comments.AgreedActionPlanHY;
     }
     this.commentArea.value.Motiv8SurveyAnswer = this.tasks[0].Motiv8SurveyAnswerID;
     this.motiv8Service.addCommentHalf(this.commentArea.value).subscribe(res => {
@@ -173,9 +173,12 @@ export class WhatHalfComponent implements OnInit {
     this.motiv8Service.getTargetWhatHalf(this.userToDo.SurveyAnswerID).subscribe(res => {
       this.tasks = res;
       console.log('res tab 2', this.tasks);
-      this.motiv8Service.getCommentForHY(this.tasks[0].Motiv8SurveyAnswerID).subscribe(res1 => {
-        this.comments = new Array(res1);
-      });
+      if (this.tasks[0]) {
+        this.motiv8Service.getCommentForHY(this.tasks[0].Motiv8SurveyAnswerID).subscribe(res1 => {
+          this.comments = res1;
+          console.log ('komentari', this.comments);
+        });
+      }
     });
   }
 

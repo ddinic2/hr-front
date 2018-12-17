@@ -3,13 +3,14 @@
     {{ task.BehaviorDescription }}<br>
     <mat-form-field  *ngIf="(loggedUser == userToDo.EmployeeID)">
       <input [disabled]="task.EmployeeMark" class="myInput" type="number" required matInput [(ngModel)]="task.EmployeeMark" min="1" max="5" placeholder="Ocena zaposlenog (1 do 5)"/>
+
     </mat-form-field>
     <mat-form-field *ngIf="!(loggedUser == userToDo.EmployeeID)">
       <input [disabled]="task.ManagerMark" class="myInput" type="number" required matInput [(ngModel)]="task.ManagerMark" min="1" max="5" placeholder="Ocena nadredjenog (1 do 5)"/>
     </mat-form-field>
   </div>
   <br>
-  <button *ngIf="(tasks && userToDo && loggedUser == userToDo.EmployeeID) && !tasks[0].ApprovedByEmployee" mat-raised-button color="myColor" (click)="saveAndSend()">Sacuvaj i posalji</button>
-  <button *ngIf="!(tasks && userToDo && loggedUser == userToDo.EmployeeID && !tasks[0].ApprovedByManager)" mat-raised-button color="myColor" (click)="saveAndSend()">Sacuvaj i odobri</button>
+  <button *ngIf="(tasks && userToDo && loggedUser == userToDo.EmployeeID) && !tasks[0].ApprovedByEmployee" [disabled]="tasks && tasks[0].ApprovedByEmployee" mat-raised-button color="myColor" (click)="saveAndSend()">Sacuvaj i posalji</button>
+  <button *ngIf="!(tasks && userToDo && loggedUser == userToDo.EmployeeID && !tasks[0].ApprovedByManager)" [disabled]="tasks && tasks[0].ApprovedByManager" mat-raised-button color="myColor" (click)="saveAndSend()">Sacuvaj i odobri</button>
 
 

@@ -73,9 +73,11 @@
       </li><br>
       <li>
         <!-- <button mat-raised-button class="mgtbOne">Sacuvaj i posalji</button> -->
-        <button mat-raised-button class="mgtbOne" (click)="edit(task)" color="accent">Izmeni / oceni</button>
+        <!-- <button mat-raised-button class="mgtbOne" (click)="edit(task)" color="accent">Izmeni / oceni</button> -->
+        <button *ngIf="(loggedUser == userToDo.EmployeeID)" [disabled]="task.ApprovedByEmployee" mat-raised-button class="mgtbOne" (click)="edit(task)" color="accent">Izmeni / oceni</button>
+        <button *ngIf="!(loggedUser == userToDo.EmployeeID)" [disabled]="task.ApprovedByManager" mat-raised-button class="mgtbOne" (click)="edit(task)" color="accent">Izmeni / oceni</button>
         <button mat-raised-button class="mgtbOne myColorGray" *ngIf="task.TargetEmployeeMark && (loggedUser == userToDo.EmployeeID) && !task.ApprovedByEmployee" (click)="approveEmployee(task)">Sacuvaj i prosledi (zaposleni)</button>
-        <button mat-raised-button class="mgtbOne myColorGreen" *ngIf="task.TargetManagerMark && !(loggedUser == userToDo.EmployeeID)" (click)="approveManager(task)">Sacuvaj i potvrdi (rukovodilac)</button>
+        <button mat-raised-button class="mgtbOne myColorGreen" *ngIf="task.TargetManagerMark && !(loggedUser == userToDo.EmployeeID)  && !task.ApprovedByManager" (click)="approveManager(task)">Sacuvaj i potvrdi (rukovodilac)</button>
       </li>
     </ul>
   </div>
