@@ -39,38 +39,54 @@
 
   <div class="infoCard" *ngFor="let task of tasks; let i = index">
     <ul class="inline">
-      <li>
-        <small>Kategorija:</small><br>
-        {{task.TargetCategoryName}}
+      <li class="liCategoryInfo">
+        <div class="universalInfo">
+          <small>Kategorija:</small><br>
+          {{task.TargetCategoryName}}
+        </div>
+      </li>
+      <li class="liNameInfo">
+        <div class="universalInfo">
+          <small>Naziv:</small><br>
+          {{task.TargetName}}
+        </div>
+      </li>
+      <li class="liResultInfo">
+        <div class="universalInfo">
+          <small>Merljiv rezultat:</small><br>
+          {{task.MeasurableResult}}
+        </div>
+      </li>
+      <li class="liDateInfo">
+        <div class="universalInfo">
+          <small>Rok:</small><br>
+          {{task.TargetDueDate | date:'dd-MM-yyyy'}}
+        </div>
+      </li>
+      <li class="liWeightInfo">
+        <div class="universalInfo">
+          <small>Tezina:</small><br>
+          {{task.TargetWeight}}
+        </div>
+      </li>
+      <li class="liResultInfo" *ngIf="task.TargetEmployeeMark">
+        <div class="universalInfo">
+          <small>Ocena zaposlenog:</small><br>
+          {{task.TargetEmployeeMark}}
+        </div>
+      </li>
+      <li class="liResultInfo" *ngIf="task.TargetManagerMark">
+        <div class="universalInfo">
+          <small>Ocena nadredjenog:</small><br>
+          {{task.TargetManagerMark}}
+        </div>
       </li>
       <li>
-        <small>Naziv:</small><br>
-        {{task.TargetName}}
-      </li>
-      <li>
-        <small>Merljiv rezultat:</small><br>
-        {{task.MeasurableResult}}
-      </li>
-      <li>
-        <small>Rok:</small><br>
-        {{task.TargetDueDate | date:'dd-MM-yyyy'}}
-      </li>
-      <li>
-        <small>Tezina:</small><br>
-        {{task.TargetWeight}}
-      </li>
-      <li>
-        <small>Opis:</small><br>
-        {{task.TargetDescription}}
-      </li>
-      <li *ngIf="task.TargetEmployeeMark">
-        <small>Ocena zaposlenog:</small><br>
-        {{task.TargetEmployeeMark}}
-      </li>
-      <li *ngIf="task.TargetManagerMark">
-        <small>Ocena nadredjenog:</small><br>
-        {{task.TargetManagerMark}}
-      </li><br>
+          <!-- <div class="universalInfo"> -->
+            <small>Opis:</small><br>
+            {{task.TargetDescription}}
+          <!-- </div> -->
+        </li><br>
       <li>
         <!-- <button mat-raised-button class="mgtbOne">Sacuvaj i posalji</button> -->
         <!-- <button mat-raised-button class="mgtbOne" (click)="edit(task)" color="accent">Izmeni / oceni</button> -->

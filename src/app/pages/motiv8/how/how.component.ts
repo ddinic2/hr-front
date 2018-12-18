@@ -23,6 +23,7 @@ export class HowComponent implements OnInit {
   rating: any;
   starCount: any;
   starColor: any;
+  haveAllGrade = false;
 
   constructor(private fb: FormBuilder, public snackBar: MatSnackBar , private motiv8Service: Motiv8Service) { }
 
@@ -70,7 +71,20 @@ export class HowComponent implements OnInit {
     this.motiv8Service.getListOfHow(this.userToDo.SurveyAnswerID).subscribe(res => {
       this.tasks = res;
       console.log('4 tab', this.tasks);
+      for (let i = 0; i < this.tasks.length; i++) {
+        if (!this.tasks[i].EmployeeMark || !this.tasks[i].ManagerMark) {
+          this.haveAllGrade = false;
+          return;
+        } else {
+          this.haveAllGrade = true;
+        }
+      }
     });
+  }
+
+  onRatingChanged(rating) {
+    console.log('zvezdice', rating);
+    this.rating = rating;
   }
 
 
@@ -83,7 +97,7 @@ export class HowComponent implements OnInit {
       }
       });
       this.rating = 1;
-      this.starCount = 0;
+      this.starCount = 5;
       this.starColor = 'primary';
   }
 

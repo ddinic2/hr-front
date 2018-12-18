@@ -185,4 +185,9 @@ export class Motiv8Service {
     const url = environment.db.ROOT2 + 'motiv8/survey-eval-hy?surveyID=' + id;
     return this.http.get<any>(url);
   }
+
+  saveAndSendAllTarget(tasks, id): Observable<WhatRequest[]> {
+    const url = environment.db.ROOT2 + 'motiv8/survey-targets-finish?surveyID=' + id;
+    return this.http.put<WhatRequest[]>(url, tasks);
+  }
 }

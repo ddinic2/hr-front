@@ -25,8 +25,8 @@ mat-form-field{
 }
 .inline>li {
     display: inline-block;
-    margin-right: 70px;
-    width: auto;
+    margin-right: 20px;
+    // width: auto;
 }
 .inline{
     list-style-type: none;
@@ -60,3 +60,31 @@ mat-form-field{
     background-color: #616161;
     color: white;
   }
+
+.universalInfo{
+  width: 100%;
+  max-width: 100%;
+  display: inline-block;
+  overflow: hidden;
+}
+.liNumberIndex{
+  width: 4%;
+}
+.liCategoryInfo{
+  width: 8%;
+}
+.liNameInfo{
+  width: 15%;
+}
+.liResultInfo{
+  width: 10%;
+}
+.liDateInfo{
+  width: 7%;
+}
+.liWeightInfo{
+  width: 3%;
+}
+li>div{
+  margin: 0;
+}

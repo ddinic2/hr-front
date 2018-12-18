@@ -172,7 +172,18 @@ export class WhatHalfComponent implements OnInit {
   getTargetWhatHalf() {
     this.motiv8Service.getTargetWhatHalf(this.userToDo.SurveyAnswerID).subscribe(res => {
       this.tasks = res;
-      console.log('res tab 2', this.tasks);
+      for (let i = 0; i < this.tasks.length; i++) {
+        if (this.tasks[i].TargetEvaluationStatus === 3 || this.tasks[i].TargetEvaluationStatus === 5) {
+          this.tasks[i].Collor = 'green';
+        }
+        if (this.tasks[i].TargetEvaluationStatus === 2 || this.tasks[i].TargetEvaluationStatus === 4) {
+          this.tasks[i].Collor = 'red';
+        }
+        if (this.tasks[i].TargetEvaluationStatus === 1) {
+          this.tasks[i].Collor = 'black';
+        }
+      }
+      console.log('tab 2', this.tasks);
       if (this.tasks[0]) {
         this.motiv8Service.getCommentForHY(this.tasks[0].Motiv8SurveyAnswerID).subscribe(res1 => {
           this.comments = res1;
@@ -185,12 +196,6 @@ export class WhatHalfComponent implements OnInit {
   // tslint:disable-next-line:member-ordering
   ifNewForumTrue: boolean;
 
-  // getCurrentUser() {
-  //   this.motiv8Service.getDataForLoggedUser(this.loggedUser).subscribe(res => {
-  //     this.currentUser = res;
-  //     console.log('current User what Half', this.currentUser);
-  //   });
-  // }
   ngOnInit() {
     this.eventsSubscription = this.events.subscribe(res =>  {
       this.userToDo = res;

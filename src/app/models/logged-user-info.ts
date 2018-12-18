@@ -70,6 +70,8 @@ export class WhatHalf {
     TargetEmployeeComment: string;
     TargetManagerMark: number;
     TargetManagerComment: string;
+    TargetStatusCode: string;
+    Collor: string;
 }
 
 export class WhatYearly {

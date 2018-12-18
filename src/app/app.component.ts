@@ -9,14 +9,18 @@ import { LoginService } from './shared/shared/login.service';
 export class AppComponent implements OnInit {
   title = 'hr-odsustva';
   userRole: number;
+
+
+
   constructor(private login: LoginService) {}
 
-  ngOnInit(): void {
+  ngOnInit() {
+    }
     // this.login.getLoggedInUser().subscribe(user => {
     //   this.userRole = user.data.roleId;
     //   console.log('dohvacen user', user);
     //   console.log('dohvacena rola', this.userRole);
     // });
   }
-}
+
 

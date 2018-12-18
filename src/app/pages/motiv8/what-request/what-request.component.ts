@@ -52,6 +52,8 @@ export class WhatRequestComponent implements OnInit {
 
 
   ifNewForumTrue: boolean;
+  tempRes: any;
+  canSend: any;
 
   addTask() {
     console.log(this.targetWhat.value);
@@ -176,14 +178,25 @@ export class WhatRequestComponent implements OnInit {
     });
   }
 
-  saveAndSendTarget(task) {
-    task.TargetCategory = Number(task.TargetCategory);
-    this.motiv8Serivice.saveAndSendTarget(task).subscribe(res => {
-      if ( res ) {
+  // saveAndSendTarget(task) {
+  //   task.TargetCategory = Number(task.TargetCategory);
+  //   this.motiv8Serivice.saveAndSendTarget(task).subscribe(res => {
+  //     if ( res ) {
+  //       this.snackBar.open('Uspesno cuvanje i porosledjivanje cilja.', 'OK', {
+  //         duration: 4000,
+  //       });
+  //       this.getTargetWhat(task.Motiv8SurveyAnswerID);
+  //     }
+  //   });
+  // }
+  saveAndSendAllTarget(tasks) {
+    this.motiv8Serivice.saveAndSendAllTarget(tasks, this.userToDo.SurveyAnswerID).subscribe(res => {
+      if (res) {
+        this.canSend = false;
         this.snackBar.open('Uspesno cuvanje i porosledjivanje cilja.', 'OK', {
           duration: 4000,
-        });
-        this.getTargetWhat(task.Motiv8SurveyAnswerID);
+          });
+          this.getTargetWhat(tasks[0].Motiv8SurveyAnswerID);
       }
     });
   }
@@ -199,13 +212,21 @@ export class WhatRequestComponent implements OnInit {
     this.motiv8Serivice.getTargetWhat(id).subscribe(res => {
       this.tasks = res;
       console.log('tab 1', this.tasks);
-      console.log('ulogovani ID', this.loggedUser);
+      // console.log('ulogovani ID', this.loggedUser);
+      for (let i = 0; i < this.tasks.length; i++) {
+         this.tempRes += this.tasks[i].TargetWeight;
+      }
+      if (Number(this.tempRes) === 100) {
+        this.canSend = true;
+      } else {
+        this.tempRes = 0;
+      }
     });
   }
 
 
   ngOnInit() {
-    this.eventsSubscription = this.events.subscribe(res =>  {
+    this.eventsSubscription = this.events.subscribe(res => {
       this.userToDo = res;
       console.log('prosledjeni', this.userToDo);
       if (res) {
@@ -215,6 +236,8 @@ export class WhatRequestComponent implements OnInit {
     this.getTargetCategory();
     this.ifNewForumTrue = false;
     this.tempVal = 0;
+    this.canSend = false;
+    this.tempRes = 0;
   }
 
 }

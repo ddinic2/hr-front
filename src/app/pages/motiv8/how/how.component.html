@@ -13,4 +13,6 @@
   <button *ngIf="(tasks && userToDo && loggedUser == userToDo.EmployeeID) && !tasks[0].ApprovedByEmployee" [disabled]="tasks && tasks[0].ApprovedByEmployee" mat-raised-button color="myColor" (click)="saveAndSend()">Sacuvaj i posalji</button>
   <button *ngIf="!(tasks && userToDo && loggedUser == userToDo.EmployeeID && !tasks[0].ApprovedByManager)" [disabled]="tasks && tasks[0].ApprovedByManager" mat-raised-button color="myColor" (click)="saveAndSend()">Sacuvaj i odobri</button>
 
+<br><br>
 
+<button *ngIf="haveAllGrade" mat-raised-button color="myColor" (click)="compareGrade()">Uporedi ocene</button>

@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { Routes, RouterModule, CanActivate  } from '@angular/router';
+import { Routes, RouterModule, CanActivate } from '@angular/router';
 
 import { AbscencesListComponent } from './pages/absence-overview/abscences-list/abscences-list.component';
 import { LeaveComponent } from './pages/leave/leave.component';
