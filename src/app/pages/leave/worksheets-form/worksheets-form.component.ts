@@ -214,43 +214,43 @@ export class WorksheetsFormComponent implements OnInit {
 
 
 
-//   download() {
-// const columns = PdfPrint.setPrint(this.dateList);
+  download() {
+const columns = PdfPrint.setPrint(this.dateList);
 
-//     const columns1 = [
-//       {title: 'ID', dataKey: 'id'},
-//       {title: 'Name', dataKey: 'name'},
-//       {title: 'Country', dataKey: 'country'}
-//   ];
-//   const rows = [
-//       {'id': 1, 'name': 'Shaw', 'country': 'Tanzania'},
-//       {'id': 2, 'name': 'Nelson', 'country': 'Kazakhstan'},
-//       {'id': 3, 'name': 'Garcia', 'country': 'Madagascar'}
-//   ];
+    const columns1 = [
+      {title: 'ID', dataKey: 'id'},
+      {title: 'Name', dataKey: 'name'},
+      {title: 'Country', dataKey: 'country'}
+  ];
+  const rows = [
+      {'id': 1, 'name': 'Shaw', 'country': 'Tanzania'},
+      {'id': 2, 'name': 'Nelson', 'country': 'Kazakhstan'},
+      {'id': 3, 'name': 'Garcia', 'country': 'Madagascar'}
+  ];
 
-//     // const doc = new jsPDF();
-//     // doc.text(20, 20, 'Hello world!');
-//     // doc.text(20, 30, 'This is client-side Javascript, pumping out a PDF.');
-//     // doc.addPage();
-//     // doc.text(20, 20, 'Do you like that?');
+    // const doc = new jsPDF();
+    // doc.text(20, 20, 'Hello world!');
+    // doc.text(20, 30, 'This is client-side Javascript, pumping out a PDF.');
+    // doc.addPage();
+    // doc.text(20, 20, 'Do you like that?');
 
-//     // // Save the PDF
-//     // doc.save('RadnaLista.pdf');
+    // // Save the PDF
+    // doc.save('RadnaLista.pdf');
 
-//     const doc = new jsPDF('p', 'pt');
-//     doc.autoTable(columns, rows);
-//     doc.save('table.pdf');
-// }
+    const doc = new jsPDF('p', 'pt');
+    doc.autoTable(columns, rows);
+    doc.save('table.pdf');
+}
 
-// setPrint = (dateList) => {
-// const pdfColumns = [];
-//   for (let i = 1; i < dateList.length; i++) {
-//     this.title = dateList[i];
-//     this.dataKey = i.toString();
-//     pdfColumns.push(this.title, this.dataKey);
-//   }
-//   return pdfColumns;
-// }
+setPrint = (dateList) => {
+const pdfColumns = [];
+  for (let i = 1; i < dateList.length; i++) {
+    this.title = dateList[i];
+    this.dataKey = i.toString();
+    pdfColumns.push(this.title, this.dataKey);
+  }
+  return pdfColumns;
+}
 
   selectedItem = (item, index, event) => {
       item.DayStatus[index] = event.value;
