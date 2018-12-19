@@ -5,7 +5,7 @@
 export const environment = {
   production: false,
   db: {
-    ROOT: 'http://localhost:54278/',
+    ROOT: 'http://localhost:22950/',
     SUBSTITUTE: 'work-leave',
     ABSCENCE: 'absences',
     ABSENCE_TYPE: '/absence-types',
@@ -35,8 +35,9 @@ export const environment = {
     GET_EMPLOYEE: '/get-employee',
     WORKSHEETS_BILLING: '/worksheets-billing',
     EXPORT_TO_EXCEL: '/export-to-excel',
-    GET_GENERATE_DOCUMENT: '/get-generate-document'
-  }
+    GET_GENERATE_DOCUMENT: '/get-generate-document',
+    EMPLOYEE_ABSENCE_WORKSHEETS: '/employee-absence-worksheets'
+    }
 };
 
 /*

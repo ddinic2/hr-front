@@ -37,11 +37,12 @@
   <p>Uneti podaci utiču na zaradu</p>
   <div class="dates-row">
     <button type="submit" mat-raised-button (click)="detailsPresence()" *ngIf='(roleId === rolaHRManager || roleId === rolaRecord) ? true : false'>Prikaži</button>
+    <button type="submit" mat-raised-button (click)="detailsEmployeeAbsence()" *ngIf='(roleId === rolaHRManager || roleId === rolaRecord) ? true : false'>Lista prisutnosti</button>
     <button type="submit" mat-raised-button (click)="compareWorksheets()" *ngIf='roleId === rolaHRManager ? true : false'> Uporedi radne liste</button>
     <button type="submit" mat-raised-button (click)="lockWorksheets()" *ngIf='roleId === rolaRecord && unlockWorksheet'> Zaključaj radnu listu</button>
     <button type="submit" mat-raised-button (click)="unlockWorksheets()" *ngIf='roleId === rolaHRManager  && lockWorksheet'> Otključaj radnu listu</button>
     <button type="submit" mat-raised-button (click)="saveWorksheets()" *ngIf='roleId === rolaRecord ? true : false'> Sačuvaj</button>
-    <!-- <button (click)="download()">download </button> -->
+    <button (click)="download()">download </button>
     <i style="padding-left: 10px;" class="fa fa-lock fa-2x" aria-hidden="true" *ngIf='lockWorksheet'></i>
     <i style="padding-left: 10px;" class="fa fa-unlock fa-2x" aria-hidden="true" *ngIf='unlockWorksheet'></i>
   </div>
@@ -51,9 +52,10 @@
 
 </form>
 
-<div>
-<table class="mat-elevation-z8" *ngIf="employeePresenceList">
-    <thead>
+<div *ngIf="employeePresenceList">
+  <h5>Radna lista</h5>
+<table class="mat-elevation-z8">
+  <thead>
         <th>Zaposleni</th>
        <th *ngFor="let dates of dateList">{{dates}}</th>
     </thead>
@@ -88,24 +90,24 @@
   <br/>
   <br/>
 
-
-
-  <div>
-    <table class="mat-elevation-z8"  *ngIf='(roleId === rolaHRManager ? true : false) && comparePresenceList'>
+  <div *ngIf='rolaHRManager && employeeAbsenceList'>
+    <h5>Lista prisutnosti</h5>
+    <table class="mat-elevation-z8">
       <th>Zaposleni</th>
-      <th>Organizaciona jedinica</th>
+      <!-- <th>Organizaciona jedinica</th> -->
       <th *ngFor="let item of dateList">{{item}}</th>
-      <tr *ngFor="let item of comparePresenceList">
+      <tr *ngFor="let item of employeeAbsenceList">
         <td>{{ item.EmployeeFullName }} </td>
-        <td>{{ item.OrgUnitName }} </td>
-        <td *ngFor="let typeCode of item.PresenceListConflictType" [style.background-color]="typeCode.ConflictType != null ? 'red' : 'white'">
-          {{typeCode.PresenceTypeCode}}
+        <!-- <td>{{ item.OrgUnitName }} </td> -->
+        <!-- <td *ngFor="let dayStatus of item.DayStatus"> -->
+        <td *ngFor="let dayStatus of item.AbsenceSubtype">
+          {{dayStatus.name}}
         </td>
       </tr>
 
     </table>
   </div>
-  <div class="legend"  *ngIf='(roleId === rolaHRManager ? true : false) && comparePresenceList'>
+  <div class="legend"  *ngIf='(roleId === rolaHRManager ? true : false) && employeeAbsenceList'>
     <h4>Legenda za HR:</h4>
     <p>BO3P -bolovanje zbog održavanja trudnoće do 30 dana počelo u prethodnom mesecu, BPV -	bolovanje povreda na radu 100% počelo u tekućem mesecu,
        BPVP - bolovanje povreda na radu 100% počelo u prethodnom mesecu,
@@ -124,6 +126,26 @@
        PRUD - privremeno udaljenje sa rada
        </p>
   </div>
+
+
+
+  <div  *ngIf='rolaHRManager && comparePresenceList'>
+    <h5>Poređenje radnih listi</h5>
+    <table class="mat-elevation-z8" >
+      <th>Zaposleni</th>
+      <th>Organizaciona jedinica</th>
+      <th *ngFor="let item of dateList">{{item}}</th>
+      <tr *ngFor="let item of comparePresenceList">
+        <td>{{ item.EmployeeFullName }} </td>
+        <td>{{ item.OrgUnitName }} </td>
+        <td *ngFor="let typeCode of item.PresenceListConflictType" [style.background-color]="typeCode.ConflictType != null ? 'red' : 'white'">
+          {{typeCode.PresenceTypeCode}}
+        </td>
+      </tr>
+
+    </table>
+  </div>
+
 
 
 

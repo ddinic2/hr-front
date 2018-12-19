@@ -55,6 +55,7 @@ export class WorksheetsFormComponent implements OnInit {
   rolaRecord = Roles.Record.toString();
   lockWorksheet: boolean;
   unlockWorksheet: boolean;
+  employeeAbsenceList: any;
 
   title: string;
   dataKey: string;
@@ -111,16 +112,11 @@ export class WorksheetsFormComponent implements OnInit {
   }
 
   detailsPresence() {
-
-    this.lockWorksheet = false;
-    this.unlockWorksheet = false;
     const formResult = this.worksheetsForm.value;
     this.subService.getEmployeePresenceList(formResult, this.loggedEmployeeId, this.roleId, this.loggedUserId)
       .subscribe(res => {
       res.map(item => item.DayStatus = item.DayStatus.map(element => {
         return DayStatus.fromCode(element);
-      //   res.map(item => item.AbsenceSubtype = item.AbsenceSubtype.map(element => {
-      //  return  DayStatus.fromSubtypeCode(element);
       }),
        this.employeePresenceList = res);
       this.dateList = this.employeePresenceList[0].Dates;
@@ -133,6 +129,21 @@ export class WorksheetsFormComponent implements OnInit {
 
       });
 
+
+  }
+
+  detailsEmployeeAbsence() {
+    const formResult = this.worksheetsForm.value;
+    this.subService.getEmployeeAbsenceList(formResult, this.loggedEmployeeId, this.roleId, this.loggedUserId)
+      .subscribe(res => {
+      // res.map(item => item.DayStatus = item.DayStatus.map(element => {
+      //   return DayStatus.fromCode(element);
+      res.map(item => item.AbsenceSubtype = item.AbsenceSubtype.map(element => {
+       return  DayStatus.fromSubtypeCode(element);
+      }),
+        this.employeeAbsenceList = res);
+        this.dateList = this.employeeAbsenceList[0].Dates;
+      });
 
   }
 
@@ -212,35 +223,49 @@ export class WorksheetsFormComponent implements OnInit {
 
   }
 
-
-
   download() {
-const columns = PdfPrint.setPrint(this.dateList);
+    const presenceListCopy = _.cloneDeep(this.employeePresenceList);
+    const columns =  PdfPrint.setPrint(presenceListCopy[0].Dates);
 
-    const columns1 = [
+    for (let i = 0; i < presenceListCopy.length; i++) {
+      const item = presenceListCopy[i];
+            for (let ii = 0; ii < item.DayStatus.length; ii++) {
+              const dayStatus = presenceListCopy[i].DayStatus[ii].name;
+              presenceListCopy[i].DayStatus[ii] = dayStatus;
+        }
+    }
+
+    const rows = [];
+    for (let i = 0; i < presenceListCopy.length; i++) {
+    const item = presenceListCopy[i];
+      rows.push(PdfPrint.setRowsPrint(item));
+    }
+    console.log(rows);
+
+  const columns1 = [
       {title: 'ID', dataKey: 'id'},
       {title: 'Name', dataKey: 'name'},
       {title: 'Country', dataKey: 'country'}
   ];
-  const rows = [
-      {'id': 1, 'name': 'Shaw', 'country': 'Tanzania'},
-      {'id': 2, 'name': 'Nelson', 'country': 'Kazakhstan'},
-      {'id': 3, 'name': 'Garcia', 'country': 'Madagascar'}
-  ];
+   const rows1 = [
+    {'name0': 'Shaw', 'name1': 'Shaw'},
+    {'name0': 'Shaw', 'name1': 'Shaw'},
+    {'name0': 'Shaw', 'name1': 'Shaw'},
+    {'name0': 'Shaw', 'name1': 'Shaw'},
+    {'name5': 'Shaw'},
+    {'name6': 'Shaw'},
+    {'name7': 'Shaw'},
+    {'name8': 'Shaw'}
+];
+console.log(rows1);
 
-    // const doc = new jsPDF();
-    // doc.text(20, 20, 'Hello world!');
-    // doc.text(20, 30, 'This is client-side Javascript, pumping out a PDF.');
-    // doc.addPage();
-    // doc.text(20, 20, 'Do you like that?');
-
-    // // Save the PDF
-    // doc.save('RadnaLista.pdf');
-
-    const doc = new jsPDF('p', 'pt');
-    doc.autoTable(columns, rows);
+         //const doc = new jsPDF('l', 'mm', 'a4');
+         const doc = new jsPDF('p', 'pt');
+    doc.autoTable(columns, rows1);
     doc.save('table.pdf');
 }
+
+
 
 setPrint = (dateList) => {
 const pdfColumns = [];
@@ -251,6 +276,7 @@ const pdfColumns = [];
   }
   return pdfColumns;
 }
+
 
   selectedItem = (item, index, event) => {
       item.DayStatus[index] = event.value;

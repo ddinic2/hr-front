@@ -28,13 +28,13 @@ export class DayStatus {
     switch (code) {
       case 1:
         return new DayStatus('GO', 1);
-      case 3:
+      case 4:
         return new DayStatus('BO', 4);
       case 8:
         return new DayStatus('RR', 8);
-      case 8:
+      case 9:
         return new DayStatus('NPO', 9);
-      case 6:
+      case 3:
         return new DayStatus('PO', 3);
       case 10:
         return new DayStatus('NN', 10);
@@ -43,6 +43,26 @@ export class DayStatus {
 
   static fromSubtypeCode(code: number): DayStatus {
     switch (code) {
+      case 2:
+        return new DayStatus('BO', 2);
+      case 3:
+        return new DayStatus('BO', 3);
+      case 4:
+        return new DayStatus('BO', 4);
+      case 5:
+        return new DayStatus('PO', 5);
+      case 6:
+        return new DayStatus('PO', 6);
+      case 7:
+        return new DayStatus('PO', 8);
+      case 8:
+        return new DayStatus('PO', 9);
+      case 9:
+        return new DayStatus('PO', 9);
+        case 10:
+        return new DayStatus('PO', 10);
+      case 11:
+        return new DayStatus('PO', 11);
       case 12:
         return new DayStatus('RR', 12);
       case 13:
@@ -55,6 +75,8 @@ export class DayStatus {
         return new DayStatus('DP', 16);
       case 17:
         return new DayStatus('VK', 17);
+      case 18:
+        return new DayStatus('GO', 18);
     }
   }
 

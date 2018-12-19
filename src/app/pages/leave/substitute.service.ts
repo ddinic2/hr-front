@@ -158,6 +158,20 @@ export class SubstituteService {
     const url = environment.db.ROOT + environment.db.WORKSHEETS;
     return this.http.get<any[]>(url, obj);
   }
+
+  getEmployeeAbsenceList = (formResult, loggedEmployeeId: string , roleId: string, loggedUserId: string) => {
+    const obj = {
+      params: new HttpParams()
+      .set('Month', formResult.month.toString())
+      .set('Year', formResult.year.toString())
+      .set('OrgUnitId', formResult.orgUnit.OrgUnitId.toString())
+      // .set('loggedEmployeeId', loggedEmployeeId)
+      // .set('RoleId', roleId)
+      // .set('loggedUserId', loggedUserId)
+    };
+    const url = environment.db.ROOT + environment.db.WORKSHEETS + environment.db.EMPLOYEE_ABSENCE_WORKSHEETS;
+    return this.http.get<any[]>(url, obj);
+  }
   getPreviewEmployeePresenceData = (formResult) => {
     const obj = {
       params: new HttpParams()
