@@ -20,10 +20,8 @@ export class HowComponent implements OnInit {
 
   tasks: any;
   task: How;
-  rating: any;
-  starCount: any;
-  starColor: any;
   haveAllGrade = false;
+  showCompared = false;
 
   constructor(private fb: FormBuilder, public snackBar: MatSnackBar , private motiv8Service: Motiv8Service) { }
 
@@ -82,12 +80,6 @@ export class HowComponent implements OnInit {
     });
   }
 
-  onRatingChanged(rating) {
-    console.log('zvezdice', rating);
-    this.rating = rating;
-  }
-
-
   ngOnInit() {
     this.eventsSubscription = this.events.subscribe(res =>  {
       this.userToDo = res;
@@ -95,10 +87,12 @@ export class HowComponent implements OnInit {
       if (res) {
         this.getHowList();
       }
-      });
-      this.rating = 1;
-      this.starCount = 5;
-      this.starColor = 'primary';
+      this.showCompared = false;
+    });
+  }
+
+  compareGrade() {
+    this.showCompared = !this.showCompared;
   }
 
 }

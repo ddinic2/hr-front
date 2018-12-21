@@ -1,6 +1,7 @@
-<div class="myItem" *ngFor="let task of tasks; let i = index">
+<div *ngIf="showCompared === false">
+  <div class="myItem" *ngFor="let task of tasks; let i = index">
     <strong>{{ task.BehaviorName }}: </strong>
-    {{ task.BehaviorDescription }}<br>
+      {{ task.BehaviorDescription }}<br>
     <mat-form-field  *ngIf="(loggedUser == userToDo.EmployeeID)">
       <input [disabled]="task.EmployeeMark" class="myInput" type="number" required matInput [(ngModel)]="task.EmployeeMark" min="1" max="5" placeholder="Ocena zaposlenog (1 do 5)"/>
 
@@ -13,6 +14,51 @@
   <button *ngIf="(tasks && userToDo && loggedUser == userToDo.EmployeeID) && !tasks[0].ApprovedByEmployee" [disabled]="tasks && tasks[0].ApprovedByEmployee" mat-raised-button color="myColor" (click)="saveAndSend()">Sacuvaj i posalji</button>
   <button *ngIf="!(tasks && userToDo && loggedUser == userToDo.EmployeeID && !tasks[0].ApprovedByManager)" [disabled]="tasks && tasks[0].ApprovedByManager" mat-raised-button color="myColor" (click)="saveAndSend()">Sacuvaj i odobri</button>
 
-<br><br>
+  <br><br>
 
-<button *ngIf="haveAllGrade" mat-raised-button color="myColor" (click)="compareGrade()">Uporedi ocene</button>
+  <button *ngIf="haveAllGrade" mat-raised-button color="accent" (click)="compareGrade()">Uporedi ocene</button>
+</div>
+<div *ngIf="showCompared === true">
+  <div class="row">
+    <div style="width: 30%; float: left">
+      <h3>Ocena</h3>
+    </div>
+    <div style="width: 30%; float: left">
+      <h3 class="center_text">Zaposleni</h3>
+    </div>
+    <div style="width: 30%; float: left">
+      <h3 class="center_text">Nadredjeni</h3>
+    </div>
+  </div>
+  <br>
+  <br>
+  <br>
+  <br>
+  <div class="row">
+    <div class="column">
+      <div style="align-items: center" *ngFor="let task of tasks; let i = index">
+        <strong>{{ task.BehaviorName }}: </strong>
+          {{ task.BehaviorDescription }}
+        <br>
+        <br>
+      </div>
+      <br>
+      <br>
+      <button mat-raised-button color="accent" (click)="compareGrade()">Povratak</button>
+    </div>
+    <div class="column">
+      <div class="center_text" *ngFor="let task of tasks; let i = index">
+          <hr-mat-star-rating [rating]="task.EmployeeMark" [starCount]="5"></hr-mat-star-rating>
+          <br>
+          <br>
+      </div>
+    </div>
+    <div class="column">
+      <div class="center_text" *ngFor="let task of tasks; let i = index">
+          <hr-mat-star-rating [rating]="task.ManagerMark" [starCount]="5"></hr-mat-star-rating>
+          <br><br>
+        </div>
+    </div>
+  </div>
+</div>
+

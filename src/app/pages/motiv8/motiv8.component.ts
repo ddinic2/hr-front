@@ -22,6 +22,7 @@ export class Motiv8Component implements OnInit {
 
   eventsSubject: Subject<LoggedUserInfo> = new Subject<LoggedUserInfo>();
 
+  chosenYearDate = new Date(2018, 1, 1);
 
 getLoggedNow() {
   this.loginService.getLoggedInUser().subscribe(res => {
