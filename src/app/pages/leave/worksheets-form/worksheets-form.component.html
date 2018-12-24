@@ -42,7 +42,7 @@
     <button type="submit" mat-raised-button (click)="lockWorksheets()" *ngIf='roleId === rolaRecord && unlockWorksheet'> Zaključaj radnu listu</button>
     <button type="submit" mat-raised-button (click)="unlockWorksheets()" *ngIf='roleId === rolaHRManager  && lockWorksheet'> Otključaj radnu listu</button>
     <button type="submit" mat-raised-button (click)="saveWorksheets()" *ngIf='roleId === rolaRecord ? true : false'> Sačuvaj</button>
-    <button (click)="download()">download </button>
+    <!-- <button (click)="download()">download </button> -->
     <i style="padding-left: 10px;" class="fa fa-lock fa-2x" aria-hidden="true" *ngIf='lockWorksheet'></i>
     <i style="padding-left: 10px;" class="fa fa-unlock fa-2x" aria-hidden="true" *ngIf='unlockWorksheet'></i>
   </div>
@@ -53,7 +53,7 @@
 </form>
 
 <div *ngIf="employeePresenceList">
-  <h5>Radna lista</h5>
+  <h4>Radna lista</h4>
 <table class="mat-elevation-z8">
   <thead>
         <th>Zaposleni</th>
@@ -91,7 +91,7 @@
   <br/>
 
   <div *ngIf='rolaHRManager && employeeAbsenceList'>
-    <h5>Lista prisutnosti</h5>
+    <h4>Lista prisutnosti</h4>
     <table class="mat-elevation-z8">
       <th>Zaposleni</th>
       <!-- <th>Organizaciona jedinica</th> -->
@@ -99,9 +99,8 @@
       <tr *ngFor="let item of employeeAbsenceList">
         <td>{{ item.EmployeeFullName }} </td>
         <!-- <td>{{ item.OrgUnitName }} </td> -->
-        <!-- <td *ngFor="let dayStatus of item.DayStatus"> -->
-        <td *ngFor="let dayStatus of item.AbsenceSubtype">
-          {{dayStatus.name}}
+        <td *ngFor="let dayStatus of item.AbsenceSubtypeCode">
+          {{dayStatus}}
         </td>
       </tr>
 
@@ -130,7 +129,7 @@
 
 
   <div  *ngIf='rolaHRManager && comparePresenceList'>
-    <h5>Poređenje radnih listi</h5>
+    <h4>Poređenje radnih listi</h4>
     <table class="mat-elevation-z8" >
       <th>Zaposleni</th>
       <th>Organizaciona jedinica</th>
@@ -139,7 +138,7 @@
         <td>{{ item.EmployeeFullName }} </td>
         <td>{{ item.OrgUnitName }} </td>
         <td *ngFor="let typeCode of item.PresenceListConflictType" [style.background-color]="typeCode.ConflictType != null ? 'red' : 'white'">
-          {{typeCode.PresenceTypeCode}}
+          {{typeCode.AbsenceSubtype}}
         </td>
       </tr>
 

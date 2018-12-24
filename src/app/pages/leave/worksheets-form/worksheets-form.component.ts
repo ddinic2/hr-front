@@ -136,12 +136,7 @@ export class WorksheetsFormComponent implements OnInit {
     const formResult = this.worksheetsForm.value;
     this.subService.getEmployeeAbsenceList(formResult, this.loggedEmployeeId, this.roleId, this.loggedUserId)
       .subscribe(res => {
-      // res.map(item => item.DayStatus = item.DayStatus.map(element => {
-      //   return DayStatus.fromCode(element);
-      res.map(item => item.AbsenceSubtype = item.AbsenceSubtype.map(element => {
-       return  DayStatus.fromSubtypeCode(element);
-      }),
-        this.employeeAbsenceList = res);
+        this.employeeAbsenceList = res;
         this.dateList = this.employeeAbsenceList[0].Dates;
       });
 
@@ -223,47 +218,42 @@ export class WorksheetsFormComponent implements OnInit {
 
   }
 
-  download() {
-    const presenceListCopy = _.cloneDeep(this.employeePresenceList);
-    const columns =  PdfPrint.setPrint(presenceListCopy[0].Dates);
+//   download() {
 
-    for (let i = 0; i < presenceListCopy.length; i++) {
-      const item = presenceListCopy[i];
-            for (let ii = 0; ii < item.DayStatus.length; ii++) {
-              const dayStatus = presenceListCopy[i].DayStatus[ii].name;
-              presenceListCopy[i].DayStatus[ii] = dayStatus;
-        }
-    }
+//     const presenceListCopy = _.cloneDeep(this.employeePresenceList);
+//     const columns =  PdfPrint.setPrint(presenceListCopy);
 
-    const rows = [];
-    for (let i = 0; i < presenceListCopy.length; i++) {
-    const item = presenceListCopy[i];
-      rows.push(PdfPrint.setRowsPrint(item));
-    }
-    console.log(rows);
+//     for (let i = 0; i < presenceListCopy.length; i++) {
+//       const item = presenceListCopy[i];
+//             for (let ii = 0; ii < item.DayStatus.length; ii++) {
+//               const dayStatus = presenceListCopy[i].DayStatus[ii].name;
+//               presenceListCopy[i].DayStatus[ii] = dayStatus;
+//         }
+//     }
 
-  const columns1 = [
-      {title: 'ID', dataKey: 'id'},
-      {title: 'Name', dataKey: 'name'},
-      {title: 'Country', dataKey: 'country'}
-  ];
-   const rows1 = [
-    {'name0': 'Shaw', 'name1': 'Shaw'},
-    {'name0': 'Shaw', 'name1': 'Shaw'},
-    {'name0': 'Shaw', 'name1': 'Shaw'},
-    {'name0': 'Shaw', 'name1': 'Shaw'},
-    {'name5': 'Shaw'},
-    {'name6': 'Shaw'},
-    {'name7': 'Shaw'},
-    {'name8': 'Shaw'}
-];
-console.log(rows1);
+//     const rows = [];
+//     for (let i = 0; i < presenceListCopy.length; i++) {
+//     const item = presenceListCopy[i];
+//       rows.push(PdfPrint.setRowsPrint(item));
+//     }
 
-         //const doc = new jsPDF('l', 'mm', 'a4');
-         const doc = new jsPDF('p', 'pt');
-    doc.autoTable(columns, rows1);
-    doc.save('table.pdf');
-}
+//     const doc = new jsPDF('l', 'mm', 'a4');
+//     jsPDF.locale = 'sr-Latn-RS';
+//     // (jsPDF.locale === undefined ? navigator.language : jsPDF.locale);
+//     doc.autoTable(columns, rows, {
+//       styles: {fontSize: 5, columnWidth: 'auto', fontStyle: 'normal'},
+//       columnStyles: {
+//         id: {fillColor: 255}
+//       },
+//       margin: {top: 20, left: 5, right: 5, bottom: 20},
+//       tableWidth: 'auto',
+//       addPageContent: function(data) {
+//         doc.text('Radna lista', 10, 5);
+
+//       }
+//   });
+//     doc.save('RadnaLista.pdf');
+// }
 
 
 
