@@ -93,3 +93,5 @@
      <button mat-raised-button *ngIf="(loggedUser == userToDo.EmployeeID) && canSend" (click)="saveAndSendAllTarget(tasks)" class="mgtbOne">Sacuvaj i posalji</button>
 
 </ng-container>
+
+<h3 *ngIf="!tasks">Kliknite na moji ciljevi ili pretrazite ciljeve za vase zaposlene.</h3>

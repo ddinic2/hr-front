@@ -1,5 +1,21 @@
-<h2>Ocenjivanje rada zaposlenih</h2>
-<hr-jp-multi-datepicker mode="YEAR" label="Izaberi godinu" [(ngModel)]="chosenYearDate" [max]="2020"></hr-jp-multi-datepicker><br>
+<mat-grid-list cols="2" rowHeight="9:1">
+  <mat-grid-tile>
+    <h2>Ocenjivanje rada zaposlenih</h2>
+  </mat-grid-tile>
+  <mat-grid-tile>
+    <hr-jp-multi-datepicker mode="YEAR" label="Izaberi godinu" [(ngModel)]="chosenYearDate" [max]="2020"></hr-jp-multi-datepicker>
+    <button mat-raised-button class="myFilterButton" (click)="filterYear()">Za godinu</button>
+    <br>
+  </mat-grid-tile>
+</mat-grid-list>
+
+
+<!-- <h2>Ocenjivanje rada zaposlenih</h2>
+<hr-jp-multi-datepicker mode="YEAR" label="Izaberi godinu" [(ngModel)]="chosenYearDate" [max]="2020"></hr-jp-multi-datepicker>
+<button mat-raised-button class="myFilterButton" (click)="filterYear()">Za godinu</button>
+<br> -->
+
+
 <hr-info-card [loggedUser]="currentUser"></hr-info-card>
 
 <div *ngIf="ifData === true" class="row"><mat-form-field>

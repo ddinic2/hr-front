@@ -19,16 +19,23 @@ export class Motiv8Component implements OnInit {
   EmployeeID = null;
   sharedEmployee: any;
   ifData: any;
+  year: any;
 
   eventsSubject: Subject<LoggedUserInfo> = new Subject<LoggedUserInfo>();
 
   chosenYearDate = new Date(2018, 1, 1);
 
+filterYear() {
+  console.log('godina', this.chosenYearDate.getFullYear());
+   this.year = this.chosenYearDate.getFullYear();
+   this.getLoggedNow();
+}
+
 getLoggedNow() {
   this.loginService.getLoggedInUser().subscribe(res => {
     this.currentUser = res.data.employeeId;
     // console.log('Motiv 8 controler CURR us', this.currentUser);
-      this.motiv8Service.getDataForLoggedUser(this.currentUser).subscribe(res2 => {
+      this.motiv8Service.getDataForLoggedUser(this.currentUser,  this.year).subscribe(res2 => {
         this.currentUserInfo = res2;
         this.ifData = true;
          console.log('Motiv 8 controler CURR us INFO', this.currentUserInfo);
@@ -44,7 +51,7 @@ getLoggedNow() {
 
 getDataForEmployee() {
   console.log(this.EmployeeID);
-  this.motiv8Service.getDataForLoggedUser(this.EmployeeID).subscribe(res => {
+  this.motiv8Service.getDataForLoggedUser(this.EmployeeID,  this.year).subscribe(res => {
     this.sharedEmployee = res;
     this.eventsSubject.next(this.sharedEmployee);
     console.log(this.sharedEmployee);
@@ -64,6 +71,7 @@ getDataForMe() {
 }
 
   ngOnInit() {
+    this.year = new Date().getFullYear();
     this.getLoggedNow();
     this.ifData = false;
   }

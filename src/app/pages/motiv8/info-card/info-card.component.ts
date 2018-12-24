@@ -13,10 +13,17 @@ export class InfoCardComponent implements OnInit {
 
   currentUser: any;
   loggedUserInfo: LoggedUserInfo;
+  currentYear: any;
+
   @Input() loggedUser: any;
 
+
   constructor( private motiv8Service: Motiv8Service , public loginService: LoginService) {
+    this.currentYear = new Date().getFullYear();
 }
+
+
+
   getUserDataAndId() {
     this.loginService.getLoggedInUser().subscribe(res => {
       this.currentUser = res;
@@ -27,8 +34,8 @@ export class InfoCardComponent implements OnInit {
       }
 
   getCurrentUser() {
-   this.motiv8Service.getDataForLoggedUser(this.currentUser.data.employeeId);
-    this.motiv8Service.getDataForLoggedUser(this.currentUser.data.employeeId).subscribe(res => {
+   this.motiv8Service.getDataForLoggedUser(this.currentUser.data.employeeId, this.currentYear);
+    this.motiv8Service.getDataForLoggedUser(this.currentUser.data.employeeId, this.currentYear).subscribe(res => {
       this.loggedUserInfo = res;
       //  console.log('Podaci novi iz info line ', this.loggedUserInfo);
     });

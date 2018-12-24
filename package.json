@@ -32,6 +32,8 @@
     "@types/jspdf": "^1.2.2",
     "angular-font-awesome": "^3.1.2",
     "angular-webstorage-service": "^1.0.2",
+    "classlist": "^2.0.0",
+    "classlist.js": "^1.1.20150312",
     "compass": "^0.1.1",
     "compass-mixins": "^0.12.10",
     "core-js": "^2.6.0",
@@ -52,6 +54,7 @@
     "rxjs-compat": "^6.3.3",
     "systemjs": "^2.1.1",
     "timsystems-lib": "file:libs/timsystems-lib",
+    "web-animations-js": "^2.3.1",
     "zone.js": "^0.8.26"
   },
   "devDependencies": {

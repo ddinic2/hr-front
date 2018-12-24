@@ -46,6 +46,7 @@ export class TotalYearlyComponent implements OnInit {
   displayedColumns = ['DevelopmentNeed', 'DevelopmentAction', 'ResponsibleEmployeeFullName', 'Deadline', 'Buttons'];
   isDevEdit = false;
   currentEditElement: DevelopmentPlan;
+  currentYear: any;
 
   constructor(private formBuilder: FormBuilder,  private service: Motiv8Service, public snackBar: MatSnackBar ) {
 
@@ -70,8 +71,10 @@ export class TotalYearlyComponent implements OnInit {
 
   ngOnInit() {
 
+    this.currentYear = new Date().getFullYear();
+
     this.totalGrade.disable();
-    this.service.getDataForLoggedUser(this.user).subscribe(res => {
+    this.service.getDataForLoggedUser(this.user, this.currentYear).subscribe(res => {
       this.loggedUserData = res;
       console.log('logovani' + res);
     });

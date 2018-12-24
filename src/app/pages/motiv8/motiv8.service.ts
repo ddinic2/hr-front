@@ -81,8 +81,8 @@ export class Motiv8Service {
     return this.http.put<WhatRequest>(url, task);
   }
 
-  getDataForLoggedUser(id: number): Observable<LoggedUserInfo> {
-    const url = environment.db.ROOT2 + 'motiv8/survey-employee?employeeID=' + id;
+  getDataForLoggedUser(id: number, year: number): Observable<LoggedUserInfo> {
+    const url = environment.db.ROOT2 + 'motiv8/survey-employee?employeeID=' + id + '&year=' + year;
     return this.http.get<LoggedUserInfo>(url);
   }
 
