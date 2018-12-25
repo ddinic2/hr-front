@@ -37,11 +37,14 @@ export class MultiDatepickerComponent implements ControlValueAccessor, AfterView
 
   @Input() mode: 'YEAR' | 'MONTH' | 'MONTHYEAR' | 'WEEK' | 'SEMESTER' | '' | null;
 
-  @Input() label = '';
+  @Input()
+   label = '';
 
-  @Input() max: any;
+  @Input()
+  max: any;
 
-  @Input() min: any;
+  @Input()
+   min: any;
 
   @Input() touchUi = false;
 

@@ -19,19 +19,15 @@ import { HowComponent } from './pages/motiv8/how/how.component';
 import { TimsGridModule } from 'libs/timsystems-lib';
 import { TotalYearlyComponent } from './pages/motiv8/total-yearly/total-yearly.component';
 import { MatStarRatingComponent } from './pages/motiv8/how/mat-star-rating/mat-star-rating.component';
-import { MultiDatepickerComponent,  } from './pages/motiv8/multidatepicker/multidatepicker.component';
-import { YearPickerComponent } from './pages/motiv8/multidatepicker/year-picker-component/year-picker.component';
-import { MonthPickerComponent } from './pages/motiv8/multidatepicker/month-picker-component/month-picker.component';
-import { RegularDatepickerComponent  } from './pages/motiv8/multidatepicker/regular-datepicker-component/regular-datepicker.component';
-
+import { MultiDatepickerModule } from './pages/motiv8/multidatepicker/multidatepicker.module';
 
 @NgModule({
   // tslint:disable-next-line:max-line-length
-  declarations: [MonthPickerComponent, RegularDatepickerComponent, AppComponent, MultiDatepickerComponent, Motiv8Component,
+  declarations: [AppComponent, Motiv8Component,
     InfoCardComponent, WhatRequestComponent, WhatHalfComponent, WhatYearlyComponent,
-    HowComponent, TotalYearlyComponent, MatStarRatingComponent, YearPickerComponent],  //
+    HowComponent, TotalYearlyComponent, MatStarRatingComponent],  //
   // tslint:disable-next-line:max-line-length
-  imports: [BrowserModule, FormsModule, TimsGridModule, MatTableModule, AppRoutingModule , MatGridListModule, LeaveModule, MatAutocompleteModule, MatButtonModule, MatDialogModule, MatFormFieldModule , ReactiveFormsModule, MatTabsModule, MatSelectModule, MatInputModule, MatDatepickerModule, MatSnackBarModule, HttpClientModule, MatTooltipModule, MatButtonModule, MatIconModule],
+  imports: [BrowserModule, MultiDatepickerModule, FormsModule, TimsGridModule, MatTableModule, AppRoutingModule , MatGridListModule, LeaveModule, MatAutocompleteModule, MatButtonModule, MatDialogModule, MatFormFieldModule , ReactiveFormsModule, MatTabsModule, MatSelectModule, MatInputModule, MatDatepickerModule, MatSnackBarModule, HttpClientModule, MatTooltipModule, MatButtonModule, MatIconModule],
   providers: [],
   bootstrap: [AppComponent]
 })
