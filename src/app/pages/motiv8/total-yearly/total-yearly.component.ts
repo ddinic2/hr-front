@@ -292,13 +292,14 @@ export class TotalYearlyComponent implements OnInit {
   }
 
   print() {
-    return this.service.downloadDoc(this.loggedUserData.SurveyAnswerID)
+    console.log(this.userData.SurveyAnswerID);
+    return this.service.downloadDoc(this.userData.SurveyAnswerID)
     .subscribe(data => {
       let thefile = {};
       thefile = data;
       const url = URL.createObjectURL(data.body);
       const disposition = data.headers.getAll('content-disposition');
-      const filename = (this.loggedUserData.EmployeeHRNumber).toString() + '_' + (this.loggedUserData.SurveyAnswerID).toString();
+      const filename = (this.userData.EmployeeHRNumber).toString() + '_' + (this.userData.SurveyAnswerID).toString();
       const a = document.createElement('a');
       document.body.appendChild(a);
       a.setAttribute('style', 'display: none');
