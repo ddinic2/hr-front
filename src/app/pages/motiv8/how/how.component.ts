@@ -26,7 +26,6 @@ export class HowComponent implements OnInit {
   constructor(private fb: FormBuilder, public snackBar: MatSnackBar , private motiv8Service: Motiv8Service) { }
 
   saveAndSend() {
-   console.log('task my val', this.tasks);
    if (Number(this.loggedUser) !== this.userToDo.EmployeeID) {
      for (let i = 0; i < this.tasks.length; i++) {
        if (this.tasks[i].ManagerMark == null) {
@@ -68,7 +67,6 @@ export class HowComponent implements OnInit {
   getHowList() {
     this.motiv8Service.getListOfHow(this.userToDo.SurveyAnswerID).subscribe(res => {
       this.tasks = res;
-      console.log('4 tab', this.tasks);
       for (let i = 0; i < this.tasks.length; i++) {
         if (!this.tasks[i].EmployeeMark || !this.tasks[i].ManagerMark) {
           this.haveAllGrade = false;
@@ -83,7 +81,6 @@ export class HowComponent implements OnInit {
   ngOnInit() {
     this.eventsSubscription = this.events.subscribe(res =>  {
       this.userToDo = res;
-      // console.log('prosledjeni', this.userToDo);
       if (res) {
         this.getHowList();
       }

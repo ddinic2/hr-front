@@ -13,7 +13,6 @@ import { EventEmitter } from 'events';
   styleUrls: ['./what-request.component.scss']
 })
 export class WhatRequestComponent implements OnInit {
-  // categories: Category[];
   // tslint:disable-next-line:max-line-length
   constructor(private fb: FormBuilder, public snackBar: MatSnackBar, private motiv8Serivice: Motiv8Service) {}
 
@@ -24,8 +23,6 @@ export class WhatRequestComponent implements OnInit {
   @Input() sharedEmployeeData: LoggedUserInfo;
 
   @Input() events: Observable<LoggedUserInfo>;
-
-  // currentUser: LoggedUserInfo;
 
   userToDo: LoggedUserInfo;
 
@@ -56,8 +53,6 @@ export class WhatRequestComponent implements OnInit {
   canSend: any;
 
   addTask() {
-    console.log(this.targetWhat.value);
-
     // tslint:disable-next-line:max-line-length
     if (!this.targetWhat.value.TargetName || !this.targetWhat.value.MeasurableResult || !this.targetWhat.value.TargetDueDate || !this.targetWhat.value.TargetDescription || Number(this.targetWhat.value.TargetWeight) > 20 || Number(this.targetWhat.value.TargetWeight) < 5 || !this.targetWhat.value.TargetCategory) {
       this.snackBar.open('Molimo Vas popunite sva polja ispravno.', 'OK', {
@@ -113,7 +108,6 @@ export class WhatRequestComponent implements OnInit {
     }
 
     this.targetWhat.reset();
-    // console.log('taskovi', this.tasks);
   }
 
   openNewForm() {
@@ -132,13 +126,11 @@ export class WhatRequestComponent implements OnInit {
        }
        );
     } else {
-      // console.log('index', index);
       this.tasks.splice(index, 1);
     }
   }
 
   edit(task) {
-    // console.log('izabrani', task);
       this.ifNewForumTrue = true;
       this.targetWhat.patchValue({
       Motiv8TargetID: task.Motiv8TargetID,
@@ -153,7 +145,6 @@ export class WhatRequestComponent implements OnInit {
       TargetStatus: task.TargetStatus,
       TargetStatusCode: task.TargetStatusCode
     });
-    // console.log('nova vrednost', this.targetWhat.value);
   }
 
   reject(id) {
@@ -204,15 +195,12 @@ export class WhatRequestComponent implements OnInit {
   getTargetCategory() {
     this.motiv8Serivice.getTargetCategory().subscribe(res => {
       this.categories = res;
-       console.log('dropdown category', this.categories);
     });
   }
 
   getTargetWhat(id) {
     this.motiv8Serivice.getTargetWhat(id).subscribe(res => {
       this.tasks = res;
-      console.log('tab 1', this.tasks);
-      // console.log('ulogovani ID', this.loggedUser);
       for (let i = 0; i < this.tasks.length; i++) {
          this.tempRes += this.tasks[i].TargetWeight;
       }
@@ -228,7 +216,6 @@ export class WhatRequestComponent implements OnInit {
   ngOnInit() {
     this.eventsSubscription = this.events.subscribe(res => {
       this.userToDo = res;
-      console.log('prosledjeni', this.userToDo);
       if (res) {
         this.getTargetWhat(this.userToDo.SurveyAnswerID);
       }

@@ -27,8 +27,6 @@ export class InfoCardComponent implements OnInit {
   getUserDataAndId() {
     this.loginService.getLoggedInUser().subscribe(res => {
       this.currentUser = res;
-      //  console.log('User iz servisa', this.currentUser);
-      // console.log('prosledjen info card', this.loggedUser);
     });
 
       }
@@ -37,12 +35,10 @@ export class InfoCardComponent implements OnInit {
    this.motiv8Service.getDataForLoggedUser(this.currentUser.data.employeeId, this.currentYear);
     this.motiv8Service.getDataForLoggedUser(this.currentUser.data.employeeId, this.currentYear).subscribe(res => {
       this.loggedUserInfo = res;
-      //  console.log('Podaci novi iz info line ', this.loggedUserInfo);
     });
   }
 
   ngOnInit() {
-    // this.getLoggedUser();
    this.getUserDataAndId();
    this.getCurrentUser();
   }

@@ -54,7 +54,6 @@ export class WhatHalfComponent implements OnInit {
   userToDo: LoggedUserInfo;
 
   edit(task) {
-    console.log('izabrani', task);
     this.ifNewForumTrue = true;
     this.employeeWhat.patchValue({
       Motiv8TargetID: task.Motiv8TargetID,
@@ -75,16 +74,9 @@ export class WhatHalfComponent implements OnInit {
       TargetEvaluationPeriod: task.TargetEvaluationPeriod,
       TargetEvaluationStatus: task.TargetEvaluationStatus
     });
-    console.log('nova vrednost', this.employeeWhat.value);
   }
 
   addComment() {
-    // if (!this.commentArea.value.AgreedActionPlanHY) {
-    //   this.snackBar.open('Molimo Vas popunite sva polja ispravno.', 'OK', {
-    //     duration: 4000
-    //   });
-    //   return;
-    // }
     if (Number(this.loggedUser) !== this.userToDo.EmployeeID) {
       this.commentArea.value.CommentEmployeeHY = this.comments.CommentEmployeeHY;
       this.commentArea.value.AgreedActionPlanHY = this.comments.AgreedActionPlanHY;
@@ -104,7 +96,6 @@ export class WhatHalfComponent implements OnInit {
   }
 
   saveExistTask() {
-    console.log('update exist', this.employeeWhat.value);
     if (
       !this.employeeWhat.valid ||
       Number(this.employeeWhat.value.TargetEvaluationProgressPercent) > 100 ||
@@ -165,7 +156,6 @@ export class WhatHalfComponent implements OnInit {
   getTargetCategory() {
     this.motiv8Service.getTargetCategory().subscribe(res => {
       this.categories = res;
-      console.log('kategorije', this.categories);
     });
   }
 
@@ -183,11 +173,9 @@ export class WhatHalfComponent implements OnInit {
           this.tasks[i].Collor = 'black';
         }
       }
-      console.log('tab 2', this.tasks);
       if (this.tasks[0]) {
         this.motiv8Service.getCommentForHY(this.tasks[0].Motiv8SurveyAnswerID).subscribe(res1 => {
           this.comments = res1;
-          console.log ('komentari', this.comments);
         });
       }
     });
@@ -199,7 +187,6 @@ export class WhatHalfComponent implements OnInit {
   ngOnInit() {
     this.eventsSubscription = this.events.subscribe(res =>  {
       this.userToDo = res;
-      console.log('prosledjeni', this.userToDo);
       if (res) {
         this.getTargetWhatHalf();
       }
@@ -208,7 +195,5 @@ export class WhatHalfComponent implements OnInit {
     this.getTargetCategory();
 
     this.ifNewForumTrue = false;
-    // this.getTargetWhatHalf();
-    // this.getCurrentUser();
   }
 }

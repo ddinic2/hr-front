@@ -39,10 +39,7 @@ export class WhatYearlyComponent implements OnInit {
 
   ifNewForumTrue: boolean;
 
-  // currentUser: LoggedUserInfo;
-
   edit(task) {
-    // console.log('izabrani', task);
     this.ifNewForumTrue = true;
     this.employeeWhat.patchValue({
       CategoryName: task.CategoryName,
@@ -56,20 +53,17 @@ export class WhatYearlyComponent implements OnInit {
       TargetEvaluationPeriod: task.TargetEvaluationPeriod,
       Motiv8TargetID: task.Motiv8TargetID
     });
-    // console.log('nova vrednost', this.employeeWhat.value);
   }
 
   getWhatYearly() {
     this.motiv8Serivice.getTargetWhatYearly(this.userToDo.SurveyAnswerID).subscribe(res => {
       this.tasks = res;
-      console.log('tab 3', this.tasks);
     });
   }
 
   getTargetCategory() {
     this.motiv8Serivice.getTargetCategory().subscribe(res => {
       this.categories = res;
-      // console.log('kategorije', this.categories);
     });
   }
 
@@ -127,24 +121,14 @@ export class WhatYearlyComponent implements OnInit {
     });
   }
 
-  // getCurrentUser() {
-  //   this.motiv8Serivice.getDataForLoggedUser(this.loggedUser).subscribe(res => {
-  //     this.currentUser = res;
-  //     // console.log('current User what', this.currentUser);
-  //   });
-  // }
-
   ngOnInit() {
     this.eventsSubscription = this.events.subscribe(res =>  {
       this.userToDo = res;
-      console.log('prosledjeni', this.userToDo);
       if (res) {
         this.getWhatYearly();
       }
       });
     this.ifNewForumTrue = false;
-    // this.getWhatYearly();
     this.getTargetCategory();
-    // this.getCurrentUser();
   }
 }

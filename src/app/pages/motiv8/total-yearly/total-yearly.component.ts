@@ -76,7 +76,6 @@ export class TotalYearlyComponent implements OnInit {
     this.totalGrade.disable();
     this.service.getDataForLoggedUser(this.user, this.currentYear).subscribe(res => {
       this.loggedUserData = res;
-      console.log('logovani' + res);
     });
 
 
@@ -92,7 +91,6 @@ export class TotalYearlyComponent implements OnInit {
         }
         this.service.getTotalYearly(this.userData.SurveyAnswerID).subscribe(data => {
           this.data = data;
-          console.log(data + ' PROVERA');
           this.patchValues();
         });
         this.service.getPotentials().subscribe(data => this.potentialOptions = data);
@@ -155,13 +153,10 @@ export class TotalYearlyComponent implements OnInit {
     object.ResponsibleEmployeeHRNumber = this.devPlan.controls.devMentor.value.EmployeeHRNumber;
     object.ResponsibleEmployeeID = this.devPlan.controls.devMentor.value.EmployeeID;
 
-    console.log(object);
-    console.log(this.currentEditElement);
     return object;
   }
 
   deleteDev = (element: DevelopmentPlan) => {
-    console.log(element);
     if (!element) {
       this.throwError();
     } else {
@@ -185,7 +180,6 @@ export class TotalYearlyComponent implements OnInit {
   }
 
   setDevFields(element: DevelopmentPlan) {
-    console.log(element);
     this.devPlan.controls.devNeed.setValue(element.DevelopmentNeed);
     this.devPlan.controls.devActivity.patchValue(element.DevelopmentAction);
     this.devPlan.controls.devDeadline.setValue(element.Deadline);
@@ -282,7 +276,6 @@ export class TotalYearlyComponent implements OnInit {
     object.TotalCommentEmployee = this.totalGrade.controls.employeeComment.value;
     object.TotalCommentManager = this.totalGrade.controls.managerComment.value;
 
-    console.log(object);
     return object;
   }
 
@@ -298,4 +291,21 @@ export class TotalYearlyComponent implements OnInit {
     });
   }
 
+  print() {
+    return this.service.downloadDoc(this.loggedUserData.SurveyAnswerID)
+    .subscribe(data => {
+      let thefile = {};
+      thefile = data;
+      const url = URL.createObjectURL(data.body);
+      const disposition = data.headers.getAll('content-disposition');
+      const filename = (this.loggedUserData.EmployeeHRNumber).toString() + '_' + (this.loggedUserData.SurveyAnswerID).toString();
+      const a = document.createElement('a');
+      document.body.appendChild(a);
+      a.setAttribute('style', 'display: none');
+      a.href = url;
+      a.download = filename;
+      a.click();
+      a.remove();
+    });
+  }
 }

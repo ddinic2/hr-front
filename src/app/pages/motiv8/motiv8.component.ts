@@ -26,7 +26,6 @@ export class Motiv8Component implements OnInit {
   chosenYearDate = new Date(2018, 1, 1);
 
 filterYear() {
-  console.log('godina', this.chosenYearDate.getFullYear());
    this.year = this.chosenYearDate.getFullYear();
    this.getLoggedNow();
 }
@@ -34,15 +33,12 @@ filterYear() {
 getLoggedNow() {
   this.loginService.getLoggedInUser().subscribe(res => {
     this.currentUser = res.data.employeeId;
-    // console.log('Motiv 8 controler CURR us', this.currentUser);
       this.motiv8Service.getDataForLoggedUser(this.currentUser,  this.year).subscribe(res2 => {
         this.currentUserInfo = res2;
         this.ifData = true;
-         console.log('Motiv 8 controler CURR us INFO', this.currentUserInfo);
         if (this.currentUserInfo.EmployeeIsManager) {
           this.motiv8Service.getEmployeeByManager(this.currentUserInfo.EmployeeID).subscribe(res3 => {
             this.listOfEmployeeByManager = res3;
-            // console.log('lista zaposlenih po manegeru 30', this.listOfEmployeeByManager);
           });
         }
       });
@@ -50,24 +46,15 @@ getLoggedNow() {
 }
 
 getDataForEmployee() {
-  console.log(this.EmployeeID);
   this.motiv8Service.getDataForLoggedUser(this.EmployeeID,  this.year).subscribe(res => {
     this.sharedEmployee = res;
     this.eventsSubject.next(this.sharedEmployee);
-    console.log(this.sharedEmployee);
-//     setTimeout(() => {
-//       this.ifData = true;
-//  }, 5000);
   });
 }
 
 getDataForMe() {
   this.sharedEmployee = this.currentUserInfo;
   this.eventsSubject.next(this.sharedEmployee);
-  console.log('za mene ciljevi', this.sharedEmployee);
-//   setTimeout(() => {
-//     this.ifData = true;
-// }, 5000);
 }
 
   ngOnInit() {

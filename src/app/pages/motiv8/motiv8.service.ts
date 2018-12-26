@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClientModule, HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { HttpClientModule, HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Observable, throwError , BehaviorSubject, of, from } from 'rxjs';
 import { Test, Status, CategoryOfTask, WhatRequest, WhatHalf, WhatYearly,
   LoggedUserInfo, How, TotalYearly, Potential, DevelopmentPlan } from 'src/app/models/logged-user-info';
@@ -7,12 +7,14 @@ import { catchError, retry } from 'rxjs/operators';
 import 'rxjs/add/operator/catch';
 import { environment } from 'src/environments/environment.prod';
 import { EmployeeMotiv8 } from 'src/app/models/employee';
+import { ResponseContentType } from '@angular/http';
 
 @Injectable({
   providedIn: 'root'
 })
 export class Motiv8Service {
 
+obj: any;
 
   constructor(private http: HttpClient ) { }
 
@@ -190,4 +192,13 @@ export class Motiv8Service {
     const url = environment.db.ROOT2 + 'motiv8/survey-targets-finish?surveyID=' + id;
     return this.http.put<WhatRequest[]>(url, tasks);
   }
+
+  downloadDoc = (id) => {
+    const url = environment.db.ROOT2 + 'motiv8/survey-print?surveyAnswerID=' + id;
+    return this.http.post(url, null,  {
+      responseType: 'blob',
+      observe: 'response',
+    });
+  }
+
 }
