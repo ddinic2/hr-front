@@ -82,7 +82,7 @@ export class WhatRequestComponent implements OnInit {
     }
 
     if (this.targetWhat.value.Motiv8TargetID) {
-
+      this.targetWhat.value.LoggedEmployeeID = Number(this.loggedUser);
       this.motiv8Serivice.updateWhatTask(this.targetWhat.value).subscribe(res => {
         if ( res ) {
           this.snackBar.open('Uspesno izmenjen cilj.', 'OK', {
@@ -97,6 +97,7 @@ export class WhatRequestComponent implements OnInit {
       this.targetWhat.value.Motiv8TargetID = -1;
      this.targetWhat.value.Motiv8SurveyAnswerID = this.userToDo.SurveyAnswerID;
       this.targetWhat.value.TargetCategory = Number(this.targetWhat.value.TargetCategory);
+      this.targetWhat.value.LoggedEmployeeID = Number(this.loggedUser);
       this.motiv8Serivice.addNewWhatRequest(this.targetWhat.value).subscribe(res => {
         if ( res ) {
           this.snackBar.open('Uspesno dodat novi cilj.', 'OK', {
@@ -181,7 +182,7 @@ export class WhatRequestComponent implements OnInit {
   //   });
   // }
   saveAndSendAllTarget(tasks) {
-    this.motiv8Serivice.saveAndSendAllTarget(tasks, this.userToDo.SurveyAnswerID).subscribe(res => {
+    this.motiv8Serivice.saveAndSendAllTarget(tasks, this.userToDo.SurveyAnswerID,  Number(this.loggedUser)).subscribe(res => {
       if (res) {
         this.canSend = false;
         this.snackBar.open('Uspesno cuvanje i porosledjivanje cilja.', 'OK', {
@@ -201,6 +202,7 @@ export class WhatRequestComponent implements OnInit {
   getTargetWhat(id) {
     this.motiv8Serivice.getTargetWhat(id).subscribe(res => {
       this.tasks = res;
+      console.log('taskovi', this.tasks);
       for (let i = 0; i < this.tasks.length; i++) {
          this.tempRes += this.tasks[i].TargetWeight;
       }
@@ -218,6 +220,8 @@ export class WhatRequestComponent implements OnInit {
       this.userToDo = res;
       if (res) {
         this.getTargetWhat(this.userToDo.SurveyAnswerID);
+        // console.log('ulgovani', this.loggedUser);
+        // console.log('podaci po ulogovanom', this.userToDo);
       }
       });
     this.getTargetCategory();

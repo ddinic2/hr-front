@@ -107,6 +107,7 @@ export class WhatHalfComponent implements OnInit {
       });
       return;
     }
+    this.employeeWhat.value.LoggedEmployeeID = Number(this.loggedUser);
     this.motiv8Service.addHalfYearTarget(this.employeeWhat.value).subscribe(res => {
       if (res) {
         this.snackBar.open('Uspesno ste izmenili cilj.', 'OK', {
@@ -120,6 +121,7 @@ export class WhatHalfComponent implements OnInit {
   }
 
   confirmeEmployee(task) {
+    task.LoggedEmployeeID = Number(this.loggedUser);
     this.motiv8Service.confirmeEmployeeHalf(task).subscribe(res => {
       if (res) {
         this.snackBar.open('Uspesno ste potvrdili.', 'OK', {
@@ -131,6 +133,7 @@ export class WhatHalfComponent implements OnInit {
   }
 
   confirmeManager(task) {
+    task.LoggedEmployeeID = Number(this.loggedUser);
     this.motiv8Service.confirmeManagerHalf(task).subscribe(res => {
       if (res) {
         this.snackBar.open('Uspesno ste potvrdili.', 'OK', {

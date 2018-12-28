@@ -188,8 +188,8 @@ obj: any;
     return this.http.get<any>(url);
   }
 
-  saveAndSendAllTarget(tasks, id): Observable<WhatRequest[]> {
-    const url = environment.db.ROOT2 + 'motiv8/survey-targets-finish?surveyID=' + id;
+  saveAndSendAllTarget(tasks, id, LoggedEmployeeID): Observable<WhatRequest[]> {
+    const url = environment.db.ROOT2 + 'motiv8/survey-targets-finish?surveyAnswerID=' + id + '&loggedEmployeeID=' + LoggedEmployeeID;
     return this.http.put<WhatRequest[]>(url, tasks);
   }
 

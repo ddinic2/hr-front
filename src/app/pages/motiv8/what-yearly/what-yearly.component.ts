@@ -87,6 +87,7 @@ export class WhatYearlyComponent implements OnInit {
         return;
       }
     }
+    this.employeeWhat.value.LoggedEmployeeID = Number(this.loggedUser);
     this.motiv8Serivice.addYearlyTarget(this.employeeWhat.value).subscribe(res => {
       if (res) {
         this.snackBar.open('Uspesno ste izmenili cilj.', 'OK', {
@@ -100,6 +101,7 @@ export class WhatYearlyComponent implements OnInit {
   }
 
   approveEmployee(task) {
+    task.LoggedEmployeeID = Number(this.loggedUser);
     this.motiv8Serivice.approveEmployeeYearly(task).subscribe(res => {
       if (res) {
         this.snackBar.open('Uspesno ste potvrdili.', 'OK', {
@@ -111,6 +113,7 @@ export class WhatYearlyComponent implements OnInit {
   }
 
   approveManager(task) {
+    task.LoggedEmployeeID = Number(this.loggedUser);
     this.motiv8Serivice.approveManagerYearly(task).subscribe(res => {
       if (res) {
         this.snackBar.open('Uspesno ste odobrili', 'OK', {
