@@ -305,8 +305,9 @@ export class TotalYearlyComponent implements OnInit {
       a.setAttribute('style', 'display: none');
       a.href = url;
       a.download = filename;
-      a.click();
-      a.remove();
+      window.navigator.msSaveBlob(data.body, filename);
+      // a.click();
+      // a.remove();
     });
   }
 }

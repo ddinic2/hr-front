@@ -149,7 +149,7 @@ export class WhatRequestComponent implements OnInit {
   }
 
   reject(id) {
-    this.motiv8Serivice.rejectTarget(id).subscribe(res => {
+    this.motiv8Serivice.rejectTarget(id,  Number(this.loggedUser)).subscribe(res => {
       if ( res ) {
         this.snackBar.open('Odbili ste cilj.', 'OK', {
           duration: 4000,
@@ -160,7 +160,7 @@ export class WhatRequestComponent implements OnInit {
   }
 
   approve(id) {
-    this.motiv8Serivice.approveTarget(id).subscribe(res => {
+    this.motiv8Serivice.approveTarget(id,  Number(this.loggedUser)).subscribe(res => {
       if ( res ) {
         this.snackBar.open('Uspesno set odobrili cilj.', 'OK', {
           duration: 4000,

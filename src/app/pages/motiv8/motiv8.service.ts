@@ -68,13 +68,13 @@ obj: any;
     return this.http.put<WhatRequest>(url, task);
   }
 
-  rejectTarget(id: number): Observable<WhatRequest> {
-    const url = environment.db.ROOT2 + 'motiv8/survey-target-reject?targetID=' + id;
+  rejectTarget(id: number, LoggedEmployeeID: number): Observable<WhatRequest> {
+    const url = environment.db.ROOT2 + 'motiv8/survey-target-reject?targetID=' + id + '&loggedEmployeeID=' + LoggedEmployeeID;
     return this.http.put<WhatRequest>(url, null);
   }
 
-  approveTarget(id: number): Observable<WhatRequest> {
-    const url = environment.db.ROOT2 + 'motiv8/survey-target-approve?targetID=' + id;
+  approveTarget(id: number, LoggedEmployeeID: number): Observable<WhatRequest> {
+    const url = environment.db.ROOT2 + 'motiv8/survey-target-approve?targetID=' + id + '&loggedEmployeeID=' + LoggedEmployeeID;
     return this.http.put<WhatRequest>(url, null);
   }
 
