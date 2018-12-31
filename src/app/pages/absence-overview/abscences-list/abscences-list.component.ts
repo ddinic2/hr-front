@@ -284,8 +284,9 @@ export class AbscencesListComponent implements OnInit {
         document.body.appendChild(a);
         a.setAttribute('style', 'display: none');
         a.href = url;
-        a.download = filename;
-        a.click();
+        window.navigator.msSaveBlob(data.body, filename);
+        // a.download = filename;
+        // a.click();
         a.remove();
       });
 
@@ -315,8 +316,9 @@ export class AbscencesListComponent implements OnInit {
           document.body.appendChild(a);
           a.setAttribute('style', 'display: none');
           a.href = url;
-          a.download = filename;
-          a.click();
+          window.navigator.msSaveBlob(data.body, filename);
+          // a.download = filename;
+          // a.click();
           a.remove();
         } else {
           this.snackBar.open('Dokument nije generisan!', 'OK', {

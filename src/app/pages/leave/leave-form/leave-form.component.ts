@@ -45,6 +45,7 @@ export class LeaveFormComponent implements OnInit {
   yearVacation: any;
   minDate = new Date();
   exceptionAbsence: boolean;
+  disableButton: boolean;
 
 
 
@@ -205,6 +206,7 @@ export class LeaveFormComponent implements OnInit {
   }
 
   saveAbsence() {
+    this.disableButton = true;
     const formResult: EmployeeAbsence = this.employeeAbsenceForm.value;
     formResult.loggedEmployeeId = this.loggedUser.value.data.employeeId;
     formResult.loggedUserId = this.loggedUser.value.data.userId;
