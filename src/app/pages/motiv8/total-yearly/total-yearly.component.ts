@@ -299,8 +299,10 @@ export class TotalYearlyComponent implements OnInit {
    */
     const ua = window.navigator.userAgent;
 
+    const trident = ua.indexOf('Trident/');
+    const edge = ua.indexOf('Edge/');
     const msie = ua.indexOf('MSIE ');
-    if (msie > 0) {
+    if ((msie > 0) || (trident > 0) || (edge > 0)) {
       // IE 10 or older => return version number
       // alert('Stariji od IE 10');
       return this.service.downloadDoc(this.userData.SurveyAnswerID)
@@ -318,56 +320,10 @@ export class TotalYearlyComponent implements OnInit {
         window.navigator.msSaveBlob(data.body, filename);
         //  a.click();
         //  a.remove();
-        return parseInt(ua.substring(msie + 5, ua.indexOf('.', msie)), 10);
+        return;
       });
     }
 
-    const trident = ua.indexOf('Trident/');
-    if (trident > 0) {
-      // IE 11 => return version number
-      // alert('u pitanju je  od IE 11');
-
-      return this.service.downloadDoc(this.userData.SurveyAnswerID)
-      .subscribe(data => {
-        let thefile = {};
-        thefile = data;
-        const url = URL.createObjectURL(data.body);
-        const disposition = data.headers.getAll('content-disposition');
-        const filename = (this.userData.EmployeeHRNumber).toString() + '_' + (this.userData.SurveyAnswerID).toString() + '.pdf';
-        const a = document.createElement('a');
-        document.body.appendChild(a);
-        a.setAttribute('style', 'display: none');
-        a.href = url;
-        a.download = filename;
-        window.navigator.msSaveBlob(data.body, filename);
-        //  a.click();
-        //  a.remove();
-        const rv = ua.indexOf('rv:');
-      return parseInt(ua.substring(rv + 3, ua.indexOf('.', rv)), 10);
-      });
-    }
-
-    const edge = ua.indexOf('Edge/');
-    if (edge > 0) {
-      // Edge (IE 12+) => return version number
-      return this.service.downloadDoc(this.userData.SurveyAnswerID)
-      .subscribe(data => {
-        let thefile = {};
-        thefile = data;
-        const url = URL.createObjectURL(data.body);
-        const disposition = data.headers.getAll('content-disposition');
-        const filename = (this.userData.EmployeeHRNumber).toString() + '_' + (this.userData.SurveyAnswerID).toString() + '.pdf';
-        const a = document.createElement('a');
-        document.body.appendChild(a);
-        a.setAttribute('style', 'display: none');
-        a.href = url;
-        a.download = filename;
-        window.navigator.msSaveBlob(data.body, filename);
-        //  a.click();
-        //  a.remove();
-        return parseInt(ua.substring(edge + 5, ua.indexOf('.', edge)), 10);
-      });
-    }
     // other browser
     return this.service.downloadDoc(this.userData.SurveyAnswerID)
     .subscribe(data => {
@@ -384,14 +340,11 @@ export class TotalYearlyComponent implements OnInit {
       // window.navigator.msSaveBlob(data.body, filename);
       a.click();
       a.remove();
-      return false;
+      return;
     });
   }
 }
 
-<<<<<<< Updated upstream
 
 
 
-=======
->>>>>>> Stashed changes

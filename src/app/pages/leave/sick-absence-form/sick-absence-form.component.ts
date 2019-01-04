@@ -181,6 +181,7 @@ export class SickAbsenceFormComponent implements OnInit {
 
   displayFn(employee: any): string | undefined {
     if (employee != null) {
+        // tslint:disable-next-line:max-line-length
         // return typeof (option) === 'string' ? option : `${option.FirstName ? option.FirstName : 'nema ime'} ${option.Surname ? option.Surname : 'nema prezime'}`;
         return typeof (employee) === 'string' ? employee : `${employee.FirstName} ${employee.Surname} ${employee.JobTypeName}`;
     }
