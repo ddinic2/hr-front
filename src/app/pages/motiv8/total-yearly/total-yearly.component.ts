@@ -344,7 +344,3 @@ export class TotalYearlyComponent implements OnInit {
     });
   }
 }
-
-
-
-
