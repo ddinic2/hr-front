@@ -138,7 +138,7 @@ export class AbscencesListComponent implements OnInit {
 
   }
 
-  //Odobravanje odsustva NAPOMENA: LoggedUser da se zameni sa objektom
+  // Odobravanje odsustva NAPOMENA: LoggedUser da se zameni sa objektom
   approve = item => {
     if (item.AbsenceProcessStatus === AbsenceProcessStatus.Created &&
       this.roleId === Roles.Manager.toString() && this.loggedEmployeeId !== item.EmployeeId.toString()  ||
@@ -172,7 +172,7 @@ export class AbscencesListComponent implements OnInit {
     this.grid.refresh();
   }
 
-  //Ponistavanje odsustva
+  // Ponistavanje odsustva
   deny = item => {
       if ((item.AbsenceProcessStatus === AbsenceProcessStatus.Created
              || item.AbsenceProcessStatus === AbsenceProcessStatus.Waiting)
@@ -210,7 +210,7 @@ export class AbscencesListComponent implements OnInit {
     }
   }
 
-  //Odobravanje odsustva iz mejla
+  // Odobravanje odsustva iz mejla
   approveFromMail = (queryParams) => {
       const employeeAbsence = (queryParams.empAbsId);
       const employeeId = (queryParams.employeeId);
@@ -231,7 +231,7 @@ export class AbscencesListComponent implements OnInit {
       });
   }
 
-  //Ponistavanje odsustva iz mejla
+  //  Ponistavanje odsustva iz mejla
   denyFromMail = queryParams => {
       const dialogRef = this.dialog.open(DialogDenyMessage, {
         width: '250px',
@@ -261,7 +261,59 @@ export class AbscencesListComponent implements OnInit {
 
   }
 
+  // generate = item => {
+  //   if (item.AbsenceProcessStatus === AbsenceProcessStatus.Approved && this.roleId === Roles.HRManager.toString()
+  //   && this.loggedEmployeeId !== item.EmployeeId.toString()) {
+  //     item.LoggedEmployeeId = this.loggedUser.value.data.employeeId;
+  //     item.LoggedUserId = this.loggedUser.value.data.userId;
+  //     item.LoggedUserEmail = this.loggedUser.value.data.employeeEmail;
+  //     item.LoggedUserRoleId = this.loggedUser.value.data.roleId;
+  //     item.AbsenceProcessStatusNew = AbsenceProcessStatus.Generate;
+  //   this.service.generateDocument(item.EmployeeAbsence, item.EmployeeId, item.AbsenceType, item.AbsenceProcessStatus,
+  //   item.LoggedEmployeeId, item.LoggedUserEmail, item.LoggedUserRoleId, item.AbsenceProcessStatusNew, item.LoggedUserId  )
+  //   .subscribe(data => {
+  //     this.performRefresh();
+  //       let thefile = {};
+  //       thefile = data;
+  //       //thefile = new File(data, 'data.xlsx');
+  //       const url = URL.createObjectURL(data.body);
+  //       const disposition = data.headers.getAll('content-disposition');
+  //       const filename = '';
+
+  //       const a = document.createElement('a');
+  //       document.body.appendChild(a);
+  //       a.setAttribute('style', 'display: none');
+  //       a.href = url;
+  //       window.navigator.msSaveBlob(data.body, filename);
+  //       // a.download = filename;
+  //       // a.click();
+  //       a.remove();
+  //     });
+
+  //   } else {
+  //     this.snackBar.open('Dokument ne može da se generiše!', 'OK', {
+  //       duration: 10000,
+  //       verticalPosition: 'top'
+  //       });
+
+  //   }
+
+  // }
+
   generate = item => {
+
+    /**
+ * detect IE
+ * returns version of IE or false, if browser is not Internet Explorer
+ */
+  const ua = window.navigator.userAgent;
+
+  const msie = ua.indexOf('MSIE ');
+  const trident = ua.indexOf('Trident/');
+  const edge = ua.indexOf('Edge/');
+  if ((msie > 0) || (trident > 0) || (edge > 0)) {
+    // IE 10 or older => return version number
+    // alert('Stariji od IE 10');
     if (item.AbsenceProcessStatus === AbsenceProcessStatus.Approved && this.roleId === Roles.HRManager.toString()
     && this.loggedEmployeeId !== item.EmployeeId.toString()) {
       item.LoggedEmployeeId = this.loggedUser.value.data.employeeId;
@@ -275,10 +327,10 @@ export class AbscencesListComponent implements OnInit {
       this.performRefresh();
         let thefile = {};
         thefile = data;
-        //thefile = new File(data, 'data.xlsx');
+        // thefile = new File(data, 'data.xlsx');
         const url = URL.createObjectURL(data.body);
         const disposition = data.headers.getAll('content-disposition');
-        const filename = '';
+        const filename = item.AbsenceSubtypeName + '.docx';
 
         const a = document.createElement('a');
         document.body.appendChild(a);
@@ -288,6 +340,7 @@ export class AbscencesListComponent implements OnInit {
         // a.download = filename;
         // a.click();
         a.remove();
+        return;
       });
 
     } else {
@@ -295,22 +348,74 @@ export class AbscencesListComponent implements OnInit {
         duration: 10000,
         verticalPosition: 'top'
         });
+        return;
 
     }
 
+
   }
+  // other browser
+  if (item.AbsenceProcessStatus === AbsenceProcessStatus.Approved && this.roleId === Roles.HRManager.toString()
+  && this.loggedEmployeeId !== item.EmployeeId.toString()) {
+    item.LoggedEmployeeId = this.loggedUser.value.data.employeeId;
+    item.LoggedUserId = this.loggedUser.value.data.userId;
+    item.LoggedUserEmail = this.loggedUser.value.data.employeeEmail;
+    item.LoggedUserRoleId = this.loggedUser.value.data.roleId;
+    item.AbsenceProcessStatusNew = AbsenceProcessStatus.Generate;
+  this.service.generateDocument(item.EmployeeAbsence, item.EmployeeId, item.AbsenceType, item.AbsenceProcessStatus,
+  item.LoggedEmployeeId, item.LoggedUserEmail, item.LoggedUserRoleId, item.AbsenceProcessStatusNew, item.LoggedUserId  )
+  .subscribe(data => {
+    this.performRefresh();
+      let thefile = {};
+      thefile = data;
+      // thefile = new File(data, 'data.xlsx');
+      const url = URL.createObjectURL(data.body);
+      const disposition = data.headers.getAll('content-disposition');
+      const filename = item.AbsenceSubtypeName + '.docx';
+
+      const a = document.createElement('a');
+      document.body.appendChild(a);
+      a.setAttribute('style', 'display: none');
+      a.href = url;
+      // window.navigator.msSaveBlob(data.body, filename);
+      a.download = filename;
+      a.click();
+      a.remove();
+    });
+
+  } else {
+    this.snackBar.open('Dokument ne može da se generiše!', 'OK', {
+      duration: 10000,
+      verticalPosition: 'top'
+      });
+
+  }
+}
 
   link = item => {
+
+    /**
+ * detect IE
+ * returns version of IE or false, if browser is not Internet Explorer
+ */
+  const ua = window.navigator.userAgent;
+
+  const msie = ua.indexOf('MSIE ');
+  const trident = ua.indexOf('Trident/');
+  const edge = ua.indexOf('Edge/');
+  if ((msie > 0) || (trident > 0) || (edge > 0)) {
+    // IE 10 or older => return version number
+    // alert('Stariji od IE 10');
     if (this.roleId === Roles.HRManager.toString() && item.AbsenceProcessStatus === AbsenceProcessStatus.Generate
     && this.loggedEmployeeId !== item.EmployeeId.toString()) {
-      this.service.getDocument(item.EmployeeAbsence, item.EmployeeId)
+      return this.service.getDocument(item.EmployeeAbsence, item.EmployeeId)
       .subscribe(data => {
         if (data.body != null) {
           let thefile = {};
           thefile = data;
           const url = URL.createObjectURL(data.body);
           const disposition = data.headers.getAll('content-disposition');
-          const filename = '';
+          const filename = item.AbsenceTypeName + '.docx';
 
           const a = document.createElement('a');
           document.body.appendChild(a);
@@ -337,12 +442,48 @@ export class AbscencesListComponent implements OnInit {
 
 
   }
+  // other browser
+  if (this.roleId === Roles.HRManager.toString() && item.AbsenceProcessStatus === AbsenceProcessStatus.Generate
+  && this.loggedEmployeeId !== item.EmployeeId.toString()) {
+    return this.service.getDocument(item.EmployeeAbsence, item.EmployeeId)
+    .subscribe(data => {
+      if (data.body != null) {
+        let thefile = {};
+        thefile = data;
+        const url = URL.createObjectURL(data.body);
+        const disposition = data.headers.getAll('content-disposition');
+        const filename = item.AbsenceTypeName + '.docx';
+
+        const a = document.createElement('a');
+        document.body.appendChild(a);
+        a.setAttribute('style', 'display: none');
+        a.href = url;
+        // window.navigator.msSaveBlob(data.body, filename);
+        a.download = filename;
+        a.click();
+        a.remove();
+      } else {
+        this.snackBar.open('Dokument nije generisan!', 'OK', {
+          duration: 10000,
+          verticalPosition: 'top'
+          });
+      }
+
+    });
+  } else {
+    this.snackBar.open('Dokument nije u statusu "Generisan" ili nemate pravana da otvorite dokument!', 'OK', {
+      duration: 10000,
+      verticalPosition: 'top'
+      });
+  }
+}
 
 }
 @Component({
   selector: 'hr-dialog-deny-message',
   templateUrl: 'dialog-deny-message.html',
 })
+// tslint:disable-next-line:component-class-suffix
 export class DialogDenyMessage {
   dialogFormGroup: FormGroup;
 

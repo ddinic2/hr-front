@@ -5,7 +5,8 @@
 export const environment = {
   production: false,
   db: {
-    ROOT: 'http://localhost:22950/',
+    ROOT: 'http://10.111.10.41:22900/',
+    // ROOT: 'http://localhost:54278/',
     SUBSTITUTE: 'work-leave',
     ABSCENCE: 'absences',
     ABSENCE_TYPE: '/absence-types',

@@ -1,8 +1,8 @@
 export const environment = {
   production: true,
   db: {
-    ROOT: 'http://10.10.1.56:22900/', // OBS
-    //ROOT: 'http://10.111.10.41:22900/',
+    // ROOT: 'http://10.10.1.56:22900/', // OBS
+    ROOT: 'http://10.111.10.41:22900/',
     SUBSTITUTE: 'work-leave',
     ABSCENCE: 'absences',
     ABSENCE_TYPE: '/absence-types',
@@ -35,7 +35,7 @@ export const environment = {
     GET_GENERATE_DOCUMENT: '/get-generate-document',
     EMPLOYEE_ABSENCE_WORKSHEETS: '/employee-absence-worksheets',
     ROOT2: 'http://10.111.10.41:22950/'
-    // ROOT2: 'http://10.10.1.56:22900/' //OBS
+    //  ROOT2: 'http://10.10.1.56:22900/' // OBS
   }
 
 };
