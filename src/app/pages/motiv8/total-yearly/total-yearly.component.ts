@@ -389,6 +389,9 @@ export class TotalYearlyComponent implements OnInit {
   }
 }
 
+<<<<<<< Updated upstream
 
 
 
+=======
+>>>>>>> Stashed changes

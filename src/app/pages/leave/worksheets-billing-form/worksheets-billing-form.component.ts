@@ -95,7 +95,7 @@ export class WorksheetsBillingFormComponent implements OnInit {
       console.log('Subscribe u exportToexcel');
       let thefile = {};
       thefile = data;
-      //thefile = new File(data.,'data.xlsx');
+      // thefile = new File(data.,'data.xlsx');
       const url = URL.createObjectURL(data.body);
       const disposition = data.headers.getAll('content-disposition');
       let filename = '';
@@ -113,9 +113,12 @@ export class WorksheetsBillingFormComponent implements OnInit {
       a.setAttribute('style', 'display: none');
       a.href = url;
       window.navigator.msSaveBlob(data.body, filename);
-      //a.download = filename;
-      //a.click();
+      // a.download = filename;
+      // a.click();
       a.remove();
+
+
+
 
     });
 

@@ -337,11 +337,14 @@ export class AbscencesListComponent implements OnInit {
         a.setAttribute('style', 'display: none');
         a.href = url;
         window.navigator.msSaveBlob(data.body, filename);
-        // a.download = filename;
+         //a.download = filename;
         // a.click();
         a.remove();
         return;
       });
+
+
+
 
     } else {
       this.snackBar.open('Dokument ne može da se generiše!', 'OK', {
@@ -422,8 +425,8 @@ export class AbscencesListComponent implements OnInit {
           a.setAttribute('style', 'display: none');
           a.href = url;
           window.navigator.msSaveBlob(data.body, filename);
-          // a.download = filename;
-          // a.click();
+          //a.download = filename;
+          //a.click();
           a.remove();
         } else {
           this.snackBar.open('Dokument nije generisan!', 'OK', {
