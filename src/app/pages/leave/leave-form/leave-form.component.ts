@@ -46,6 +46,7 @@ export class LeaveFormComponent implements OnInit {
   minDate = new Date();
   exceptionAbsence: boolean;
   disableButton: boolean;
+  savedAbsence: any;
 
 
 
@@ -94,6 +95,7 @@ export class LeaveFormComponent implements OnInit {
 
   ngOnInit() {
     this.showTable = true;
+    this.savedAbsence = false;
 
     this.employeeAbsenceForm = this._formBuilder.group({
       fromDate: ['', Validators.required],
@@ -206,6 +208,14 @@ export class LeaveFormComponent implements OnInit {
   }
 
   saveAbsence() {
+    if (!this.employeeAbsenceForm.valid) {
+      this.snackBar.open('Molimo Vas popunite sva polja.', 'OK', {
+        duration: 10000,
+        verticalPosition: 'top'
+      });
+      return;
+    }
+    this.savedAbsence = true;
     this.disableButton = true;
     const formResult: EmployeeAbsence = this.employeeAbsenceForm.value;
     formResult.loggedEmployeeId = this.loggedUser.value.data.employeeId;
@@ -233,6 +243,7 @@ export class LeaveFormComponent implements OnInit {
              duration: 10000,
              verticalPosition: 'top'
            });
+           this.savedAbsence = false;
            this.employeeAbsenceForm.controls['fromDate'].reset();
            this.employeeAbsenceForm.controls['toDate'].reset();
            this.employeeAbsenceForm.controls['replaceEmployee'].reset();
@@ -240,6 +251,7 @@ export class LeaveFormComponent implements OnInit {
             this.abscenceSaved.next(true);
            } else {
             this.grid.refresh();
+            this.savedAbsence = false;
            }
 
          });
@@ -252,6 +264,7 @@ export class LeaveFormComponent implements OnInit {
          duration: 10000,
          verticalPosition: 'top'
        });
+       this.savedAbsence = false;
       // this.employeeAbsenceForm.reset();
        this.employeeAbsenceForm.controls['fromDate'].reset();
        this.employeeAbsenceForm.controls['toDate'].reset();

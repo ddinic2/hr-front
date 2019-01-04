@@ -39,6 +39,7 @@ export class PaidAbsenceFormComponent implements OnInit {
   rolaHRManager = Roles.HRManager.toString();
   rolaManager = Roles.Manager.toString();
   minDate = new Date();
+  savedAbsence: any;
 
   columnNameArray = [
     'Ime i Prezime',
@@ -91,6 +92,7 @@ export class PaidAbsenceFormComponent implements OnInit {
    }
 
   ngOnInit() {
+    this.savedAbsence = false;
     this.subsService.getAbsenceSubtype(this.absenceType).subscribe (res => {this.absenceSubtypeOptions = res; });
     this.loggedUser =  this.loginService.getLoggedInUser();
     this.loggedEmployeeId = this.loggedUser.value.data.employeeId;
@@ -178,6 +180,14 @@ export class PaidAbsenceFormComponent implements OnInit {
 
 
   saveAbsence() {
+    if (!this.employeePaidAbsenceForm.valid) {
+      this.snackBar.open('Molimo Vas popunite sva polja.', 'OK', {
+        duration: 10000,
+        verticalPosition: 'top'
+      });
+      return;
+    }
+    this.savedAbsence = true;
     const formResult: EmployeeAbsence = this.employeePaidAbsenceForm.value;
     formResult.loggedEmployeeId = this.loggedUser.value.data.employeeId;
     formResult.loggedUserId = this.loggedUser.value.data.userId;
@@ -193,12 +203,14 @@ export class PaidAbsenceFormComponent implements OnInit {
       duration: 10000,
       verticalPosition: 'top'
     });
+    this.savedAbsence = false;
     this.employeePaidAbsenceForm.reset();
     this.employeePaidAbsenceForm.enable();
     if (this.roleId === Roles.HRManager.toString() || this.roleId === Roles.Manager.toString()) {
       this.abscenceSaved.next(true);
      } else {
       this.grid.refresh();
+      this.savedAbsence = false;
      }
 
   });

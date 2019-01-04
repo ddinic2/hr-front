@@ -41,6 +41,7 @@ export class SickAbsenceFormComponent implements OnInit {
   holidayDays: any;
   loggedEmployeeId: string;
   roleId: string;
+  savedAbsence: any;
 
   columnNameArray = [
     'Ime i Prezime',
@@ -90,6 +91,7 @@ export class SickAbsenceFormComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.savedAbsence = false;
     this.subsService.getAbsenceSickLeaveType().subscribe(res => { this.sickLeaveTypeOptions = res; });
     this.subsService.getAbsenceSubtype(this.absenceType).subscribe(res => {this.absenceSubtypeOptions = res; });
     this.subsService.getSickLeaveCode().subscribe(res => {this.sickLeaveCodeOptions = res; });
@@ -179,13 +181,21 @@ export class SickAbsenceFormComponent implements OnInit {
 
   displayFn(employee: any): string | undefined {
     if (employee != null) {
-        //return typeof (option) === 'string' ? option : `${option.FirstName ? option.FirstName : 'nema ime'} ${option.Surname ? option.Surname : 'nema prezime'}`;
+        // return typeof (option) === 'string' ? option : `${option.FirstName ? option.FirstName : 'nema ime'} ${option.Surname ? option.Surname : 'nema prezime'}`;
         return typeof (employee) === 'string' ? employee : `${employee.FirstName} ${employee.Surname} ${employee.JobTypeName}`;
     }
 
   }
 
   saveAbsence() {
+    if (!this.employeeSickAbsenceForm.valid) {
+      this.snackBar.open('Molimo Vas popunite sva polja.', 'OK', {
+        duration: 10000,
+        verticalPosition: 'top'
+      });
+      return;
+    }
+    this.savedAbsence = true;
     const formResult: EmployeeAbsence = this.employeeSickAbsenceForm.value;
     formResult.loggedEmployeeId = this.loggedUser.value.data.employeeId;
     formResult.loggedUserId = this.loggedUser.value.data.userId;
@@ -199,12 +209,14 @@ export class SickAbsenceFormComponent implements OnInit {
       duration: 5000,
       verticalPosition: 'top'
     });
+    this.savedAbsence = false;
     this.employeeSickAbsenceForm.reset();
     this.employeeSickAbsenceForm.enable();
     this.filterOptions = this.employeeOptions;
-    //this.abscenceSaved.emit(null);
-    //this.abscenceSaved.next(true);
+    // this.abscenceSaved.emit(null);
+    // this.abscenceSaved.next(true);
     this.grid.refresh();
+    this.savedAbsence = false;
   });
   console.log(JSON.stringify(formResult, null, 2));
   }

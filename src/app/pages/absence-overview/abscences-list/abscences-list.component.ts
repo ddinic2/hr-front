@@ -330,7 +330,7 @@ export class AbscencesListComponent implements OnInit {
         // thefile = new File(data, 'data.xlsx');
         const url = URL.createObjectURL(data.body);
         const disposition = data.headers.getAll('content-disposition');
-        const filename = item.AbsenceSubtypeName + '.docx';
+        const filename = item.AbsenceSubtypeName + '.doc';
 
         const a = document.createElement('a');
         document.body.appendChild(a);
