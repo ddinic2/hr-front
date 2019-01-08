@@ -18,6 +18,7 @@ export class WhatRequestComponent implements OnInit {
 
    eventsSubscription: any;
    tempVal: any;
+   errors: any;
 
   @Input() loggedUser: any;
   @Input() sharedEmployeeData: LoggedUserInfo;
@@ -88,6 +89,7 @@ export class WhatRequestComponent implements OnInit {
           this.snackBar.open('Uspesno izmenjen cilj.', 'OK', {
             duration: 4000,
           });
+          this.targetWhat.reset();
           this.getTargetWhat(this.userToDo.SurveyAnswerID);
         }
        } );
@@ -103,12 +105,19 @@ export class WhatRequestComponent implements OnInit {
           this.snackBar.open('Uspesno dodat novi cilj.', 'OK', {
             duration: 4000,
           });
+          this.targetWhat.reset();
           this.getTargetWhat(this.userToDo.SurveyAnswerID);
         }
-      });
+      },
+        error => {
+        this.errors = error;
+        this.snackBar.open('Doslo je do greske prilikom dodavanja.', 'OK', {
+          duration: 4000,
+        });
+        return;
+    });
     }
 
-    this.targetWhat.reset();
   }
 
   openNewForm() {
