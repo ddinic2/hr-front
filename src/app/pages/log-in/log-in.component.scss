@@ -1,0 +1,23 @@
+.logInDiv{
+  -webkit-box-shadow: 11px -4px 44px -12px rgba(172, 171, 172, 0.945);
+  -moz-box-shadow: 11px -4px 44px -12px rgba(138, 135, 138, 0.945);
+  box-shadow: 11px -4px 44px -12px rgba(138, 135, 138, 0.945);
+  border: 1px solid lightgray;
+  border-radius: 5px;
+  margin-top: 5px;
+  margin-bottom: 5px;
+  max-width: 400px;
+  padding: 10px;
+}
+
+.row{
+  width: 40%;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  height: 1000px;
+}
+
+mat-form-field{
+  width: 300px;
+}

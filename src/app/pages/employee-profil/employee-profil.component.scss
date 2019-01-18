@@ -1,0 +1,33 @@
+mat-form-field {
+  margin-right: 5px;
+}
+mat-checkbox{
+  margin-right: 5px;
+}
+.noteWidth40{
+  width: 40%;
+}
+.noteWidth100{
+  width: 100%;
+}
+
+//card CSS
+.example-card {
+  max-width: 400px;
+}
+
+.example-header-image {
+  background-image: url('https://material.angular.io/assets/img/examples/shiba1.jpg');
+  background-size: cover;
+}
+//card CSS END
+
+.mgR20{
+  margin-right: 20px;
+}
+
+// @media screen and (max-width: 1024px) {
+//   body {
+//     background-color: lightgreen;
+//   }
+// }

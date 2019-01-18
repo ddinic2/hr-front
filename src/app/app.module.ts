@@ -5,7 +5,8 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { LeaveModule } from './pages/leave/leave.module';
 import {MatButtonModule, DateAdapter,
-   MatAutocompleteModule, MatTableModule, MatTooltipModule, MatIconModule, MatGridListModule } from '@angular/material';
+   // tslint:disable-next-line:max-line-length
+   MatAutocompleteModule, MatTableModule, MatTooltipModule, MatIconModule, MatGridListModule, MatToolbarModule, MatSidenavModule, MatListModule, MatExpansionModule, MatCardModule, MatCheckboxModule } from '@angular/material';
 // tslint:disable-next-line:max-line-length
 import {MatDialogModule, MatFormFieldModule, MatTabsModule, MatSelectModule, MatInputModule, MatDatepickerModule, MatSnackBarModule} from '@angular/material';
 import {  ReactiveFormsModule, FormsModule } from '@angular/forms';
@@ -20,15 +21,27 @@ import { TimsGridModule } from 'libs/timsystems-lib';
 import { TotalYearlyComponent } from './pages/motiv8/total-yearly/total-yearly.component';
 import { MatStarRatingComponent } from './pages/motiv8/how/mat-star-rating/mat-star-rating.component';
 import { MultiDatepickerModule } from './pages/motiv8/multidatepicker/multidatepicker.module';
+import { LogInComponent } from './pages/log-in/log-in.component';
+import { HomeComponent } from './pages/home/home.component';
+import { MenuListItemComponent } from './pages/menu-list-item/menu-list-item.component';
+import { NavService } from './pages/nav.service';
+import {MatStepperModule} from '@angular/material/stepper';
+import { EmployeeProfilComponent } from './pages/employee-profil/employee-profil.component';
 
 @NgModule({
   // tslint:disable-next-line:max-line-length
   declarations: [AppComponent, Motiv8Component,
     InfoCardComponent, WhatRequestComponent, WhatHalfComponent, WhatYearlyComponent,
-    HowComponent, TotalYearlyComponent, MatStarRatingComponent],  //
+    HowComponent, TotalYearlyComponent, MatStarRatingComponent, LogInComponent, HomeComponent, MenuListItemComponent,
+     EmployeeProfilComponent],  //
   // tslint:disable-next-line:max-line-length
-  imports: [BrowserModule, MultiDatepickerModule, FormsModule, TimsGridModule, MatTableModule, AppRoutingModule , MatGridListModule, LeaveModule, MatAutocompleteModule, MatButtonModule, MatDialogModule, MatFormFieldModule , ReactiveFormsModule, MatTabsModule, MatSelectModule, MatInputModule, MatDatepickerModule, MatSnackBarModule, HttpClientModule, MatTooltipModule, MatButtonModule, MatIconModule],
-  providers: [],
+  imports: [BrowserModule, MultiDatepickerModule, FormsModule, TimsGridModule, MatTableModule, AppRoutingModule ,
+    MatGridListModule, LeaveModule, MatAutocompleteModule,
+    MatButtonModule, MatDialogModule, MatFormFieldModule ,
+    ReactiveFormsModule, MatTabsModule, MatSelectModule, MatInputModule, MatDatepickerModule, MatSnackBarModule,
+    HttpClientModule, MatTooltipModule, MatButtonModule, MatIconModule, MatToolbarModule, MatSidenavModule,
+    MatListModule, MatStepperModule, MatExpansionModule, MatCardModule, MatCheckboxModule],
+  providers: [ NavService ],
   bootstrap: [AppComponent]
 })
 export class AppModule {

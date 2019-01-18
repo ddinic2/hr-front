@@ -1,0 +1,16 @@
+<div class="row" *ngIf="logginSucces">
+  <div class="logInDiv">
+    <form [formGroup]="logInForm">
+
+      <mat-form-field>
+        <input required matInput formControlName="UserName" placeholder="Username">
+      </mat-form-field><br>
+      <mat-form-field>
+        <input required matInput type="password" formControlName="Password" placeholder="Password">
+      </mat-form-field><br>
+
+    </form>
+
+    <button mat-raised-button color="primary" (click)="signIn()">Sign in</button>
+  </div>
+</div>

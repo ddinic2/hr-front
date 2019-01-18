@@ -1,0 +1,665 @@
+<mat-accordion>
+
+   <!--Osnovni podaci-->
+  <mat-expansion-panel (opened)="panelOpenState = true"
+  (closed)="panelOpenState = false">
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        Osnovni podaci
+      </mat-panel-title>
+      <mat-panel-description>
+          <!-- {{panelOpenState ? 'open' : 'closed'}} -->
+      </mat-panel-description>
+    </mat-expansion-panel-header>
+
+    <mat-grid-list cols="4" rowHeight="550px">
+        <mat-grid-tile
+            [colspan]="1"
+            [rowspan]="1"
+            [style.background]="">
+
+            <mat-card class="example-card mgR20">
+                <mat-card-header>
+                  <div mat-card-avatar class="example-header-image"></div>
+                  <mat-card-title>Ovde ime i prezime</mat-card-title>
+                  <mat-card-subtitle>Ovde moze trenutna pozicija</mat-card-subtitle>
+                </mat-card-header>
+                <img mat-card-image src="https://material.angular.io/assets/img/examples/shiba2.jpg" alt="Photo of a Shiba Inu">
+                <mat-card-content>
+                  <p>
+                    Moze ovde neka napomena ili bilo sta vezano za radnika.
+                  </p>
+                </mat-card-content>
+                <mat-card-actions>
+                    <button mat-button>
+                        <i class="material-icons">
+                            add_photo_alternate
+                            </i>
+                    </button>
+                  </mat-card-actions>
+              </mat-card>
+        </mat-grid-tile>
+
+        <mat-grid-tile
+        [colspan]="3"
+        [rowspan]="1"
+        [style.background]="">
+
+          <form [formGroup]="basicData">
+              <mat-form-field>
+                <input matInput formControlName="PassEmployee" placeholder="Sifra zaposlenog">
+              </mat-form-field>
+              <mat-form-field>
+                <input matInput formControlName="FirstName" placeholder="Ime">
+              </mat-form-field>
+              <mat-form-field>
+                <input matInput formControlName="LastName" placeholder="Prezime">
+              </mat-form-field>
+              <mat-form-field>
+                <input matInput formControlName="Gender" placeholder="Pol">
+              </mat-form-field>
+              <mat-form-field>
+                <input disabled matInput [matDatepicker]="birthday" formControlName="Birthday"
+                  placeholder="Datum rodjenja"> <!--[min]="minDate"-->
+                <mat-datepicker-toggle matSuffix [for]="birthday"></mat-datepicker-toggle>
+                <mat-datepicker disabled="false" #birthday></mat-datepicker>
+              </mat-form-field>
+              <mat-form-field>
+                <input matInput formControlName="JMBG" placeholder="JMBG">
+              </mat-form-field>
+              <mat-form-field>
+                <input matInput formControlName="PlaceOfBirthday" placeholder="Mesto rodjenja">
+              </mat-form-field>
+              <mat-form-field>
+                <input matInput formControlName="Email" placeholder="Sluzbeni e-mail">
+              </mat-form-field>
+              <mat-form-field>
+                <input matInput formControlName="CompanyPhone" placeholder="Sluzbeni telefon">
+              </mat-form-field>
+              <mat-form-field>
+                <mat-select formControlName="Poenter" placeholder="Poenter">
+                  <mat-option value={{type.PoentersId}} *ngFor="let type of poenters">{{type.PoenterName}}</mat-option>
+                </mat-select>
+              </mat-form-field>
+              <mat-form-field>
+                <input matInput formControlName="MaidenName" placeholder="Devojacko prezime">
+              </mat-form-field>
+              <mat-form-field>
+                <input matInput formControlName="BloodType" placeholder="Krvna grupa">
+              </mat-form-field>
+              <mat-form-field>
+                <input matInput formControlName="ParentName" placeholder="Ime roditelja">
+              </mat-form-field>
+              <mat-form-field>
+                <mat-select formControlName="StatusOfEmployee" placeholder="Status">
+                  <mat-option value={{type.StatusId}} *ngFor="let type of statusesOfEmployee">{{type.StatusName}}</mat-option>
+                </mat-select>
+              </mat-form-field>
+              <mat-form-field class="noteWidth40">
+                <textarea matInput required formControlName="Note" placeholder="Napomena"></textarea>
+              </mat-form-field><br>
+              <button mat-raised-button (click)="saveBasicData()">Sacuvaj</button>
+            </form>
+
+
+        </mat-grid-tile>
+      </mat-grid-list>
+
+
+  </mat-expansion-panel>
+
+  <!--Podaci o zaposlenju-->
+  <mat-expansion-panel (opened)="panelOpenState = true"
+  (closed)="panelOpenState = false">
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        Podaci o zaposlenju
+      </mat-panel-title>
+      <mat-panel-description>
+         <!--  opis neki -->
+      </mat-panel-description>
+    </mat-expansion-panel-header>
+
+    <form [formGroup]="employmentData">
+        <mat-form-field>
+          <input disabled matInput [matDatepicker]="start" formControlName="StartWork"
+            placeholder="Datum zaposlenja"> <!--[min]="minDate"-->
+          <mat-datepicker-toggle matSuffix [for]="start"></mat-datepicker-toggle>
+          <mat-datepicker disabled="false" #start></mat-datepicker>
+        </mat-form-field>
+        <mat-form-field>
+          <input disabled matInput [matDatepicker]="contract" formControlName="ContractDate"
+            placeholder="Datum zakljucenja ugovora"> <!--[min]="minDate"-->
+          <mat-datepicker-toggle matSuffix [for]="contract"></mat-datepicker-toggle>
+          <mat-datepicker disabled="false" #contract></mat-datepicker>
+        </mat-form-field>
+        <mat-form-field>
+          <input disabled matInput [matDatepicker]="anex" formControlName="AnexStart"
+            placeholder="Datum stupanja aneksa na snagu"> <!--[min]="minDate"-->
+          <mat-datepicker-toggle matSuffix [for]="anex"></mat-datepicker-toggle>
+          <mat-datepicker disabled="false" #anex></mat-datepicker>
+        </mat-form-field>
+        <mat-form-field>
+          <input matInput formControlName="DelNumber" placeholder="Delovodni broj">
+        </mat-form-field>
+        <mat-form-field>
+          <input matInput formControlName="ContractNumber" placeholder="Broj ugovora">
+        </mat-form-field>
+        <mat-form-field>
+          <mat-select formControlName="EmployementType" placeholder="Tip zaposlenja">
+            <mat-option value={{type.EmployementTypeId}} *ngFor="let type of types">{{type.TypeName}}</mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field>
+          <mat-select formControlName="WorkintTimeType" placeholder="Tip radnog vremena">
+            <mat-option value={{type.WorkingTimeTypeId}} *ngFor="let type of typesOfWorkingTime">{{type.WorkingTimeTypeName}}</mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field>
+          <input disabled matInput [matDatepicker]="startDate" formControlName="StartDate"
+            placeholder="Datum od"> <!--[min]="minDate"-->
+          <mat-datepicker-toggle matSuffix [for]="startDate"></mat-datepicker-toggle>
+          <mat-datepicker disabled="false" #startDate></mat-datepicker>
+        </mat-form-field>
+        <mat-form-field>
+          <input disabled matInput [matDatepicker]="endDate" formControlName="EndDate"
+            placeholder="Datum do"> <!--[min]="minDate"-->
+          <mat-datepicker-toggle matSuffix [for]="endDate"></mat-datepicker-toggle>
+          <mat-datepicker disabled="false" #endDate></mat-datepicker>
+        </mat-form-field>
+        <mat-form-field>
+          <input matInput formControlName="Percentage" placeholder="Procenat">
+        </mat-form-field>
+        <mat-form-field>
+          <mat-select formControlName="ShiftWork" placeholder="Smenski rad">
+            <mat-option value={{type.ShiftWorkId}} *ngFor="let type of shiftWorks">{{type.ShiftWorksName}}</mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field>
+          <input matInput formControlName="DocumentLabel" placeholder="Oznaka dokumenta">
+        </mat-form-field>
+      </form>
+
+      <div class="form-group">
+          <label for="file"></label>
+          <input mat-raised-button type="file"
+                 id="file"
+                 (change)="handleFileInput($event.target.files)">
+
+                 <button mat-raised-button (click)="saveEmploymentData()">Sacuvaj</button>
+      </div>
+  </mat-expansion-panel>
+
+<!--Radno mesto-->
+  <mat-expansion-panel (opened)="panelOpenState = true"
+  (closed)="panelOpenState = false">
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        Radno mesto
+      </mat-panel-title>
+      <mat-panel-description>
+         <!--  opis neki -->
+      </mat-panel-description>
+    </mat-expansion-panel-header>
+
+    <mat-form-field>
+      <input matInput placeholder="First name">
+    </mat-form-field>
+
+    <mat-form-field>
+      <input matInput placeholder="Age">
+    </mat-form-field>
+  </mat-expansion-panel>
+
+<!--Adresa-->
+  <mat-expansion-panel (opened)="panelOpenState = true"
+  (closed)="panelOpenState = false">
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        Adresa
+      </mat-panel-title>
+      <mat-panel-description>
+         <!--  opis neki -->
+      </mat-panel-description>
+    </mat-expansion-panel-header>
+
+    <mat-form-field>
+      <input matInput placeholder="First name">
+    </mat-form-field>
+
+    <mat-form-field>
+      <input matInput placeholder="Age">
+    </mat-form-field>
+  </mat-expansion-panel>
+
+<!--Licni porodicni podaci-->
+  <mat-expansion-panel (opened)="panelOpenState = true"
+  (closed)="panelOpenState = false">
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        Licni porodicni podaci
+      </mat-panel-title>
+      <mat-panel-description>
+         <!--  opis neki -->
+      </mat-panel-description>
+    </mat-expansion-panel-header>
+
+    <form [formGroup]="personalFamilyData">
+      <mat-form-field>
+        <input matInput formControlName="TelephoneFix" placeholder="Fiksni telefon">
+      </mat-form-field>
+      <mat-form-field>
+        <input matInput formControlName="MobilePhone" placeholder="Mobilni telefon">
+      </mat-form-field>
+      <mat-form-field>
+        <mat-select formControlName="PlaceOfBirth" placeholder="Mesto rodjenja">
+          <mat-option value={{type.PlaceOfBirth}} *ngFor="let type of placesOfBirth">{{type.PlaceOfBirth}}</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field>
+        <mat-select formControlName="MunicipalityOfBirth" placeholder="Opstina rodjenja">
+          <mat-option value={{type.MunicipalityOfBirth}} *ngFor="let type of municipalitys">{{type.MunicipalityOfBirth}}</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field>
+        <mat-select formControlName="CitizenShip" placeholder="Drzavljanstvo">
+          <mat-option value={{type.CitizenShip}} *ngFor="let type of CitizenShips">{{type.CitizenShip}}</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field>
+        <mat-select formControlName="Ethnicity" placeholder="Veroispovest">
+          <mat-option value={{type.Ethnicity}} *ngFor="let type of Ethnicitys">{{type.Ethnicity}}</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field>
+        <mat-select formControlName="Nationality" placeholder="Nacionalnost">
+          <mat-option value={{type.Nationality}} *ngFor="let type of nationalitys">{{type.Nationality}}</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field>
+        <mat-select formControlName="ReligiousHoliday" placeholder="Verski praznik">
+          <mat-option value={{type.ReligiousHoliday}} *ngFor="let type of religiousHolidays">{{type.ReligiousHoliday}}</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field>
+        <mat-select formControlName="Bank" placeholder="Ime banke">
+          <mat-option value={{type.Bank}} *ngFor="let type of banks">{{type.Bank}}</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field>
+        <input matInput formControlName="MeritalStatus" placeholder="Bracni status">
+      </mat-form-field>
+      <mat-form-field>
+        <input matInput formControlName="EmailPrivate" placeholder="Privatna e-mail adresa">
+      </mat-form-field>
+      <mat-form-field>
+        <input matInput formControlName="BankAccountNumber" placeholder="Broj tekuceg racuna">
+      </mat-form-field>
+      <mat-form-field>
+        <input matInput formControlName="DegreeOfDisability" placeholder="Stepen invaliditeta (%)">
+      </mat-form-field>
+      <mat-form-field>
+        <input matInput formControlName="DescriptionOfDisability" placeholder="Opis invaliditeta">
+      </mat-form-field>
+      <mat-checkbox class="example-margin" formControlName="CheckedSingleParent" [(ngModel)]="checkedSingleParent">Samohrani roditelj</mat-checkbox><br>
+      <mat-form-field class="noteWidth100">
+        <textarea matInput formControlName="InjuriesAtWork" placeholder="Hronicne bolesti alergije, povrede na radu"></textarea>
+      </mat-form-field><br>
+      <strong>Za hitne slucajeve</strong><br>
+      <mat-form-field>
+        <input matInput formControlName="ContactPersonName" placeholder="Ime kontakt osobe">
+      </mat-form-field>
+      <mat-form-field>
+        <input matInput formControlName="ContactPersonPhone" placeholder="Telefon kontakt osobe">
+      </mat-form-field><br>
+
+      <button mat-raised-button (click)="savePersonalFamilyData()">Sacuvaj</button>
+      <button mat-raised-button (click)="showFormForAddFamiliMemeber()">Dodaj clana porodice</button>
+    </form>
+
+    <form [formGroup]="familyMember" *ngIf="showFormForMember">
+      <mat-form-field>
+        <input matInput formControlName="FirstName" placeholder="Ime">
+      </mat-form-field>
+      <mat-form-field>
+        <input matInput formControlName="LastName" placeholder="Prezime">
+      </mat-form-field>
+      <mat-form-field>
+        <mat-select formControlName="Relation" placeholder="Srodstvo">
+          <mat-option value={{type.Relation}} *ngFor="let type of relations">{{type.Relation}}</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field>
+        <input disabled matInput [matDatepicker]="birthdayMember" formControlName="BirthdayMember"
+          placeholder="Datum rodjenja"> <!--[min]="minDate"-->
+        <mat-datepicker-toggle matSuffix [for]="birthdayMember"></mat-datepicker-toggle>
+        <mat-datepicker disabled="false" #birthdayMember></mat-datepicker>
+      </mat-form-field>
+      <mat-form-field>
+        <mat-select formControlName="GenderOfMember" placeholder="Pol">
+          <mat-option value={{type.GenderOfMember}} *ngFor="let type of genders">{{type.GenderOfMember}}</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field>
+        <input matInput formControlName="JMBG" placeholder="JMBG">
+      </mat-form-field>
+      <mat-form-field>
+        <mat-select formControlName="Place" placeholder="Mesto">
+          <mat-option value={{type.Place}} *ngFor="let type of places">{{type.Place}}</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field>
+        <mat-select formControlName="Municipality" placeholder="Opstina">
+          <mat-option value={{type.Municipality}} *ngFor="let type of municipalitys">{{type.Municipality}}</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field>
+        <input matInput formControlName="Address" placeholder="Adresa">
+      </mat-form-field>
+      <mat-form-field>
+        <input matInput formControlName="Job" placeholder="Zanimanje">
+      </mat-form-field>
+      <mat-form-field>
+        <input matInput formControlName="NumberOfHealthBooks" placeholder="Broj zdravstvene knjizice">
+      </mat-form-field>
+      <mat-form-field>
+        <input matInput formControlName="ContactData" placeholder="Kontakt podaci">
+      </mat-form-field>
+      <mat-checkbox class="example-margin" formControlName="CheckedInsured" [(ngModel)]="checkedInsured">Osiguranik</mat-checkbox><br>
+      <mat-form-field class="noteWidth100">
+        <textarea matInput formControlName="Note" placeholder="Napomena"></textarea>
+      </mat-form-field><br>
+
+      <button mat-raised-button (click)="savePersonalDataForMember()">Sacuvaj</button>
+    </form>
+  </mat-expansion-panel>
+
+<!--Licna dokumenta-->
+  <mat-expansion-panel (opened)="panelOpenState = true"
+  (closed)="panelOpenState = false">
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        Licna dokumenta
+      </mat-panel-title>
+      <mat-panel-description>
+         <!--  opis neki -->
+      </mat-panel-description>
+    </mat-expansion-panel-header>
+
+    <mat-form-field>
+      <input matInput placeholder="First name">
+    </mat-form-field>
+
+    <mat-form-field>
+      <input matInput placeholder="Age">
+    </mat-form-field>
+  </mat-expansion-panel>
+
+<!--Obrazovanje-->
+  <mat-expansion-panel (opened)="panelOpenState = true"
+  (closed)="panelOpenState = false">
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        Obrazovanje
+      </mat-panel-title>
+      <mat-panel-description>
+         <!--  opis neki -->
+      </mat-panel-description>
+    </mat-expansion-panel-header>
+
+    <form [formGroup]="personalEducation">
+      <mat-form-field>
+        <mat-select formControlName="NameOfSchool" placeholder="Naziv skole">
+          <mat-option value={{type.NameOfSchool}} *ngFor="let type of schools">{{type.NameOfSchool}}</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field>
+        <mat-select formControlName="Profession" placeholder="Zanimanje">
+          <mat-option value={{type.Profession}} *ngFor="let type of proessions">{{type.Profession}}</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field>
+        <input matInput formControlName="IdOfProfession" placeholder="Sifra zanimanja">
+      </mat-form-field>
+      <mat-form-field>
+        <mat-select formControlName="TypeOfSchool" placeholder="Tip skole">
+          <mat-option value={{type.TypeOfSchool}} *ngFor="let type of schoolTypes">{{type.TypeOfSchool}}</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field>
+        <input disabled matInput [matDatepicker]="dateOfIssue" formControlName="DateOfIssue"
+          placeholder="Datum izdavanja"> <!--[min]="minDate"-->
+        <mat-datepicker-toggle matSuffix [for]="dateOfIssue"></mat-datepicker-toggle>
+        <mat-datepicker disabled="false" #dateOfIssue></mat-datepicker>
+      </mat-form-field>
+      <mat-form-field>
+        <input disabled matInput [matDatepicker]="dateOfAcquisition" formControlName="DateOfAcquisition"
+          placeholder="Datum sticanja"> <!--[min]="minDate"-->
+        <mat-datepicker-toggle matSuffix [for]="dateOfAcquisition"></mat-datepicker-toggle>
+        <mat-datepicker disabled="false" #dateOfAcquisition></mat-datepicker>
+      </mat-form-field>
+      <mat-form-field>
+        <input disabled matInput [matDatepicker]="beginningOfSchooling" formControlName="BeginningOfSchooling"
+          placeholder="Pocetak skolovanja"> <!--[min]="minDate"-->
+        <mat-datepicker-toggle matSuffix [for]="beginningOfSchooling"></mat-datepicker-toggle>
+        <mat-datepicker disabled="false" #beginningOfSchooling></mat-datepicker>
+      </mat-form-field>
+      <mat-form-field>
+        <input disabled matInput [matDatepicker]="endOfSchooling" formControlName="EndOfSchooling"
+          placeholder="Zavrsetak skolovanja"> <!--[min]="minDate"-->
+        <mat-datepicker-toggle matSuffix [for]="endOfSchooling"></mat-datepicker-toggle>
+        <mat-datepicker disabled="false" #endOfSchooling></mat-datepicker>
+      </mat-form-field>
+      <mat-form-field>
+        <mat-select formControlName="ProfessionalQualifications" placeholder="Tip skole">
+          <mat-option value={{type.ProfessionalQualifications}} *ngFor="let type of qualifications">{{type.ProfessionalQualifications}}</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field>
+        <input matInput formControlName="DegreeNumber" placeholder="Broj diplome">
+      </mat-form-field>
+      <mat-checkbox class="example-margin" formControlName="CheckedIsActiveDegree" [(ngModel)]="checkedIsActiveDegree">Aktivna</mat-checkbox><br>
+      <mat-form-field class="noteWidth100">
+        <textarea matInput formControlName="Note" placeholder="Napomena"></textarea>
+      </mat-form-field><br>
+      <div class="form-group">
+          <label for="file"></label>
+          <input mat-raised-button type="file"
+                 id="file1"
+                 (change)="handleFileInput1($event.target.files)">
+
+                 <button mat-raised-button (click)="savePersonalEducation()">Sacuvaj</button>
+      </div>
+    </form>
+  </mat-expansion-panel>
+
+<!--Radni staz-->
+  <mat-expansion-panel (opened)="panelOpenState = true"
+  (closed)="panelOpenState = false">
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        Radni staz
+      </mat-panel-title>
+      <mat-panel-description>
+         <!--  opis neki -->
+      </mat-panel-description>
+    </mat-expansion-panel-header>
+
+    <mat-form-field>
+      <input matInput placeholder="First name">
+    </mat-form-field>
+
+    <mat-form-field>
+      <input matInput placeholder="Age">
+    </mat-form-field>
+  </mat-expansion-panel>
+
+<!--Odsustva-->
+  <mat-expansion-panel (opened)="panelOpenState = true"
+  (closed)="panelOpenState = false">
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        Odsustva
+      </mat-panel-title>
+      <mat-panel-description>
+         <!--  opis neki -->
+      </mat-panel-description>
+    </mat-expansion-panel-header>
+
+    <mat-form-field>
+      <input matInput placeholder="First name">
+    </mat-form-field>
+
+    <mat-form-field>
+      <input matInput placeholder="Age">
+    </mat-form-field>
+  </mat-expansion-panel>
+
+<!--Obuke-->
+  <mat-expansion-panel (opened)="panelOpenState = true"
+  (closed)="panelOpenState = false">
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        Obuke
+      </mat-panel-title>
+      <mat-panel-description>
+         <!--  opis neki -->
+      </mat-panel-description>
+    </mat-expansion-panel-header>
+
+    <mat-form-field>
+      <input matInput placeholder="First name">
+    </mat-form-field>
+
+    <mat-form-field>
+      <input matInput placeholder="Age">
+    </mat-form-field>
+  </mat-expansion-panel>
+
+<!--Sluzbeni put-->
+  <mat-expansion-panel (opened)="panelOpenState = true"
+  (closed)="panelOpenState = false">
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        Sluzbeni put
+      </mat-panel-title>
+      <mat-panel-description>
+         <!--  opis neki -->
+      </mat-panel-description>
+    </mat-expansion-panel-header>
+
+    <mat-form-field>
+      <input matInput placeholder="First name">
+    </mat-form-field>
+
+    <mat-form-field>
+      <input matInput placeholder="Age">
+    </mat-form-field>
+  </mat-expansion-panel>
+
+<!--Zarada zaposlenog-->
+  <mat-expansion-panel (opened)="panelOpenState = true"
+  (closed)="panelOpenState = false">
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        Zarada zaposlenog
+      </mat-panel-title>
+      <mat-panel-description>
+         <!--  opis neki -->
+      </mat-panel-description>
+    </mat-expansion-panel-header>
+
+    <mat-form-field>
+      <input matInput placeholder="First name">
+    </mat-form-field>
+
+    <mat-form-field>
+      <input matInput placeholder="Age">
+    </mat-form-field>
+  </mat-expansion-panel>
+
+<!--Dodatna znanja-->
+  <mat-expansion-panel (opened)="panelOpenState = true"
+  (closed)="panelOpenState = false">
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        Dodatna znanja
+      </mat-panel-title>
+      <mat-panel-description>
+         <!--  opis neki -->
+      </mat-panel-description>
+    </mat-expansion-panel-header>
+
+    <mat-form-field>
+      <input matInput placeholder="First name">
+    </mat-form-field>
+
+    <mat-form-field>
+      <input matInput placeholder="Age">
+    </mat-form-field>
+  </mat-expansion-panel>
+
+<!--Generisani dokumenti-->
+  <mat-expansion-panel (opened)="panelOpenState = true"
+  (closed)="panelOpenState = false">
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        Generisani dokumenti
+      </mat-panel-title>
+      <mat-panel-description>
+         <!--  opis neki -->
+      </mat-panel-description>
+    </mat-expansion-panel-header>
+
+    <mat-form-field>
+      <input matInput placeholder="First name">
+    </mat-form-field>
+
+    <mat-form-field>
+      <input matInput placeholder="Age">
+    </mat-form-field>
+  </mat-expansion-panel>
+
+<!--Prevoz-->
+  <mat-expansion-panel (opened)="panelOpenState = true"
+  (closed)="panelOpenState = false">
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        Prevoz
+      </mat-panel-title>
+      <mat-panel-description>
+        <!--  opis neki -->
+      </mat-panel-description>
+    </mat-expansion-panel-header>
+
+    <mat-form-field>
+      <input matInput placeholder="First name">
+    </mat-form-field>
+
+    <mat-form-field>
+      <input matInput placeholder="Age">
+    </mat-form-field>
+  </mat-expansion-panel>
+
+<!--Garderoba oprema-->
+  <mat-expansion-panel (opened)="panelOpenState = true"
+  (closed)="panelOpenState = false">
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        Garderoba oprema
+      </mat-panel-title>
+      <mat-panel-description>
+         <!--  opis neki -->
+      </mat-panel-description>
+    </mat-expansion-panel-header>
+
+    <mat-form-field>
+      <input matInput placeholder="First name">
+    </mat-form-field>
+
+    <mat-form-field>
+      <input matInput placeholder="Age">
+    </mat-form-field>
+  </mat-expansion-panel>
+
+</mat-accordion>
