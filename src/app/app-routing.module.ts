@@ -8,6 +8,7 @@ import { Motiv8Component } from 'src/app/pages/motiv8/motiv8.component';
 import { LogInComponent } from './pages/log-in/log-in.component';
 import { HomeComponent } from './pages/home/home.component';
 import { EmployeeProfilComponent } from './pages/employee-profil/employee-profil.component';
+import { TaskManagerComponent } from './pages/task-manager/task-manager.component';
 
 const routes: Routes = [
   {
@@ -41,6 +42,12 @@ const routes: Routes = [
     component: EmployeeProfilComponent,
     canActivate: [AuthGuard],
     data: { title: 'Employee profil' }
+  },
+  {
+    path: 'task-manager',
+    component: TaskManagerComponent,
+    canActivate: [AuthGuard],
+    data: { title: 'Task manager' }
   },
   { path: '**',
     component: LogInComponent,

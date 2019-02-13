@@ -6,7 +6,7 @@ import { AppComponent } from './app.component';
 import { LeaveModule } from './pages/leave/leave.module';
 import {MatButtonModule, DateAdapter,
    // tslint:disable-next-line:max-line-length
-   MatAutocompleteModule, MatTableModule, MatTooltipModule, MatIconModule, MatGridListModule, MatToolbarModule, MatSidenavModule, MatListModule, MatExpansionModule, MatCardModule, MatCheckboxModule } from '@angular/material';
+   MatAutocompleteModule, MatTableModule, MatTooltipModule, MatIconModule, MatGridListModule, MatToolbarModule, MatSidenavModule, MatListModule, MatExpansionModule, MatCardModule, MatCheckboxModule, MatPaginatorModule } from '@angular/material';
 // tslint:disable-next-line:max-line-length
 import {MatDialogModule, MatFormFieldModule, MatTabsModule, MatSelectModule, MatInputModule, MatDatepickerModule, MatSnackBarModule} from '@angular/material';
 import {  ReactiveFormsModule, FormsModule } from '@angular/forms';
@@ -27,20 +27,30 @@ import { MenuListItemComponent } from './pages/menu-list-item/menu-list-item.com
 import { NavService } from './pages/nav.service';
 import {MatStepperModule} from '@angular/material/stepper';
 import { EmployeeProfilComponent } from './pages/employee-profil/employee-profil.component';
+import { GridComponent } from './pages/grid/grid.component';
+import { TaskManagerComponent } from './pages/task-manager/task-manager.component';
+import {A11yModule} from '@angular/cdk/a11y';
+import {ScrollingModule} from '@angular/cdk/scrolling';
+import {CdkTableModule} from '@angular/cdk/table';
+import {CdkTreeModule} from '@angular/cdk/tree';
+import {DragDropModule} from '@angular/cdk/drag-drop';
 
 @NgModule({
   // tslint:disable-next-line:max-line-length
   declarations: [AppComponent, Motiv8Component,
     InfoCardComponent, WhatRequestComponent, WhatHalfComponent, WhatYearlyComponent,
     HowComponent, TotalYearlyComponent, MatStarRatingComponent, LogInComponent, HomeComponent, MenuListItemComponent,
-     EmployeeProfilComponent],  //
+     EmployeeProfilComponent,
+     GridComponent,
+     TaskManagerComponent],  //
   // tslint:disable-next-line:max-line-length
   imports: [BrowserModule, MultiDatepickerModule, FormsModule, TimsGridModule, MatTableModule, AppRoutingModule ,
     MatGridListModule, LeaveModule, MatAutocompleteModule,
     MatButtonModule, MatDialogModule, MatFormFieldModule ,
     ReactiveFormsModule, MatTabsModule, MatSelectModule, MatInputModule, MatDatepickerModule, MatSnackBarModule,
     HttpClientModule, MatTooltipModule, MatButtonModule, MatIconModule, MatToolbarModule, MatSidenavModule,
-    MatListModule, MatStepperModule, MatExpansionModule, MatCardModule, MatCheckboxModule],
+    MatListModule, MatStepperModule, MatExpansionModule, MatCardModule, MatCheckboxModule, MatPaginatorModule,
+    A11yModule, CdkTableModule, CdkTreeModule, DragDropModule, ScrollingModule],
   providers: [ NavService ],
   bootstrap: [AppComponent]
 })

@@ -1,0 +1,99 @@
+.example-container {
+  width: 260px;
+  max-width: 100%;
+  margin: 0 25px 25px 0;
+  display: inline-block;
+  vertical-align: top;
+}
+
+.example-list {
+  border: solid 1px #ccc;
+  min-height: 60px;
+  background: white;
+  border-radius: 4px;
+  overflow: hidden;
+  display: block;
+}
+
+.example-box {
+  padding: 20px 10px;
+  border-bottom: solid 1px #ccc;
+  color: rgba(0, 0, 0, 0.87);
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+
+  justify-content: space-between;
+  box-sizing: border-box;
+  cursor: move;
+  background: white;
+  font-size: 14px;
+}
+
+.cdk-drag-preview {
+  box-sizing: border-box;
+  border-radius: 4px;
+  box-shadow: 0 5px 5px -3px rgba(0, 0, 0, 0.2),
+              0 8px 10px 1px rgba(0, 0, 0, 0.14),
+              0 3px 14px 2px rgba(0, 0, 0, 0.12);
+}
+
+.cdk-drag-placeholder {
+  opacity: 0;
+}
+
+.cdk-drag-animating {
+  transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+.example-box:last-child {
+  border: none;
+}
+
+.example-list.cdk-drop-list-dragging .example-box:not(.cdk-drag-placeholder) {
+  transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+.itemDivision{
+  width: 20%;
+  border: 1px solid gray;
+  float: left;
+  margin: 10px;
+  padding: 10px;
+  background-color: #576377;
+  color: whitesmoke;
+  text-align: center;
+  border-radius: 5px;
+}
+
+.backlog {
+  content: url('https://is5-ssl.mzstatic.com/image/thumb/Purple114/v4/3b/49/12/3b4912d0-4f2a-6d18-a0b3-3d00ce4af573/AppIcon-0-1x_U007emarketing-0-85-220-0-5.png/246x0w.jpg');
+  width: 40px;
+  height: 40px;
+  border: 3px solid #00aec3;
+  border-radius: 22px;
+}
+
+.toDo {
+  content: url('http://icons.iconarchive.com/icons/blackvariant/button-ui-requests-5/1024/ToDo-List-icon.png');
+  width: 40px;
+  height: 40px;
+  border: 3px solid #00aec3;
+  border-radius: 22px;
+}
+
+.inProgres {
+  content: url('https://www.iconbunny.com/icons/media/catalog/product/cache/2/thumbnail/600x/1b89f2fc96fc819c2a7e15c7e545e8a9/3/9/398.9-work-in-progress-sign-board-icon-iconbunny.jpg');
+  width: 40px;
+  height: 40px;
+  border: 3px solid #00aec3;
+  border-radius: 22px;
+}
+
+.done {
+  content: url('https://img14.androidappsapk.co/300/1/2/e/com.done.com.app.png');
+  width: 40px;
+  height: 40px;
+  border: 3px solid #00aec3;
+  border-radius: 22px;
+}

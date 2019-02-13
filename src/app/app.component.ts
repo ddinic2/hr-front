@@ -42,6 +42,11 @@ export class AppComponent implements OnInit {
           iconName: '',
           route: 'devfestfl/sessions/material-design'
         },
+        {
+          displayName: 'Novi zaposleni',
+          iconName: '',
+          route: 'motiv8'
+        },
         // {
         //   displayName: 'Napredna pretraga',
         //   iconName: '',
@@ -409,6 +414,11 @@ export class AppComponent implements OnInit {
     //     }
     //   ]
     // }
+    {
+      displayName: 'Task-manager',
+      iconName: 'settings',
+      route: 'task-manager'
+    },
   ];
 // kraj navigacije
 
