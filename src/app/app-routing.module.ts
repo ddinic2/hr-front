@@ -9,6 +9,7 @@ import { LogInComponent } from './pages/log-in/log-in.component';
 import { HomeComponent } from './pages/home/home.component';
 import { EmployeeProfilComponent } from './pages/employee-profil/employee-profil.component';
 import { TaskManagerComponent } from './pages/task-manager/task-manager.component';
+import { MultiFileUploadComponent } from './pages/multi-file-upload/multi-file-upload.component';
 
 const routes: Routes = [
   {
@@ -48,6 +49,12 @@ const routes: Routes = [
     component: TaskManagerComponent,
     canActivate: [AuthGuard],
     data: { title: 'Task manager' }
+  },
+  {
+    path: 'multi-upload-file',
+    component: MultiFileUploadComponent,
+    canActivate: [AuthGuard],
+    data: { title: 'Multi-upload file component' }
   },
   { path: '**',
     component: LogInComponent,

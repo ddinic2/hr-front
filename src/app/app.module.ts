@@ -34,6 +34,9 @@ import {ScrollingModule} from '@angular/cdk/scrolling';
 import {CdkTableModule} from '@angular/cdk/table';
 import {CdkTreeModule} from '@angular/cdk/tree';
 import {DragDropModule} from '@angular/cdk/drag-drop';
+import { MultiFileUploadComponent } from './pages/multi-file-upload/multi-file-upload.component';
+import { FileSelectDirective, FileDropDirective } from 'ng2-file-upload';
+import { IonicModule } from '@ionic/angular';
 
 @NgModule({
   // tslint:disable-next-line:max-line-length
@@ -42,7 +45,7 @@ import {DragDropModule} from '@angular/cdk/drag-drop';
     HowComponent, TotalYearlyComponent, MatStarRatingComponent, LogInComponent, HomeComponent, MenuListItemComponent,
      EmployeeProfilComponent,
      GridComponent,
-     TaskManagerComponent],  //
+     TaskManagerComponent, MultiFileUploadComponent, FileSelectDirective, FileDropDirective],  //
   // tslint:disable-next-line:max-line-length
   imports: [BrowserModule, MultiDatepickerModule, FormsModule, TimsGridModule, MatTableModule, AppRoutingModule ,
     MatGridListModule, LeaveModule, MatAutocompleteModule,
@@ -50,7 +53,7 @@ import {DragDropModule} from '@angular/cdk/drag-drop';
     ReactiveFormsModule, MatTabsModule, MatSelectModule, MatInputModule, MatDatepickerModule, MatSnackBarModule,
     HttpClientModule, MatTooltipModule, MatButtonModule, MatIconModule, MatToolbarModule, MatSidenavModule,
     MatListModule, MatStepperModule, MatExpansionModule, MatCardModule, MatCheckboxModule, MatPaginatorModule,
-    A11yModule, CdkTableModule, CdkTreeModule, DragDropModule, ScrollingModule],
+    A11yModule, CdkTableModule, CdkTreeModule, DragDropModule, ScrollingModule, IonicModule],
   providers: [ NavService ],
   bootstrap: [AppComponent]
 })

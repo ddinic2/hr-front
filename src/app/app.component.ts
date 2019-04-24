@@ -161,6 +161,11 @@ export class AppComponent implements OnInit {
       iconName: 'star_half',
       route: 'motiv8'
     },
+    {
+      displayName: 'Multi-upload file component',
+      iconName: 'star_half',
+      route: 'multi-upload-file'
+    },
     // {
     //   displayName: 'Disney',
     //   iconName: '',
